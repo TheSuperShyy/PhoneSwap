@@ -29,18 +29,13 @@ module.exports = {
         'off-white-200': '#f5f5f5', // Anti-white
         'off-white-300': '#fafafa', // Light Gray
         'eggshell': '#f5f0e8', // Eggshell
+        'dark-blue': '#1E3A8A', // Replace with your desired hex code
+        'deep-dark-blue': '#0F172A',
+        'another-dark-blue' : '#29467F',
         blue: {
-          50: '#e0f2ff',
-          100: '#bbdefb',
-          200: '#90caf9',
-          300: '#64b5f6',
-          400: '#42a5f5',
           500: '#2196f3',
           600: '#1e88e5',
           700: '#1976d2',
-          800: '#1565c0',
-          900: '#0d47a1',
-          950: '#14005C', // Added 950 for deeper shades
         },
         orange: {
           50: '#fff3e0',
