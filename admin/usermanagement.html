@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>User Management</title>
+    <link rel="stylesheet" href="/src/output.css" />
+    <script
+      src="https://kit.fontawesome.com/10d593c5dc.js"
+      crossorigin="anonymous"
+    ></script>
+    <style>
+      .dropdown-menu {
+        display: none;
+      }
+      .dropdown:focus-within .dropdown-menu {
+        display: block;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="flex">
+      <!-- Sidebar -->
+      <div class="w-1/5 bg-blue-600 text-white h-screen p-4 fixed">
+        <h1 class="text-4xl mb-6 mt-2 font-medium font-russo">PhoneSwap</h1>
+        <ul>
+          <li class="mb-4">
+            <a
+              class="flex items-center hover:bg-blue-800 p-2 text-base font-medium rounded-lg"
+              href="dashboard.html"
+            >
+              <i class="fas fa-tachometer-alt mr-3"></i>
+              Dashboard
+            </a>
+          </li>
+          <li class="mb-4">
+            <a
+              class="flex items-center hover:bg-blue-700 p-2 text-base font-medium rounded-lg"
+              href="audittrail.html"
+            >
+              <i class="fas fa-list-alt mr-3"></i>
+              Audit Trail
+            </a>
+          </li>
+          <li class="mb-4">
+            <a
+              class="flex items-center hover:bg-blue-700 p-2 text-base font-medium rounded-lg"
+              href="swapphones.html"
+            >
+              <i class="fa-solid fa-phone mr-3"></i>
+              Swap Phones
+            </a>
+          </li>
+          <li class="mb-4">
+            <a
+              class="flex items-center hover:bg-blue-700 p-2 text-base font-medium rounded-lg"
+              href="usermanagement.html"
+            >
+              <i class="fas fa-users mr-3"></i>
+              User Management
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Main Content -->
+      <div class="w-4/5 ml-auto">
+        <!-- Navbar section -->
+        <div
+          class="fixed w-4/5 bg-white z-10 px-6 py-3 flex justify-between items-center shadow-md"
+        >
+          <!-- Menubar -->
+          <div class="flex flex-row items-center gap-4">
+            <button class="text-black focus:outline-none">
+              <i class="fas fa-bars"></i>
+            </button>
+            <h2 class="text-xl font-semibold mr-4">User Management</h2>
+          </div>
+
+          <!-- Avatarbar -->
+          <div class="flex flex-row items-center gap-4">
+            <!-- Notification -->
+            <div class="flex items-center">
+              <button class="relative top-2 text-2xl" aria-label="Notifications">
+                <i class="fa-regular fa-bell"></i>
+              </button>
+            </div>
+          <div class="relative dropdown">
+            <button
+              class="flex flex-row items-center gap-3 border border-black shadow-gray-700 shadow-sm bg-amber-400 text-black px-4 w-fit rounded-xl"
+            >
+              <i class="fa-regular fa-user fa-xl"></i>
+              <div class="flex flex-col items-start">
+                <h1 class="font-medium">Emily Dav</h1>
+                <h1 class="text-sm">Admin</h1>
+              </div>
+              <i class="fa-solid fa-angle-down fa-sm pl-3"></i>
+            </button>
+            <div
+              class="dropdown-menu absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-2 z-20 hidden"
+            >
+              <a
+                href="#"
+                class="block px-4 py-2 text-gray-800 hover:bg-gray-200"
+                >Profile</a
+              >
+              <a
+                href="#"
+                class="block px-4 py-2 text-gray-800 hover:bg-gray-200"
+                >Settings</a
+              >
+              <a
+                href="#"
+                class="block px-4 py-2 text-gray-800 hover:bg-gray-200"
+                >Logout</a
+              >
+            </div>
+          </div>
+        </div>
+        </div>
+
+        <div class="pt-22 py-6 laptop:px-12 phone:px-4">
+          <!-- contents -->
+          <div
+            class="flex flex-col gap-1 items-end justify-center w-full mx-auto"
+          >
+            <div class="flex flex-col gap-3 mx-auto py-4 w-full">
+              <!-- Filter -->
+              <div class="flex laptop:flex-row phone:flex-col gap-2 w-full">
+                <div class="flex justify-start">
+                  <form method="" class="flex flex-row items-center">
+                    <select
+                      name="filter"
+                      id="filterSelect"
+                      class="px-4 py-2 h-10 w-48 text-sm border border-gray-700 rounded-l-lg outline-none"
+                    ></select>
+                    <input
+                      type="text"
+                      name=""
+                      id=""
+                      placeholder="Search"
+                      value
+                      class="w-full h-10 p-2 border border-gray-700 shadow-sm sm:text-sm outline-none rounded-r-lg"
+                    />
+                  </form>
+                </div>
+                <div class="flex ml-auto">
+                  <div class="flex justify-end gap-2">
+                    <button
+                      id="openModalBtn"
+                      class="border border-black bg-blue-950 text-white px-4 py-2 rounded-lg"
+                    >
+                      <i class="fa-solid fa-circle-plus"></i>
+                      Add User
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Audit trail table -->
+              <div class="rounded-lg shadow-md">
+                <div class="w-full overflow-x-auto h-full rounded-lg">
+                  <table class="w-full bg-white">
+                    <thead class="bg-gray-200">
+                      <tr
+                        class="bg-gray-200 border-b border-gray-400 text-sm text-left px-4"
+                      >
+                        <th class="py-3 px-4 border-b whitespace-nowrap">ID</th>
+                        <th class="py-3 px-4 border-b whitespace-nowrap">
+                          Complete Name
+                        </th>
+                        <th class="py-3 px-4 border-b whitespace-nowrap">
+                          Position
+                        </th>
+                        <th class="py-3 px-4 border-b whitespace-nowrap">
+                          Email
+                        </th>
+                        <th class="py-3 px-4 border-b whitespace-nowrap">
+                          Contact Number
+                        </th>
+                        <th class="py-3 px-4 border-b"></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr class="border-b text-left">
+                        <td class="py-2 px-4 whitespace-nowrap">0001</td>
+                        <td class="py-2 px-4 whitespace-nowrap">
+                          Yul Grant Gatchalian
+                        </td>
+                        <td class="py-2 px-4 whitespace-nowrap">Team Leader</td>
+                        <td class="py-2 px-4 whitespace-nowrap">
+                          YulGrant@gmail.com
+                        </td>
+                        <td class="py-2 px-4 whitespace-nowrap">09990874663</td>
+                        <td class="text-center space-x-2">
+                          <div class="flex flex-row py-2 px-4 gap-1">
+                            <button
+                              id="openModalBtn1"
+                              class="flex flex-row gap-2 items-center border border-white bg-amber-400 hover:bg-amber-600 text-white px-3 py-1.5 rounded-full"
+                            >
+                              <i class="fa-solid fa-pen"></i>Edit
+                            </button>
+                            <button
+                              class="flex flex-row gap-2 items-center border border-white shadow-md bg-red-600 hover:bg-red-500 text-white px-3 py-1.5 rounded-full"
+                            >
+                              <i class="fa-solid fa-trash"></i>Delete
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                      <tr class="border-b text-left">
+                        <td class="py-2 px-4 whitespace-nowrap">0002</td>
+                        <td class="py-2 px-4 whitespace-nowrap">
+                          Yul Grant Gatchalian
+                        </td>
+                        <td class="py-2 px-4 whitespace-nowrap">Team Leader</td>
+                        <td class="py-2 px-4 whitespace-nowrap">
+                          YulGrant@gmail.com
+                        </td>
+                        <td class="py-2 px-4 whitespace-nowrap">09990874663</td>
+                        <td class="text-center space-x-2">
+                          <div class="flex flex-row py-2 px-4 gap-1">
+                            <button
+                              id="openModalBtn1"
+                              class="flex flex-row gap-2 items-center border border-white bg-amber-400 hover:bg-amber-600 text-white px-3 py-1.5 rounded-full"
+                            >
+                              <i class="fa-solid fa-pen"></i>Edit
+                            </button>
+                            <button
+                              class="flex flex-row gap-2 items-center border border-white shadow-md bg-red-600 hover:bg-red-500 text-white px-3 py-1.5 rounded-full"
+                            >
+                              <i class="fa-solid fa-trash"></i>Delete
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                      <tr class="border-b text-left">
+                        <td class="py-2 px-4 whitespace-nowrap">0003</td>
+                        <td class="py-2 px-4 whitespace-nowrap">
+                          Yul Grant Gatchalian
+                        </td>
+                        <td class="py-2 px-4 whitespace-nowrap">Team Leader</td>
+                        <td class="py-2 px-4 whitespace-nowrap">
+                          YulGrant@gmail.com
+                        </td>
+                        <td class="py-2 px-4 whitespace-nowrap">09990874663</td>
+                        <td class="text-center space-x-2">
+                          <div class="flex flex-row py-2 px-4 gap-1">
+                            <button
+                              id="openModalBtn1"
+                              class="flex flex-row gap-2 items-center border border-white bg-amber-400 hover:bg-amber-600 text-white px-3 py-1.5 rounded-full"
+                            >
+                              <i class="fa-solid fa-pen"></i>Edit
+                            </button>
+                            <button
+                              class="flex flex-row gap-2 items-center border border-white shadow-md bg-red-600 hover:bg-red-500 text-white px-3 py-1.5 rounded-full"
+                            >
+                              <i class="fa-solid fa-trash"></i>Delete
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                      <tr class="border-b text-left">
+                        <td class="py-2 px-4 whitespace-nowrap">0004</td>
+                        <td class="py-2 px-4 whitespace-nowrap">
+                          Yul Grant Gatchalian
+                        </td>
+                        <td class="py-2 px-4 whitespace-nowrap">Team Leader</td>
+                        <td class="py-2 px-4 whitespace-nowrap">
+                          MYulGrant@gmail.com
+                        </td>
+                        <td class="py-2 px-4 whitespace-nowrap">09990874663</td>
+                        <td class="text-center space-x-2">
+                          <div class="flex flex-row py-2 px-4 gap-1">
+                            <button
+                              id="openModalBtn1"
+                              class="flex flex-row gap-2 items-center border border-white bg-amber-400 hover:bg-amber-600 text-white px-3 py-1.5 rounded-full"
+                            >
+                              <i class="fa-solid fa-pen"></i>Edit
+                            </button>
+                            <button
+                              class="flex flex-row gap-2 items-center border border-white shadow-md bg-red-600 hover:bg-red-500 text-white px-3 py-1.5 rounded-full"
+                            >
+                              <i class="fa-solid fa-trash"></i>Delete
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                      <tr class="border-b text-left">
+                        <td class="py-2 px-4 whitespace-nowrap">0005</td>
+                        <td class="py-2 px-4 whitespace-nowrap">
+                          Yul Grant Gatchalian
+                        </td>
+                        <td class="py-2 px-4 whitespace-nowrap">Team Leader</td>
+                        <td class="py-2 px-4 whitespace-nowrap">
+                          MYulGrant@gmail.com
+                        </td>
+                        <td class="py-2 px-4 whitespace-nowrap">09990874663</td>
+                        <td class="text-center space-x-2">
+                          <div class="flex flex-row py-2 px-4 gap-1">
+                            <button
+                              id="openModalBtn1"
+                              class="flex flex-row gap-2 items-center border border-white bg-amber-400 hover:bg-amber-600 text-white px-3 py-1.5 rounded-full"
+                            >
+                              <i class="fa-solid fa-pen"></i>Edit
+                            </button>
+                            <button
+                              class="flex flex-row gap-2 items-center border border-white shadow-md bg-red-600 hover:bg-red-500 text-white px-3 py-1.5 rounded-full"
+                            >
+                              <i class="fa-solid fa-trash"></i>Delete
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                      <tr class="border-b text-left">
+                        <td class="py-2 px-4 whitespace-nowrap">0006</td>
+                        <td class="py-2 px-4 whitespace-nowrap">
+                          Yul Grant Gatchalian
+                        </td>
+                        <td class="py-2 px-4 whitespace-nowrap">Team Leader</td>
+                        <td class="py-2 px-4 whitespace-nowrap">
+                          MYulGrant@gmail.com
+                        </td>
+                        <td class="py-2 px-4 whitespace-nowrap">09990874663</td>
+                        <td class="text-center space-x-2">
+                          <div class="flex flex-row py-2 px-4 gap-1">
+                            <button
+                              id="openModalBtn1"
+                              class="flex flex-row gap-2 items-center border border-white bg-amber-400 hover:bg-amber-600 text-white px-3 py-1.5 rounded-full"
+                            >
+                              <i class="fa-solid fa-pen"></i>Edit
+                            </button>
+                            <button
+                              class="flex flex-row gap-2 items-center border border-white shadow-md bg-red-600 hover:bg-red-500 text-white px-3 py-1.5 rounded-full"
+                            >
+                              <i class="fa-solid fa-trash"></i>Delete
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              <!-- Modal for ADD USER -->
+              <div
+                id="myModal"
+                class="fixed inset-0 flex justify-center items-center hidden bg-black bg-opacity-50 z-50 pt-24 pb-24 h-full laptop:px-80 laptop:w-full phone:w-full phone:px-4"
+              >
+                <div
+                  class="bg-white border border-gray-600 rounded-lg px-6 py-6 shadow-lg relative h-fit w-full"
+                >
+                  <div class="flex justify-center">
+                    <div
+                      class="w-28 h-28 bg-gray-200 rounded-full flex items-center justify-center"
+                    >
+                      <span class="text-gray-500 text-3xl">&#128100;</span>
+                    </div>
+                  </div>
+                  <span
+                    class="absolute top-3 right-3 text-gray-500 hover:text-gray-700 cursor-pointer text-2xl"
+                    id="closeModalBtn"
+                    >&times;</span
+                  >
+
+                  <div class="flex flex-col gap-4 mt-4">
+                    <div class="flex laptop:flex-row phone:flex-col gap-4">
+                      <div class="flex flex-col gap-2 w-full">
+                        <label for="" class="text-sm font-medium"
+                          >First Name</label
+                        >
+                        <input
+                          type="text"
+                          placeholder="Yul Grant"
+                          class="border border-gray-700 p-2 rounded-lg text-black"
+                        />
+                      </div>
+                      <div class="flex flex-col gap-2 w-full">
+                        <label for="" class="text-sm font-medium"
+                          >Last Name</label
+                        >
+                        <input
+                          type="text"
+                          placeholder="Gatchalian"
+                          class="border border-gray-700 p-2 rounded-lg"
+                        />
+                      </div>
+                    </div>
+                    <div class="flex laptop:flex-row phone:flex-col gap-4">
+                      <div class="flex flex-col gap-2 w-full">
+                        <label for="" class="text-sm font-medium">Email</label>
+                        <input
+                          type="email"
+                          placeholder="Yulgrant@gmail.com"
+                          class="border border-gray-700 p-2 rounded-lg"
+                        />
+                      </div>
+                      <div class="flex flex-col gap-2 w-full">
+                        <label for="" class="text-sm font-medium"
+                          >Contact Number</label
+                        >
+                        <input
+                          type="text/number"
+                          placeholder="09345678653"
+                          class="border border-gray-700 p-2 rounded-lg"
+                        />
+                      </div>
+                    </div>
+                    <div class="flex laptop:flex-row phone:flex-col gap-4">
+                      <div class="flex flex-col gap-2 w-full">
+                        <label for="" class="text-sm font-medium">Role</label>
+                        <input
+                          type="text/number"
+                          placeholder="Team Leader"
+                          class="border border-gray-700 p-2 rounded-lg"
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="flex justify-end space-x-2 mt-4">
+                    <button
+                      id="closeModalBtn"
+                      class="w-25 px-4 py-2 shadow-md shadow-gray-300 bg-red-800 text-white border border-white font-medium rounded-lg"
+                    >
+                      Deactivate
+                    </button>
+                    <button
+                      class="px-4 py-2 w-24 shadow-md shadow-gray-300 bg-blue-800 font-medium text-white border border-white rounded-lg"
+                    >
+                      Add
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Modal for EDIT USER -->
+            <div
+              id="myModal1"
+              class="fixed inset-0 flex justify-center items-center hidden bg-black bg-opacity-50 z-50 pt-24 pb-24 h-full laptop:px-80 laptop:w-full phone:w-full phone:px-4"
+            >
+              <div
+                class="bg-white border border-gray-600 rounded-lg px-6 py-6 shadow-lg relative h-fit w-full"
+              >
+                <div class="flex justify-center">
+                  <div
+                    class="w-28 h-28 bg-gray-200 rounded-full flex items-center justify-center"
+                  >
+                    <span class="text-gray-500 text-3xl">&#128100;</span>
+                  </div>
+                </div>
+                <span
+                  class="absolute top-3 right-3 text-gray-500 hover:text-gray-700 cursor-pointer text-2xl"
+                  id="closeModalBtn1"
+                  >&times;</span
+                >
+
+                <div class="flex flex-col gap-4 mt-4">
+                  <div class="flex laptop:flex-row phone:flex-col gap-4">
+                    <div class="flex flex-col gap-2 w-full">
+                      <label for="" class="text-sm font-medium"
+                        >First Name</label
+                      >
+                      <input
+                        type="text"
+                        placeholder="Yul Grant"
+                        class="border border-gray-700 p-2 rounded-lg text-black"
+                      />
+                    </div>
+                    <div class="flex flex-col gap-2 w-full">
+                      <label for="" class="text-sm font-medium"
+                        >Last Name</label
+                      >
+                      <input
+                        type="text"
+                        placeholder="Gatchalian"
+                        class="border border-gray-700 p-2 rounded-lg"
+                      />
+                    </div>
+                  </div>
+                  <div class="flex laptop:flex-row phone:flex-col gap-4">
+                    <div class="flex flex-col gap-2 w-full">
+                      <label for="" class="text-sm font-medium">Email</label>
+                      <input
+                        type="email"
+                        placeholder="Yulgrant@gmail.com"
+                        class="border border-gray-700 p-2 rounded-lg"
+                      />
+                    </div>
+                    <div class="flex flex-col gap-2 w-full">
+                      <label for="" class="text-sm font-medium"
+                        >Contact Number</label
+                      >
+                      <input
+                        type="text/number"
+                        placeholder="09345678653"
+                        class="border border-gray-700 p-2 rounded-lg"
+                      />
+                    </div>
+                  </div>
+                  <div class="flex laptop:flex-row phone:flex-col gap-4">
+                    <div class="flex flex-col gap-2 w-full">
+                      <label for="" class="text-sm font-medium">Role</label>
+                      <input
+                        type="text/number"
+                        placeholder="Team Leader"
+                        class="border border-gray-700 p-2 rounded-lg"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div class="flex justify-end space-x-2 mt-4">
+                  <button
+                    class="w-28 px-4 py-2 shadow-md shadow-gray-300 text-white bg-red-600 border border-white font-medium rounded-lg"
+                  >
+                    Deactivate
+                  </button>
+                  <button
+                    class="px-4 py-2 w-24 shadow-md shadow-gray-300 bg-amber-400 font-medium text-white border border-white rounded-lg"
+                  >
+                    Save
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Pagination -->
+            <div class="flex space-x-2">
+              <button
+                class="rounded-lg px-4 py-2 hover:bg-blue-50 hover:font-semibold"
+              >
+                <i class="fa-solid fa-angle-left"></i>
+              </button>
+              <button
+                class="rounded-lg px-4 py-2 hover:bg-blue-50 hover:font-semibold"
+              >
+                1
+              </button>
+              <button
+                class="border border-gray-300 rounded-lg px-4 py-2 hover:bg-blue-800 bg-blue-600 text-white font-medium"
+              >
+                2
+              </button>
+              <button
+                class="rounded-lg px-4 py-2 hover:bg-blue-50 hover:font-semibold"
+              >
+                3
+              </button>
+              <button
+                class="rounded-lg px-4 py-2 hover:bg-blue-50 hover:font-semibold"
+              >
+                4
+              </button>
+              <button
+                class="rounded-lg px-4 py-2 hover:bg-blue-50 hover:font-semibold"
+              >
+                5
+              </button>
+              <button
+                class="rounded-lg px-4 py-2 hover:bg-blue-50 hover:font-semibold"
+              >
+                <i class="fa-solid fa-angle-right"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+
+  <script>
+    const modal = document.getElementById("myModal");
+    const openModalBtn = document.getElementById("openModalBtn");
+    const closeModalBtn = document.getElementById("closeModalBtn");
+    const modalCancelButton = document.getElementById("modalCancelButton");
+
+    openModalBtn.addEventListener("click", () => {
+      modal.classList.remove("hidden");
+    });
+
+    closeModalBtn.addEventListener("click", () => {
+      modal.classList.add("hidden");
+    });
+
+    modalCancelButton.addEventListener("click", () => {
+      modal.classList.add("hidden");
+    });
+  </script>
+
+  <script>
+    const modal1 = document.getElementById("myModal1");
+    const openModalBtn1 = document.getElementById("openModalBtn1");
+    const closeModalBtn1 = document.getElementById("closeModalBtn1");
+    const modalCancelButton1 = document.getElementById("modalCancelButton1");
+
+    openModalBtn1.addEventListener("click", () => {
+      modal1.classList.remove("hidden");
+    });
+
+    closeModalBtn1.addEventListener("click", () => {
+      modal1.classList.add("hidden");
+    });
+
+    modalCancelButton1.addEventListener("click", () => {
+      modal1.classList.add("hidden");
+    });
+  </script>
+</html>
