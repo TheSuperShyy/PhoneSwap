@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="/src/output.css" />
+    <script
+      src="https://kit.fontawesome.com/10d593c5dc.js"
+      crossorigin="anonymous"
+    ></script>
+    <style>
+      .dropdown-menu {
+        display: none;
+      }
+      .dropdown:focus-within .dropdown-menu {
+        display: block;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="flex">
+      <!-- Sidebar -->
+      <div class="w-1/5 bg-blue-600 text-white h-screen p-4 fixed">
+        <h1 class="text-4xl mb-6 mt-2 font-medium font-russo">E-Inventory</h1>
+        <ul>
+          <li class="mb-4">
+            <a
+              class="flex items-center hover:bg-blue-700 p-2 text-base font-medium rounded-lg"
+              href="dashboard.html"
+            >
+              <i class="fas fa-tachometer-alt mr-3"></i>
+              Dashboard
+            </a>
+          </li>
+          <li class="mb-4">
+            <a
+              class="flex items-center hover:bg-blue-700 p-2 text-base font-medium rounded-lg"
+              href="audit.html"
+            >
+              <i class="fas fa-list-alt mr-3"></i>
+              Audit Trail
+            </a>
+          </li>
+          <li class="mb-4">
+            <a
+              class="flex items-center hover:bg-blue-700 p-2 text-base font-medium rounded-lg"
+              href="inventorymanagement.html"
+            >
+              <i class="fas fa-warehouse mr-3"></i>
+              Inventory Management
+            </a>
+          </li>
+          <li class="mb-4">
+            <a
+              class="flex items-center hover:bg-blue-700 p-2 text-base font-medium rounded-lg"
+              href="assets.html"
+            >
+              <i class="fas fa-tools mr-3"></i>
+              Asset Management
+            </a>
+          </li>
+          <li class="mb-4">
+            <a
+              class="flex items-center hover:bg-blue-700 p-2 text-base font-medium rounded-lg"
+              href="broken-items.html"
+            >
+              <i class="fas fa-exclamation-triangle mr-3"></i>
+              Broken Item List
+            </a>
+          </li>
+          <li class="mb-4">
+            <a
+              class="flex items-center hover:bg-blue-700 p-2 text-base font-medium rounded-lg"
+              href="scrap-items.html"
+            >
+              <i class="fas fa-recycle mr-3"></i>
+              Scrap Item List
+            </a>
+          </li>
+          <li class="mb-4">
+            <a
+              class="flex items-center hover:bg-blue-700 p-2 text-base font-medium rounded-lg"
+              href="usermanagement.html"
+            >
+              <i class="fas fa-users mr-3"></i>
+              User Management
+            </a>
+          </li>
+          <li class="mb-4">
+            <a
+              class="flex items-center hover:bg-blue-700 p-2 text-base font-medium rounded-lg"
+              href="employee.html"
+            >
+              <i class="fa-solid fa-user-tie mr-3"></i>
+              Employee
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Main Content -->
+      <div class="w-4/5 ml-auto">
+        <!-- Navbar section -->
+        <div class="fixed w-4/5 bg-white z-10 px-6 py-3 flex justify-between items-center shadow-md">
+          <!-- Menubar -->
+          <div class="flex flex-row items-center gap-4">
+            <button class="text-black focus:outline-none">
+              <i class="fas fa-bars"></i>
+            </button>
+            <h2 class="text-xl font-semibold mr-4">Dashboard</h2>
+          </div>
+
+          <!-- Avatarbar -->
+          <div class="relative dropdown">
+            <button class="flex flex-row items-center gap-3 border border-black shadow-gray-700 shadow-sm bg-amber-400 text-black px-4 w-fit rounded-xl">
+              <i class="fa-regular fa-user fa-xl"></i>
+              <div class="flex flex-col items-start">
+                <h1 class="font-medium">Emily Dav</h1>
+                <h1 class="text-sm">Admin</h1>
+              </div>
+              <i class="fa-solid fa-angle-down fa-sm pl-3"></i>
+            </button>
+            <div class="dropdown-menu absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-2 z-20 hidden">
+              <a href="#"
+                class="block px-4 py-2 text-gray-800 hover:bg-gray-200"
+                >Profile</a>
+              <a href="#"
+                class="block px-4 py-2 text-gray-800 hover:bg-gray-200"
+                >Settings</a>
+              <a  href="#"
+                class="block px-4 py-2 text-gray-800 hover:bg-gray-200"
+                >Logout</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="pt-22 py-6 px-14">
+          <h3 class="text-xl font-semibold mb-4">Overview</h3>
+          
+        </div>
+
+      </div>
+    </div>
+
+  </body>
+
+  <!-- Selection for total assets --> 
+  <script>
+    const selectButton = document.getElementById('selectButton');
+    const selectDropdown = document.getElementById('selectDropdown');
+    const selectedValue = document.getElementById('selectedValue');
+
+    selectButton.addEventListener('click', () => {
+        selectDropdown.classList.toggle('hidden');
+    });
+
+    selectDropdown.addEventListener('click', (event) => {
+        if (event.target.tagName === 'A') {
+            event.preventDefault(); // Prevent link behavior
+            const value = event.target.dataset.value;
+            const text = event.target.textContent;
+
+            selectButton.textContent = text; // Update button text
+            selectedValue.value = value;      // Update hidden input value
+            selectDropdown.classList.add('hidden'); // Close dropdown
+        }
+    });
+
+    // Close dropdown if clicked outside
+    window.addEventListener('click', (event) => {
+        if (!selectButton.contains(event.target) && !selectDropdown.contains(event.target)) {
+            selectDropdown.classList.add('hidden');
+        }
+    });
+  </script>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <!-- Total assets barchart -->
+  <script>
+      var ctx = document.getElementById('myChart').getContext('2d');
+      var myChart = new Chart(ctx, {
+          type: 'bar',
+          data: {
+              labels: ['January', 'February', 'March', 'April', 'May', 'June'],
+              datasets: [{
+                  label: 'Sales',
+                  data: [12, 19, 3, 5, 2, 3],
+                  backgroundColor: [
+                      'rgba(255, 99, 132, 0.2)',
+                      'rgba(54, 162, 235, 0.2)',
+                      'rgba(255, 206, 86, 0.2)',
+                      'rgba(75, 192, 192, 0.2)',
+                      'rgba(153, 102, 255, 0.2)',
+                      'rgba(255, 159, 64, 0.2)'
+                  ],
+                  borderColor: [
+                      'rgba(255, 99, 132, 1)',
+                      'rgba(54, 162, 235, 1)',
+                      'rgba(255, 206, 86, 1)',
+                      'rgba(75, 192, 192, 1)',
+                      'rgba(153, 102, 255, 1)',
+                      'rgba(255, 159, 64, 1)'
+                  ],
+                  borderWidth: 1
+              }]
+          },
+          options: {
+              scales: {
+                  y: {
+                      beginAtZero: true
+                  }
+              }
+          }
+      });
+  </script>
+
+  <!-- inventory stats -->
+  <script>
+    var ctx = document.getElementById('invetorycpiechart').getContext('2d');
+    var myChart = new Chart(ctx, {
+      type: 'pie',
+      data: {
+          labels: ['Total Stock', 'Deployed Stock', 'Broken Items'],
+          datasets: [{
+              data: [30, 40, 20],
+              backgroundColor: [
+                  'rgba(248, 183, 33, 0.8)',
+                  'rgba(246, 217, 93, 0.8)',
+                  'rgba(255, 230, 178, 0.8)'
+              ],
+              borderColor: [
+                  'rgba(246, 217, 93, 1)',
+                  'rgba(246, 217, 93, 1)',
+                  'rgba(255, 217, 127, 1)'
+              ],
+              borderWidth: 1
+          }]
+      },
+      options: {
+          responsive: true,
+          maintainAspectRatio: false,
+
+          layout: { // Add this layout block
+              padding: { // Add padding below the chart
+                  bottom: 50 // Adjust as needed
+              }
+          },
+          plugins: { // Use plugins for more control
+              legend: {
+                  display: true, // Ensure legend is displayed
+                  position: 'bottom', // Position at the bottom
+                  align: 'center', // Center the legend
+                  labels: {
+                      fontColor: 'black',
+                      fontSize: 18,
+                      padding: 30, // Adjust spacing between labels
+                      boxWidth: 20, // Adjust the size of the color box
+                      useBorderBox: false // Remove the border around the box
+                  }
+              }
+          }
+      }
+  });
+  </script>
+
+</html>
