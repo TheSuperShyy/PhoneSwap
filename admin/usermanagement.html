@@ -21,7 +21,7 @@
   <body>
     <div class="flex">
       <!-- Sidebar -->
-      <div class="w-1/5 bg-blue-600 text-white h-screen p-4 fixed">
+      <div class="w-1/5 bg-blue-950 text-white h-screen p-4 fixed">
         <h1 class="text-4xl mb-6 mt-2 font-medium font-russo">PhoneSwap</h1>
         <ul>
           <li class="mb-4">
@@ -74,28 +74,6 @@
             <button class="text-black focus:outline-none">
               <i class="fas fa-bars"></i>
             </button>
-            <h2 class="text-xl font-semibold mr-4">User Management</h2>
-          </div>
-
-          <!-- Avatarbar -->
-          <div class="flex flex-row items-center gap-4">
-            <!-- Notification -->
-            <div class="flex items-center">
-              <button class="relative top-2 text-2xl" aria-label="Notifications">
-                <i class="fa-regular fa-bell"></i>
-              </button>
-            </div>
-          <div class="relative dropdown">
-            <button
-              class="flex flex-row items-center gap-3 border border-black shadow-gray-700 shadow-sm bg-amber-400 text-black px-4 w-fit rounded-xl"
-            >
-              <i class="fa-regular fa-user fa-xl"></i>
-              <div class="flex flex-col items-start">
-                <h1 class="font-medium">Emily Dav</h1>
-                <h1 class="text-sm">Admin</h1>
-              </div>
-              <i class="fa-solid fa-angle-down fa-sm pl-3"></i>
-            </button>
             <div
               class="dropdown-menu absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-2 z-20 hidden"
             >
@@ -115,8 +93,141 @@
                 >Logout</a
               >
             </div>
+            <h2 class="text-xl font-semibold mr-4">User Management</h2>
           </div>
-        </div>
+
+          <div class="flex flex-row items-center gap-4">
+            <!-- Notification Bell -->
+            <div class="relative inline-block text-left">
+              <button
+                class="relative text-2xl"
+                aria-label="Notifications"
+                id="notificationButton"
+              >
+                <i class="fa-regular fa-bell"></i>
+              </button>
+
+              <!-- Dropdown Message Notification -->
+              <div
+                class="origin-top-right absolute right-0 mt-2 w-80 rounded-md shadow-lg bg-white border border-gray-400 ring-1 ring-black ring-opacity-5 focus:outline-none hidden"
+                role="menu"
+                aria-orientation="vertical"
+                aria-labelledby="notificationButton"
+                id="notificationDropdown"
+              >
+                <div class="py-1" role="none">
+                  <a
+                    href="#"
+                    class="block px-4 py-2 text-sm text-black-700 hover:bg-gray-100"
+                    role="menuitem"
+                  >
+                    <div class="flex">
+                      <div>
+                        <p class="font-medium">
+                          New message from Yul Gatchalian
+                        </p>
+                        <p class="text-sm text-black-500">Stress to the max.</p>
+                        <p class="text-xs text-black-400">5 minutes ago</p>
+                      </div>
+                    </div>
+                  </a>
+                  <a
+                    href="#"
+                    class="block px-4 py-2 text-sm text-black-700 hover:bg-gray-100"
+                    role="menuitem"
+                  >
+                    <div class="flex">
+                      <div class="mr-3">
+                        <p class="font-medium">Cylie Gonzales</p>
+                        <p class="text-sm text-black-500">
+                          Brain says code, stomach says feed me.
+                        </p>
+                        <p class="text-xs text-black-400">1 hour ago</p>
+                      </div>
+                    </div>
+                  </a>
+                  <a
+                    href="#"
+                    class="block px-4 py-2 text-sm text-black-700 hover:bg-gray-100"
+                    role="menuitem"
+                  >
+                    <div class="flex">
+                      <div class="mr-3">
+                        <p class="font-medium">Kian David</p>
+                        <p class="text-sm text-black-500">
+                          Coding with good vibes = ultimate chill.
+                        </p>
+                        <p class="text-xs text-black-400">2 days ago</p>
+                      </div>
+                    </div>
+                  </a>
+                  <a
+                    href="#"
+                    class="block px-4 py-2 text-sm text-black-700 hover:bg-gray-100"
+                    role="menuitem"
+                  >
+                    <div class="flex">
+                      <div class="mr-3">
+                        <p class="font-medium">Miko Basilio</p>
+                        <p class="text-sm text-black-500">
+                          Bugs and beats, coding and grooving
+                        </p>
+                        <p class="text-xs text-black-400">2 days ago</p>
+                      </div>
+                    </div>
+                  </a>
+                  <a
+                    href="#"
+                    class="block px-4 py-2 text-sm text-black-700 hover:bg-gray-100"
+                    role="menuitem"
+                  >
+                    <div class="flex">
+                      <div class="mr-3">
+                        <p class="font-medium">Daniel Digo</p>
+                        <p class="text-sm text-black-500">
+                          Catching up on sleep and relaxing.
+                        </p>
+                        <p class="text-xs text-black-400">2 days ago</p>
+                      </div>
+                    </div>
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            <!-- Avatarbar -->
+            <div class="relative dropdown">
+              <button
+                class="flex flex-row items-center gap-3 border border-black shadow-gray-700 shadow-sm bg-amber-400 text-black px-4 w-fit rounded-xl"
+              >
+                <i class="fa-regular fa-user fa-xl"></i>
+                <div class="flex flex-col items-start">
+                  <h1 class="font-medium">Emily Dav</h1>
+                  <h1 class="text-sm">Admin</h1>
+                </div>
+                <i class="fa-solid fa-angle-down fa-sm pl-3"></i>
+              </button>
+              <div
+                class="dropdown-menu absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-2 z-20 hidden"
+              >
+                <a
+                  href="#"
+                  class="block px-4 py-2 text-gray-800 hover:bg-gray-200"
+                  >Profile</a
+                >
+                <a
+                  href="#"
+                  class="block px-4 py-2 text-gray-800 hover:bg-gray-200"
+                  >Settings</a
+                >
+                <a
+                  href="#"
+                  class="block px-4 py-2 text-gray-800 hover:bg-gray-200"
+                  >Logout</a
+                >
+              </div>
+            </div>
+          </div>
         </div>
 
         <div class="pt-22 py-6 laptop:px-12 phone:px-4">
@@ -157,7 +268,7 @@
                 </div>
               </div>
 
-              <!-- Audit trail table -->
+              <!-- User Management Table -->
               <div class="rounded-lg shadow-md">
                 <div class="w-full overflow-x-auto h-full rounded-lg">
                   <table class="w-full bg-white">
@@ -184,12 +295,10 @@
                     <tbody>
                       <tr class="border-b text-left">
                         <td class="py-2 px-4 whitespace-nowrap">0001</td>
-                        <td class="py-2 px-4 whitespace-nowrap">
-                          Yul Grant Gatchalian
-                        </td>
+                        <td class="py-2 px-4 whitespace-nowrap">Kian David</td>
                         <td class="py-2 px-4 whitespace-nowrap">Team Leader</td>
                         <td class="py-2 px-4 whitespace-nowrap">
-                          YulGrant@gmail.com
+                          Kian@gmail.com
                         </td>
                         <td class="py-2 px-4 whitespace-nowrap">09990874663</td>
                         <td class="text-center space-x-2">
@@ -211,11 +320,11 @@
                       <tr class="border-b text-left">
                         <td class="py-2 px-4 whitespace-nowrap">0002</td>
                         <td class="py-2 px-4 whitespace-nowrap">
-                          Yul Grant Gatchalian
+                          Cylie Gonzales
                         </td>
                         <td class="py-2 px-4 whitespace-nowrap">Team Leader</td>
                         <td class="py-2 px-4 whitespace-nowrap">
-                          YulGrant@gmail.com
+                          Cylie@gmail.com
                         </td>
                         <td class="py-2 px-4 whitespace-nowrap">09990874663</td>
                         <td class="text-center space-x-2">
@@ -263,11 +372,11 @@
                       <tr class="border-b text-left">
                         <td class="py-2 px-4 whitespace-nowrap">0004</td>
                         <td class="py-2 px-4 whitespace-nowrap">
-                          Yul Grant Gatchalian
+                          Miko Basilio
                         </td>
                         <td class="py-2 px-4 whitespace-nowrap">Team Leader</td>
                         <td class="py-2 px-4 whitespace-nowrap">
-                          MYulGrant@gmail.com
+                          Miko@gmail.com
                         </td>
                         <td class="py-2 px-4 whitespace-nowrap">09990874663</td>
                         <td class="text-center space-x-2">
@@ -289,11 +398,11 @@
                       <tr class="border-b text-left">
                         <td class="py-2 px-4 whitespace-nowrap">0005</td>
                         <td class="py-2 px-4 whitespace-nowrap">
-                          Yul Grant Gatchalian
+                          Daniel Quinzy Digo
                         </td>
                         <td class="py-2 px-4 whitespace-nowrap">Team Leader</td>
                         <td class="py-2 px-4 whitespace-nowrap">
-                          MYulGrant@gmail.com
+                          Digo@gmail.com
                         </td>
                         <td class="py-2 px-4 whitespace-nowrap">09990874663</td>
                         <td class="text-center space-x-2">
@@ -319,7 +428,7 @@
                         </td>
                         <td class="py-2 px-4 whitespace-nowrap">Team Leader</td>
                         <td class="py-2 px-4 whitespace-nowrap">
-                          MYulGrant@gmail.com
+                          YulGrant@gmail.com
                         </td>
                         <td class="py-2 px-4 whitespace-nowrap">09990874663</td>
                         <td class="text-center space-x-2">
@@ -352,17 +461,13 @@
                   class="bg-white border border-gray-600 rounded-lg px-6 py-6 shadow-lg relative h-fit w-full"
                 >
                   <div class="flex justify-center">
-                    <div
-                      class="w-28 h-28 bg-gray-200 rounded-full flex items-center justify-center"
-                    >
+                    <div class="w-28 h-28 bg-gray-200 rounded-full flex items-center justify-center">
                       <span class="text-gray-500 text-3xl">&#128100;</span>
                     </div>
                   </div>
                   <span
                     class="absolute top-3 right-3 text-gray-500 hover:text-gray-700 cursor-pointer text-2xl"
-                    id="closeModalBtn"
-                    >&times;</span
-                  >
+                    id="closeModalBtn">&times;</span>
 
                   <div class="flex flex-col gap-4 mt-4">
                     <div class="flex laptop:flex-row phone:flex-col gap-4">
@@ -456,7 +561,6 @@
                   id="closeModalBtn1"
                   >&times;</span
                 >
-
                 <div class="flex flex-col gap-4 mt-4">
                   <div class="flex laptop:flex-row phone:flex-col gap-4">
                     <div class="flex flex-col gap-2 w-full">
@@ -512,6 +616,7 @@
                   </div>
                 </div>
 
+                <!-- Buttons -->
                 <div class="flex justify-end space-x-2 mt-4">
                   <button
                     class="w-28 px-4 py-2 shadow-md shadow-gray-300 text-white bg-red-600 border border-white font-medium rounded-lg"
@@ -540,7 +645,7 @@
                 1
               </button>
               <button
-                class="border border-gray-300 rounded-lg px-4 py-2 hover:bg-blue-800 bg-blue-600 text-white font-medium"
+                class="border border-gray-300 rounded-lg px-4 py-2 hover:bg-yellow-800 bg-yellow-600 text-white font-medium"
               >
                 2
               </button>
@@ -571,6 +676,7 @@
     </div>
   </body>
 
+  <!-- Modal - ADD USER -->
   <script>
     const modal = document.getElementById("myModal");
     const openModalBtn = document.getElementById("openModalBtn");
@@ -590,6 +696,7 @@
     });
   </script>
 
+  <!-- Modal1 - EDIT USER -->
   <script>
     const modal1 = document.getElementById("myModal1");
     const openModalBtn1 = document.getElementById("openModalBtn1");
@@ -606,6 +713,18 @@
 
     modalCancelButton1.addEventListener("click", () => {
       modal1.classList.add("hidden");
+    });
+  </script>
+
+  <!-- Notification Bell Dropdown-->
+  <script>
+    const notificationButton = document.getElementById("notificationButton");
+    const notificationDropdown = document.getElementById(
+      "notificationDropdown"
+    );
+
+    notificationButton.addEventListener("click", () => {
+      notificationDropdown.classList.toggle("hidden");
     });
   </script>
 </html>
