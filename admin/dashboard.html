@@ -189,13 +189,13 @@
                     </td>
                     <td class="text-center space-x-2">
                       <div class="flex flex-row py-2 px-4 gap-2">
-                        <button id="openModalBtn" class="flex flex-row gap-2 items-center font-semibold border border-white bg-blue-950 hover:bg-blue-900 text-white px-6 py-1.5 rounded-full shadow-lg">
+                        <button id="openModalBtn1" class="flex flex-row gap-2 items-center font-semibold border border-white bg-blue-950 hover:bg-blue-900 text-white px-6 py-1.5 rounded-full shadow-lg">
                           View 
                         </button>
                     </td>
                     <td class="text-center space-x-2">
                       <div class="flex flex-row py-2 px-4 gap-2">
-                        <button class="flex flex-row gap-2 items-center border font-semibold border-white bg-red-700 hover:bg-blue-900 text-white px-6 py-1.5 rounded-full shadow-lg">
+                        <button class="flex flex-row gap-2 items-center border font-semibold border-white bg-red-700 hover:bg-red-900 text-white px-6 py-1.5 rounded-full shadow-lg">
                           Missing
                         </button>
                     </td>
@@ -276,19 +276,19 @@
 
   <script>
     const modal = document.getElementById('myModal');
-    const openModalBtn = document.getElementById('openModalBtn');
-    const closeModalBtn = document.getElementById('closeModalBtn');
-    const modalCancelButton = document.getElementById('modalCancelButton');
+    const openModalBtn1 = document.getElementById('openModalBtn1');
+    const closeModalBtn1 = document.getElementById('closeModalBtn1');
+    const modalCancelButton1 = document.getElementById('modalCancelButton1');
 
-    openModalBtn.addEventListener('click', () => {
+    openModalBtn1.addEventListener('click', () => {
         modal.classList.remove('hidden');
     });
 
-    closeModalBtn.addEventListener('click', () => {
+    closeModalBtn1.addEventListener('click', () => {
         modal.classList.add('hidden');
     });
 
-    modalCancelButton.addEventListener('click', () => {
+    modalCancelButton1.addEventListener('click', () => {
         modal.classList.add('hidden');
     });
   </script>
