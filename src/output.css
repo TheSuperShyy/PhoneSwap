@@ -1374,6 +1374,16 @@ video {
   background-color: rgb(13 71 161 / var(--tw-bg-opacity, 1));
 }
 
+.hover\:bg-red-900:hover {
+  --tw-bg-opacity: 1;
+  background-color: rgb(183 28 28 / var(--tw-bg-opacity, 1));
+}
+
+.hover\:bg-red-800:hover {
+  --tw-bg-opacity: 1;
+  background-color: rgb(198 40 40 / var(--tw-bg-opacity, 1));
+}
+
 .hover\:underline-offset-2:hover {
   text-underline-offset: 2px;
 }
