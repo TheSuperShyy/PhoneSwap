@@ -32,29 +32,16 @@
             </a>
           </li>
           <li class="mb-4">
-            <a
-              class="flex items-center hover:bg-opacity-30 hover:bg-white p-2 text-base font-medium rounded-lg"
-              href="audit.html"
-            >
-              <i class="fas fa-list-alt mr-3"></i>
-              Audit Trail
-            </a>
-          </li>
-          <li class="mb-4">
-            <a
-              class="flex items-center bg-opacity-30 bg-white p-2 text-base font-medium rounded-lg"
-              href="swapphones.html"
-            >
-              <i class="fas fa-warehouse mr-3"></i>
+            <a class="flex items-center bg-opacity-30 bg-white p-2 text-base font-medium rounded-lg"
+              href="swapphones.html">
+              <i class="fa-solid fa-arrows-rotate mr-3"></i>
               Swap Phones
             </a>
           </li>
           <li class="mb-4">
-            <a
-              class="flex items-center hover:bg-opacity-30 hover:bg-white p-2 text-base font-medium rounded-lg"
-              href="usermanagement.html"
-            >
-              <i class="fas fa-tools mr-3"></i>
+            <a class="flex items-center hover:bg-opacity-30 hover:bg-white p-2 text-base font-medium rounded-lg"
+              href="usermanagement.html">
+              <i class="fa-solid fa-user-group mr-3"></i>
               User Management
             </a>
           </li>
@@ -72,8 +59,6 @@
             </button>
             <h2 class="text-xl font-semibold mr-4">Swap Phones</h2>
           </div>
-
-   
         <div class="flex flex-row items-center gap-4">
             <!-- Notification Bell -->
             <div class="relative inline-block text-left">
@@ -187,9 +172,14 @@
             </button>
             <div class="dropdown-menu absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-2 z-20 hidden">
               <a
-                href="accountsetting.html"
+                href="#"
                 class="block px-4 py-2 text-gray-800 hover:bg-gray-200"
-                >Acount Settings</a
+                >Profile</a
+              >
+              <a
+                href="#"
+                class="block px-4 py-2 text-gray-800 hover:bg-gray-200"
+                >Settings</a
               >
               <a
                 href="#"
@@ -200,111 +190,161 @@
           </div>
         </div>
       </div>
-      <div class="pt-22 py-6 laptop:px-12 phone:px-4">
+
+
+      <div class="pt-22 py-6 laptop:px-10 phone:px-6">
         <!-- contents -->
             <div class="flex flex-col gap-1 items-end justify-center w-full mx-auto">
               <div class="flex flex-col gap-3 mx-auto py-4 w-full">
-                <!-- Filter & Search -->
-                <div class="flex laptop:flex-row phone:flex-col gap-2 w-full">
-                  <div class="flex justify-start">
-                    <form method="" class="flex flex-row items-center">
-                      <select
-                        name="filter"
-                        id="filterSelect"
-                        class="px-4 py-2 h-10 w-48 text-sm border border-gray-700 rounded-l-lg outline-none">
-                      </select>
-                      <input
-                        type="text"
-                        name=""
-                        id=""
-                        placeholder="Search"
-                        value
-                        class="w-full h-10 p-2 border border-gray-700 shadow-sm sm:text-sm outline-none rounded-r-lg"
-                      />
-                    </form>
+                <!-- navig section, filter, search and export button -->
+                <div class="flex laptop:flex-row phone:flex-col gap-3 justify-between">
+                  <div class="flex flex-row gap-5 border-b border-black">
+                      <a href="swapphones.html" class="font-semibold laptop:text-lg phone:text-sm hover:border-b-2 hover:border-black">Swap Phones</a>
+                      <a href="swappedphones.html" class="font-semibold laptop:text-lg phone:text-sm border-b-2 border-black">Swapped Phones</a>
                   </div>
-
-                  <!-- Export -->
-                  <div class="flex ml-auto">
-                    <div class="flex justify-end gap-2">
-                      <button
-                        id="openModalBtn"
-                        class="flex items-center gap-2 font-semibold border border-black  bg-blue-950 hover:bg-blue-950 hover:bg-opacity-95 text-white px-4 py-2 rounded-lg shadow-md"
-                      >
+                  <div class="flex flex-row gap-4">
+                    <!-- Filter and Search -->
+                    <div class="flex laptop:flex-row phone:flex-col gap-2 w-full">
+                      <div class="flex justify-start">
+                        <form method="" class="flex flex-row items-center">
+                          <select name="filter" id="filterSelect"
+                            class="px-4 py-2 h-10 w-36 text-sm border border-gray-700 rounded-l-lg outline-none">
+                              <option value="">Select Filter</option>
+                              <option value="">Device Model</option>
+                              <option value="">Serial Number</option>
+                              <option value="">Table Number</option>
+                              <option value="">Status</option>
+                              <option value="">Assigned</option>
+                              <option value="">Report</option>
+                          </select>
+                          <input type="text" name="" id="" placeholder="Search" value
+                            class="w-2/3 h-10 p-2 border border-gray-700 shadow-sm sm:text-sm outline-none rounded-r-lg"/>
+                        </form>
+                      </div>
+                      <div class="flex ml-auto gap-2">
+                        <button class="flex items-center gap-2 border border-white bg-blue-950 hover:bg-blue-950 hover:bg-opacity-95 text-white px-4 py-2 rounded-lg shadow-md">
                           <i class="fa-solid fa-filter"></i></i><span>Export</span>
-                      </button>
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>
   
-              <!-- Swap Phones Table -->
+                <!-- Swap Phones Table -->
                 <div class="w-full overflow-x-auto h-full border border-gray-300 rounded-lg shadow-md">
                   <table class="w-full bg-white pl-7">
                     <thead>
                       <tr class="bg-gray-200 border-b border-gray-400 text-sm text-left px-4">
+                        <th class="py-3 px-4 border-b">
+                          <input
+                            type="checkbox"
+                            onclick="toggleSelectAll(this)"
+                          />
+                        </th>
                         <th class="py-3 px-4 whitespace-nowrap">Device Model</th>
                         <th class="py-3 px-4 whitespace-nowrap">Serial Number</th>
-                        <th class="py-3 px-4 whitespace-nowrap">Status</th>
-                        <th class="py-3 px-4 whitespace-nowrap">Team Leader</th>
                         <th class="py-3 px-4 whitespace-nowrap">Table Number</th>
+                        <th class="py-3 px-4 whitespace-nowrap">Status</th>
+                        <th class="py-3 px-4 whitespace-nowrap">Team Member</th>
+                        <th class="py-3 px-4 whitespace-nowrap"></th>
                       </tr> 
                     </thead>
                     <tbody>
                       <tr class=" border-b">
+                        <td class="py-2 px-4 whitespace-nowrap">
+                          <input type="checkbox" />
+                        </td>
                         <td class="py-5 px-4 whitespace-nowrap">Iphone 8</td>
                         <td class="py-5 px-4 whitespace-nowrap">
                             I8-2024110023
                         </td>
+                        <td class="py-5 px-4 whitespace-nowrap">Table 1</td>
                         <td class="py-2 px-4 whitespace-nowrap">
                             <span class="text-green-800 bg-green-100 border border-green-800 rounded-full bg-opacity-100 py-2 px-6 font-medium shadow-lg">Active</span>
                         </td>
     
                         <td class="py-5 px-4 whitespace-nowrap">Yul Grant Gatchalian</td>
-                        <td class="py-5 px-4 whitespace-nowrap">Table 1</td>
+                        <td class="py-2 px-4 whitespace-nowrap">
+                          <button class="flex flex-row gap-2 items-center border font-semibold border-black bg-amber-400 hover:bg-amber-600 text-black px-6 py-1.5 rounded-full shadow-lg">
+                            Swap
+                          </button>
+                        </td>
                       </tr>
                       <tr class=" border-b">
+                        <td class="py-2 px-4 whitespace-nowrap">
+                          <input type="checkbox" />
+                        </td>
                         <td class="py-5 px-4 whitespace-nowrap">Iphone 8</td>
                         <td class="py-5 px-4 whitespace-nowrap">
                             I8-2024110023
                         </td>
+                        <td class="py-5 px-4 whitespace-nowrap">Table 2</td>
                         <td class="py-2 px-4 whitespace-nowrap">
                             <span class="text-green-800 bg-green-100 border border-green-800 rounded-full bg-opacity-100 py-2 px-6 font-medium shadow-lg">Active</span>
                         </td>
                         <td class="py-5 px-4 whitespace-nowrap">Cylie Gonzales</td>
-                        <td class="py-5 px-4 whitespace-nowrap">Table 2</td>
+                        <td class="py-2 px-4 whitespace-nowrap">
+                          <button class="flex flex-row gap-2 items-center border font-semibold border-black bg-amber-400 hover:bg-amber-600 text-black px-6 py-1.5 rounded-full shadow-lg">
+                            Swap
+                          </button>
+                        </td>
                       </tr>
                       <tr class=" border-b">
+                        <td class="py-2 px-4 whitespace-nowrap">
+                          <input type="checkbox" />
+                        </td>
                         <td class="py-5 px-4 whitespace-nowrap">Iphone 8</td>
                         <td class="py-5 px-4 whitespace-nowrap">
                             I8-2024110023
                         </td>
+                        <td class="py-5 px-4 whitespace-nowrap">Table 2</td>
                         <td class="py-2 px-4 whitespace-nowrap">
                             <span class="text-green-800 bg-green-100 border border-green-800 rounded-full bg-opacity-100 py-2 px-6 font-medium shadow-lg">Active</span>
                         </td>
                         <td class="py-5 px-4 whitespace-nowrap">Kian David</td>
-                        <td class="py-5 px-4 whitespace-nowrap">Table 2</td>
+                        <td class="py-2 px-4 whitespace-nowrap">
+                          <button class="flex flex-row gap-2 items-center border font-semibold border-black bg-amber-400 hover:bg-amber-600 text-black px-6 py-1.5 rounded-full shadow-lg">
+                            Swap
+                          </button>
+                        </td>
                       </tr>
                       <tr class=" border-b">
+                        <td class="py-2 px-4 whitespace-nowrap">
+                          <input type="checkbox" />
+                        </td>
                         <td class="py-5 px-4 whitespace-nowrap">Iphone 8</td>
                         <td class="py-5 px-4 whitespace-nowrap">
                             I8-2024110023
                         </td>
+                        <td class="py-5 px-4 whitespace-nowrap">Table 2</td>
                         <td class="py-2 px-4 whitespace-nowrap">
                             <span class="text-green-800 bg-green-100 border border-green-800 rounded-full bg-opacity-100 py-2 px-6 font-medium shadow-lg">Active</span>
                         </td>
                         <td class="py-5 px-4 whitespace-nowrap">Miko Basilio</td>
-                        <td class="py-5 px-4 whitespace-nowrap">Table 2</td>
+                        <td class="py-2 px-4 whitespace-nowrap">
+                          <button class="flex flex-row gap-2 items-center border font-semibold border-black bg-amber-400 hover:bg-amber-600 text-black px-6 py-1.5 rounded-full shadow-lg">
+                            Swap
+                          </button>
+                        </td>
                       </tr>
                       <tr class=" border-b">
+                        <td class="py-2 px-4 whitespace-nowrap">
+                          <input type="checkbox" />
+                        </td>
                         <td class="py-5 px-4 whitespace-nowrap">Iphone 8</td>
                         <td class="py-5 px-4 whitespace-nowrap">
                             I8-2024110023
                         </td>
+                        <td class="py-5 px-4 whitespace-nowrap">Table 1</td>
                         <td class="py-2 px-4 whitespace-nowrap">
                             <span class="text-green-800 bg-green-100 border border-green-800 rounded-full bg-opacity-100 py-2 px-6 font-medium shadow-lg">Active</span>
                         </td>
                         <td class="py-5 px-4 whitespace-nowrap">Daniel Quinzy Digo</td>
-                        <td class="py-5 px-4 whitespace-nowrap">Table 1</td>
+                        <td class="py-2 px-4 whitespace-nowrap">
+                          <button class="flex flex-row gap-2 items-center border font-semibold border-black bg-amber-400 hover:bg-amber-600 text-black px-6 py-1.5 rounded-full shadow-lg">
+                            Swap
+                          </button>
+                        </td>
                       </tr>
                     </tbody>
                   </table>
@@ -364,4 +404,15 @@
       notificationDropdown.classList.toggle("hidden");
     });
   </script>
+
+  <!-- Checkbox script -->
+  <script>
+    function toggleSelectAll(source) {
+      checkboxes = document.querySelectorAll('input[type="checkbox"]');
+      for (var i = 0; i < checkboxes.length; i++) {
+        if (checkboxes[i] != source) checkboxes[i].checked = source.checked;
+      }
+    }
+  </script>
+
 </html>

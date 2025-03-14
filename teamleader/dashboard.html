@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Manage Phones</title>
+    <title>Dashboard</title>
     <link rel="stylesheet" href="/src/output.css" />
     <script
       src="https://kit.fontawesome.com/10d593c5dc.js"
@@ -32,29 +32,16 @@
             </a>
           </li>
           <li class="mb-4">
-            <a
-              class="flex items-center hover:bg-opacity-30 hover:bg-white p-2 text-base font-medium rounded-lg"
-              href="audit.html"
-            >
-              <i class="fas fa-list-alt mr-3"></i>
-              Audit Trail
-            </a>
-          </li>
-          <li class="mb-4">
-            <a
-              class="flex items-center hover:bg-opacity-30 hover:bg-white p-2 text-base font-medium rounded-lg"
-              href="swapphones.html"
-            >
-              <i class="fas fa-warehouse mr-3"></i>
+            <a class="flex items-center hover:bg-opacity-30 hover:bg-white p-2 text-base font-medium rounded-lg"
+              href="swapphones.html">
+              <i class="fa-solid fa-arrows-rotate mr-3"></i>
               Swap Phones
             </a>
           </li>
           <li class="mb-4">
-            <a
-              class="flex items-center hover:bg-opacity-30 hover:bg-white p-2 text-base font-medium rounded-lg"
-              href="usermanagement.html"
-            >
-              <i class="fas fa-tools mr-3"></i>
+            <a class="flex items-center hover:bg-opacity-30 hover:bg-white p-2 text-base font-medium rounded-lg"
+              href="usermanagement.html">
+              <i class="fa-solid fa-user-group mr-3"></i>
               User Management
             </a>
           </li>
@@ -70,7 +57,7 @@
             <button class="text-black focus:outline-none">
               <i class="fas fa-bars"></i>
             </button>
-            <h2 class="text-xl font-semibold mr-4">Manage Phones</h2>
+            <h2 class="text-xl font-semibold mr-4">Dashboard</h2>
           </div>
 
           <!-- Avatarbar -->
@@ -79,7 +66,7 @@
               <i class="fa-regular fa-user fa-xl"></i>
               <div class="flex flex-col items-start">
                 <h1 class="font-medium">Emily Dav</h1>
-                <h1 class="text-sm">Admin</h1>
+                <h1 class="text-sm">Team Leader 1</h1>
               </div>
               <i class="fa-solid fa-angle-down fa-sm pl-3"></i>
             </button>
@@ -126,12 +113,11 @@
           <!-- navig section, filter, search and export button -->
           <div class="flex laptop:flex-row phone:flex-col gap-3 justify-between">
             <div class="flex flex-row gap-5 border-b border-black">
-                <a href="dashboard.html" class="font-semibold laptop:text-lg phone:text-sm hover:border-b-2 hover:border-black">Assign Phones</a>
-                <a href="managephones.html" class="font-semibold laptop:text-lg phone:text-sm border-b-2 border-black">Manage Phones</a>
+                <a href="dashboard.html" class="font-semibold laptop:text-lg phone:text-sm border-b-2 border-black">Assign Phones</a>
                 <a href="missingphones.html" class="font-semibold laptop:text-lg phone:text-sm hover:border-b-2 hover:border-black">Missing Phones</a>
             </div>
             <div class="flex flex-row gap-4">
-            <!-- Filter and Search -->
+              <!-- Filter and Search -->
               <div class="flex laptop:flex-row phone:flex-col gap-2 w-full">
                 <div class="flex justify-start">
                   <form method="" class="flex flex-row items-center">
@@ -150,14 +136,14 @@
                   </form>
                 </div>
                 <div class="flex flex-row ml-auto gap-2">
-                  <a href="">
-                    <button class="flex items-center gap-2 border border-black bg-white hover:bg-gray-100 hover:bg-opacity-95 text-black px-4 py-2 rounded-lg shadow-md">
-                        <i class="fa-solid fa-filter"></i></i><span>Export</span>
+                    <button id="openModalBtn1" class="flex items-center gap-2 border border-white bg-amber-400 hover:bg-amber-600 hover:bg-opacity-95 text-white px-4 py-2 rounded-lg shadow-md">
+                      <i class="fa-solid fa-right-to-bracket"></i></i><span>Assign</span>
                     </button>
-                  </a>
-                    <button id="openModalBtn2" class="flex items-center gap-2 border border-black bg-blue-950 hover:bg-blue-950 hover:bg-opacity-95 text-white px-4 py-2 rounded-lg shadow-md">
-                      <i class="fa-solid fa-circle-plus"></i><span>Add New</span>
-                    </button>
+                    <a href="">
+                      <button class="flex items-center gap-2 border border-white bg-blue-950 hover:bg-blue-950 hover:bg-opacity-95 text-white px-4 py-2 rounded-lg shadow-md">
+                          <i class="fa-solid fa-filter"></i></i><span>Export</span>
+                      </button>
+                    </a>
                 </div>
               </div>
             </div>
@@ -169,17 +155,26 @@
               <table class="w-full bg-white">
                 <thead class="bg-gray-300">
                   <tr class="text-left text-sm">
+                    <th class="py-3 px-4 border-b">
+                      <input
+                        type="checkbox"
+                        onclick="toggleSelectAll(this)"
+                      />
+                    </th>
                     <th class="py-3 px-4 border-b">Device Model</th>
                     <th class="py-3 px-4 border-b">Serial Number</th>
                     <th class="py-3 px-4 border-b">Table Number</th>
                     <th class="py-3 px-4 border-b">Status</th>
-                    <th class="py-3 px-4 border-b">Team Leader</th>
+                    <th class="py-3 px-4 border-b">Team Member</th>
                     <th class="py-3 px-4 border-b">Action</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr class="border-b text-left">
                     <td class="py-2 px-4 whitespace-nowrap">
+                      <input type="checkbox" />
+                    </td>
+                    <td class="py-2 px-4 flex items-center space-x-2">
                       Iphone 8
                     </td>
                     <td class="py-2 px-4 whitespace-nowrap">120295</td>
@@ -194,15 +189,35 @@
                     </td>
                     <td class="py-2 px-4 whitespace-nowrap">Pending</td>
                     </td>
-                    <td class="text-center space-x-2">
-                      <div class="flex flex-row py-2 px-4 gap-2">
-                        <button id="openModalBtn1" class="flex flex-row gap-2 items-center font-semibold border border-white bg-blue-500 hover:bg-blue-700 text-white px-6 py-1.5 rounded-full shadow-lg">
-                          <i class="fa-regular fa-pen-to-square"></i> Edit
+                    <td class="py-2 px-4 whitespace-nowrap">
+                        <button class="flex flex-row gap-2 items-center border font-semibold border-white bg-red-700 hover:bg-red-900 text-white px-6 py-1.5 rounded-full shadow-lg">
+                          Missing
                         </button>
-                        <button class="flex flex-row gap-2 items-center border font-semibold border-white bg-red-700 hover:bg-red-900 text-white px-4 py-1.5 rounded-full shadow-lg">
-                          <i class="fa-solid fa-trash"></i> Delete
+                    </td>
+                  </tr>
+                  <tr class="border-b text-left">
+                    <td class="py-2 px-4 whitespace-nowrap">
+                      <input type="checkbox" />
+                    </td>
+                    <td class="py-2 px-4 flex items-center space-x-2">
+                      Iphone 8
+                    </td>
+                    <td class="py-2 px-4 whitespace-nowrap">120295</td>
+                    <td class="py-2 px-4 whitespace-nowrap">
+                        <select id="openModalBtn" class="border b rounded-lg p-2">
+                          <option>Table 1</option>
+                          <option>Table 2</option>
+                        </select>
+                      </td>
+                    <td class="py-2 px-4 whitespace-nowrap">
+                        <span class="text-red-800 bg-red-50 border border-red-800 rounded-full bg-opacity-100 py-2 px-6 font-medium shadow-lg">Inactive</span>
+                    </td>
+                    <td class="py-2 px-4 whitespace-nowrap">Pending</td>
+                    </td>
+                    <td class="py-2 px-4 whitespace-nowrap">
+                        <button class="flex flex-row gap-2 items-center border font-semibold border-white bg-red-700 hover:bg-red-900 text-white px-6 py-1.5 rounded-full shadow-lg">
+                          Missing
                         </button>
-                      </div>
                     </td>
                   </tr>
                 </tbody>
@@ -210,13 +225,13 @@
             </div>
           </div>
 
-          <!-- Modal for edit phone details -->
-          <div id="myModal1" class="fixed inset-0 flex justify-center items-center hidden bg-black bg-opacity-50 z-50 pt-24 pb-24 h-full laptop:px-80 laptop:w-full phone:w-full phone:px-4">
+          <!-- Modal for view employee -->
+          <div id="myModal" class="fixed inset-0 flex justify-center hidden bg-black bg-opacity-50 z-50 pt-24 pb-24 h-full laptop:px-80 laptop:w-full phone:w-full phone:px-4">
             <div class="bg-white border border-gray-600 rounded-lg px-6 py-6 shadow-lg relative h-fit w-full">
                 <div class="flex flex-col gap-4">
-                    <h2 class="text-3xl font-russo mb-2">Edit Phone</h2>
+                    <h2 class="text-2xl font-russo mb-2">Assign Team Leader</h2>
         
-                    <div class="flex flex-col gap-4">
+                    <div class="flex flex-col gap-4 mt-4">
                       <div class="flex laptop:flex-row phone:flex-col gap-4">
                         <div class="flex flex-col gap-2 w-full">
                           <label for="" class="text-sm font-medium">Device Model</label>
@@ -233,12 +248,12 @@
                         </div>
                       </div>
                         <div class="flex flex-col gap-2 w-full">
-                          <label for="" class="text-sm font-medium">Table Number</label>
+                          <label for="" class="text-sm font-medium">Team Leader</label>
                           <select name="filter" id="filterSelect"
                             class="p-2 h-10 w-full text-sm border border-gray-700 rounded-lg outline-none">
-                            <option value="">Select Table Number</option>
-                            <option value="">Table 1</option>
-                            <option value="">Table 2</option>
+                            <option value="">Select Team Leader</option>
+                            <option value="">Team Leader 1</option>
+                            <option value="">Team Leader 2</option>
                           </select>
                         </div>
                     </div>
@@ -246,51 +261,6 @@
                 <br>
                 <div class="flex justify-end gap-2 mt-4">
                   <button id="closeModalBtn1" class="w-24 px-4 py-2 shadow-md shadow-gray-300 hover:ring-slate-400 text-black border border-black font-medium rounded-lg">
-                    Cancel
-                  </button>
-                  <button class="px-4 py-2 w-24 shadow-md shadow-gray-300 bg-amber-400 font-medium text-black border border-black rounded-lg">
-                    Save
-                  </button>
-                </div>
-            </div>
-          </div>
-
-          <!-- Modal for add phone -->
-          <div id="myModal2" class="fixed inset-0 flex justify-center items-center hidden bg-black bg-opacity-50 z-50 pt-24 pb-24 h-full laptop:px-80 laptop:w-full phone:w-full phone:px-4">
-            <div class="bg-white border border-gray-600 rounded-lg px-6 py-6 shadow-lg relative h-fit w-full">
-                <div class="flex flex-col gap-4">
-                    <h2 class="text-3xl font-russo mb-2">Add New Phone</h2>
-        
-                    <div class="flex flex-col gap-4">
-                      <div class="flex laptop:flex-row phone:flex-col gap-4">
-                        <div class="flex flex-col gap-2 w-full">
-                          <label for="" class="text-sm font-medium">Device Model</label>
-                          <input type="text" placeholder="Device Model" class="border border-gray-700  p-2 rounded-lg">
-                        </div>
-                        <div class="flex flex-col gap-2 w-full">
-                          <label for="" class="text-sm font-medium">Serial Number</label>
-                          <select name="filter" id="filterSelect"
-                            class="p-2 h-10 w-full text-sm border border-gray-700 rounded-lg outline-none">
-                            <option value="">Select Serial Number</option>
-                            <option value="">123456</option>
-                            <option value="">789210</option>
-                          </select>
-                        </div>
-                      </div>
-                        <div class="flex flex-col gap-2 w-full">
-                          <label for="" class="text-sm font-medium">Table Number</label>
-                          <select name="filter" id="filterSelect"
-                            class="p-2 h-10 w-full text-sm border border-gray-700 rounded-lg outline-none">
-                            <option value="">Select Table Number</option>
-                            <option value="">Table 1</option>
-                            <option value="">Table 2</option>
-                          </select>
-                        </div>
-                    </div>
-                </div>
-                <br>
-                <div class="flex justify-end gap-2 mt-4">
-                  <button id="closeModalBtn2" class="w-24 px-4 py-2 shadow-md shadow-gray-300 hover:ring-slate-400 text-black border border-black font-medium rounded-lg">
                     Cancel
                   </button>
                   <button class="px-4 py-2 w-24 shadow-md shadow-gray-300 bg-amber-400 font-medium text-black border border-black rounded-lg">
@@ -327,7 +297,7 @@
 
   </body>
 
-  <!-- avatarbar --> 
+  <!-- Selection for total assets --> 
   <script>
     const selectButton = document.getElementById('selectButton');
     const selectDropdown = document.getElementById('selectDropdown');
@@ -359,44 +329,34 @@
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-  <!-- Script for modal edit assets -->
+  <!-- Modal for assign -->
   <script>
-    const modal1 = document.getElementById('myModal1');
+    const modal = document.getElementById('myModal');
     const openModalBtn1 = document.getElementById('openModalBtn1');
     const closeModalBtn1 = document.getElementById('closeModalBtn1');
-    const modalCancelButton1 = document.getElementById('modalBackButton1');
+    const modalCancelButton1 = document.getElementById('modalCancelButton1');
 
     openModalBtn1.addEventListener('click', () => {
-        modal1.classList.remove('hidden');
+        modal.classList.remove('hidden');
     });
 
     closeModalBtn1.addEventListener('click', () => {
-        modal1.classList.add('hidden');
+        modal.classList.add('hidden');
     });
 
     modalCancelButton1.addEventListener('click', () => {
-        modal1.classList.add('hidden');
+        modal.classList.add('hidden');
     });
   </script>
 
-  <!-- Script for add modal -->
+ <!-- Checkbox script -->
   <script>
-    const modal2 = document.getElementById('myModal2');
-    const openModalBtn2 = document.getElementById('openModalBtn2');
-    const closeModalBtn2 = document.getElementById('closeModalBtn2');
-    const modalCancelButton2 = document.getElementById('modalBackButton2');
-
-    openModalBtn2.addEventListener('click', () => {
-        modal2.classList.remove('hidden');
-    });
-
-    closeModalBtn2.addEventListener('click', () => {
-        modal2.classList.add('hidden');
-    });
-
-    modalCancelButton2.addEventListener('click', () => {
-        modal2.classList.add('hidden');
-    });
+    function toggleSelectAll(source) {
+      checkboxes = document.querySelectorAll('input[type="checkbox"]');
+      for (var i = 0; i < checkboxes.length; i++) {
+        if (checkboxes[i] != source) checkboxes[i].checked = source.checked;
+      }
+    }
   </script>
 
 </html>
