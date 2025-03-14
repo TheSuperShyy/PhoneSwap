@@ -211,14 +211,9 @@
                 class="dropdown-menu absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-2 z-20 hidden"
               >
                 <a
-                  href="#"
+                  href="accountsetting.html"
                   class="block px-4 py-2 text-gray-800 hover:bg-gray-200"
-                  >Profile</a
-                >
-                <a
-                  href="#"
-                  class="block px-4 py-2 text-gray-800 hover:bg-gray-200"
-                  >Settings</a
+                  >Account Settings</a
                 >
                 <a
                   href="#"
@@ -454,89 +449,92 @@
 
               <!-- Modal for ADD USER -->
               <div
-                id="myModal"
-                class="fixed inset-0 flex justify-center items-center hidden bg-black bg-opacity-50 z-50 pt-24 pb-24 h-full laptop:px-80 laptop:w-full phone:w-full phone:px-4"
+              id="myModal"
+              class="fixed inset-0 flex justify-center items-center hidden bg-black bg-opacity-50 z-50 pt-24 pb-24 h-full laptop:px-80 laptop:w-full phone:w-full phone:px-4"
+            >
+              <div
+                class="bg-white border border-gray-600 rounded-lg px-6 py-6 shadow-lg relative h-fit w-full"
               >
-                <div
-                  class="bg-white border border-gray-600 rounded-lg px-6 py-6 shadow-lg relative h-fit w-full"
+                <div class="flex justify-center">
+                  <div
+                    class="w-28 h-28 bg-gray-200 rounded-full flex items-center justify-center"
+                  >
+                    <span class="text-gray-500 text-3xl">&#128100;</span>
+                  </div>
+                </div>
+                <span
+                  class="absolute top-3 right-3 text-gray-500 hover:text-gray-700 cursor-pointer text-2xl"
+                  id="closeModalBtn"
+                  >&times;</span
                 >
-                  <div class="flex justify-center">
-                    <div class="w-28 h-28 bg-gray-200 rounded-full flex items-center justify-center">
-                      <span class="text-gray-500 text-3xl">&#128100;</span>
+                <div class="flex flex-col gap-4 mt-4">
+                  <div class="flex laptop:flex-row phone:flex-col gap-4">
+                    <div class="flex flex-col gap-2 w-full">
+                      <label for="" class="text-sm font-medium"
+                        >First Name</label
+                      >
+                      <input
+                        type="text"
+                        placeholder="Yul Grant"
+                        class="border border-gray-700 p-2 rounded-lg text-black"
+                      />
+                    </div>
+                    <div class="flex flex-col gap-2 w-full">
+                      <label for="" class="text-sm font-medium"
+                        >Last Name</label
+                      >
+                      <input
+                        type="text"
+                        placeholder="Gatchalian"
+                        class="border border-gray-700 p-2 rounded-lg"
+                      />
                     </div>
                   </div>
-                  <span
-                    class="absolute top-3 right-3 text-gray-500 hover:text-gray-700 cursor-pointer text-2xl"
-                    id="closeModalBtn">&times;</span>
+                  <div class="flex laptop:flex-row phone:flex-col gap-4">
+                    <div class="flex flex-col gap-2 w-full">
+                      <label for="" class="text-sm font-medium">Email</label>
+                      <input
+                        type="email"
+                        placeholder="Yulgrant@gmail.com"
+                        class="border border-gray-700 p-2 rounded-lg"
+                      />
+                    </div>
+                    <div class="flex flex-col gap-2 w-full">
+                      <label for="" class="text-sm font-medium"
+                        >Contact Number</label
+                      >
+                      <input
+                        type="text/number"
+                        placeholder="09345678653"
+                        class="border border-gray-700 p-2 rounded-lg"
+                      />
+                    </div>
+                  </div>
+                  <div class="flex laptop:flex-row phone:flex-col gap-4">
+                    <div class="flex flex-col gap-2 w-full">
+                      <label for="" class="text-sm font-medium">Role</label>
+                      <input
+                        type="text/number"
+                        placeholder="Team Leader"
+                        class="border border-gray-700 p-2 rounded-lg"
+                      />
+                    </div>
+                  </div>
+                </div>
 
-                  <div class="flex flex-col gap-4 mt-4">
-                    <div class="flex laptop:flex-row phone:flex-col gap-4">
-                      <div class="flex flex-col gap-2 w-full">
-                        <label for="" class="text-sm font-medium"
-                          >First Name</label
-                        >
-                        <input
-                          type="text"
-                          placeholder="Yul Grant"
-                          class="border border-gray-700 p-2 rounded-lg text-black"
-                        />
-                      </div>
-                      <div class="flex flex-col gap-2 w-full">
-                        <label for="" class="text-sm font-medium"
-                          >Last Name</label
-                        >
-                        <input
-                          type="text"
-                          placeholder="Gatchalian"
-                          class="border border-gray-700 p-2 rounded-lg"
-                        />
-                      </div>
-                    </div>
-                    <div class="flex laptop:flex-row phone:flex-col gap-4">
-                      <div class="flex flex-col gap-2 w-full">
-                        <label for="" class="text-sm font-medium">Email</label>
-                        <input
-                          type="email"
-                          placeholder="Yulgrant@gmail.com"
-                          class="border border-gray-700 p-2 rounded-lg"
-                        />
-                      </div>
-                      <div class="flex flex-col gap-2 w-full">
-                        <label for="" class="text-sm font-medium"
-                          >Contact Number</label
-                        >
-                        <input
-                          type="text/number"
-                          placeholder="09345678653"
-                          class="border border-gray-700 p-2 rounded-lg"
-                        />
-                      </div>
-                    </div>
-                    <div class="flex laptop:flex-row phone:flex-col gap-4">
-                      <div class="flex flex-col gap-2 w-full">
-                        <label for="" class="text-sm font-medium">Role</label>
-                        <input
-                          type="text/number"
-                          placeholder="Team Leader"
-                          class="border border-gray-700 p-2 rounded-lg"
-                        />
-                      </div>
-                    </div>
-                  </div>
-
-                  <div class="flex justify-end space-x-2 mt-4">
-                    <button
-                      id="closeModalBtn"
-                      class="w-25 px-4 py-2 shadow-md shadow-gray-300 bg-red-800 text-white border border-white font-medium rounded-lg"
-                    >
-                      Deactivate
-                    </button>
-                    <button
-                      class="px-4 py-2 w-24 shadow-md shadow-gray-300 bg-blue-800 font-medium text-white border border-white rounded-lg"
-                    >
-                      Add
-                    </button>
-                  </div>
+                <!-- Buttons -->
+                <div class="flex justify-end space-x-2 mt-4">
+                  <button
+                    id="closeModalBtn"
+                    class="w-28 px-4 py-2 shadow-md shadow-gray-300 text-white bg-red-600 border border-white font-medium rounded-lg"
+                  >
+                    Deactivate
+                  </button>
+                  <button
+                    class="px-4 py-2 w-24 shadow-md shadow-gray-300 bg-blue-400 font-medium text-white border border-white rounded-lg"
+                  >
+                    Add
+                  </button>
                 </div>
               </div>
             </div>
@@ -619,6 +617,7 @@
                 <!-- Buttons -->
                 <div class="flex justify-end space-x-2 mt-4">
                   <button
+                    id="closeModalBtn1"
                     class="w-28 px-4 py-2 shadow-md shadow-gray-300 text-white bg-red-600 border border-white font-medium rounded-lg"
                   >
                     Deactivate
@@ -633,11 +632,11 @@
             </div>
 
             <!-- Pagination -->
-            <div class="flex space-x-2">
+             <div class="flex space-x-2">
               <button
                 class="rounded-lg px-4 py-2 hover:bg-blue-50 hover:font-semibold"
               >
-                <i class="fa-solid fa-angle-left"></i>
+              <i class="fa-solid fa-angle-left"></i>
               </button>
               <button
                 class="rounded-lg px-4 py-2 hover:bg-blue-50 hover:font-semibold"
@@ -667,7 +666,7 @@
               <button
                 class="rounded-lg px-4 py-2 hover:bg-blue-50 hover:font-semibold"
               >
-                <i class="fa-solid fa-angle-right"></i>
+              <i class="fa-solid fa-angle-right"></i>
               </button>
             </div>
           </div>
