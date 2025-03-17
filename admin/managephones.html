@@ -34,7 +34,7 @@
           <li class="mb-4">
             <a
               class="flex items-center hover:bg-opacity-30 hover:bg-white p-2 text-base font-medium rounded-lg"
-              href="audit.html"
+              href="audittrail.html"
             >
               <i class="fas fa-list-alt mr-3"></i>
               Audit Trail
@@ -73,6 +73,107 @@
             <h2 class="text-xl font-semibold mr-4">Manage Phones</h2>
           </div>
 
+          <div class="flex gap-4">
+            <div class="flex flex-row items-center gap-4">
+              <!-- Notification Bell -->
+              <div class="relative inline-block text-left">
+                <button
+                  class="relative text-2xl"
+                  aria-label="Notifications"
+                  id="notificationButton"
+                >
+                  <i class="fa-regular fa-bell"></i>
+                </button>
+
+                <!-- Dropdown Message Notification -->
+                <div
+                  class="origin-top-right absolute right-0 mt-2 w-80 rounded-md shadow-lg bg-white border border-gray-400 ring-1 ring-black ring-opacity-5 focus:outline-none hidden"
+                  role="menu"
+                  aria-orientation="vertical"
+                  aria-labelledby="notificationButton"
+                  id="notificationDropdown"
+                >
+                  <div class="py-1" role="none">
+                    <a
+                      href="#"
+                      class="block px-4 py-2 text-sm text-black-700 hover:bg-gray-100"
+                      role="menuitem"
+                    >
+                      <div class="flex">
+                        <div>
+                          <p class="font-medium">
+                            New message from Yul Gatchalian
+                          </p>
+                          <p class="text-sm text-black-500">Stress to the max.</p>
+                          <p class="text-xs text-black-400">5 minutes ago</p>
+                        </div>
+                      </div>
+                    </a>
+                    <a
+                      href="#"
+                      class="block px-4 py-2 text-sm text-black-700 hover:bg-gray-100"
+                      role="menuitem"
+                    >
+                      <div class="flex">
+                        <div class="mr-3">
+                          <p class="font-medium">Cylie Gonzales</p>
+                          <p class="text-sm text-black-500">
+                            Brain says code, stomach says feed me.
+                          </p>
+                          <p class="text-xs text-black-400">1 hour ago</p>
+                        </div>
+                      </div>
+                    </a>
+                    <a
+                    href="#"
+                    class="block px-4 py-2 text-sm text-black-700 hover:bg-gray-100"
+                    role="menuitem"
+                  >
+                    <div class="flex">
+                      <div class="mr-3">
+                        <p class="font-medium">Kian David</p>
+                        <p class="text-sm text-black-500">
+                          Coding with good vibes = ultimate chill.
+                        </p>
+                        <p class="text-xs text-black-400">2 days ago</p>
+                      </div>
+                    </div>
+                  </a>
+                  <a
+                    href="#"
+                    class="block px-4 py-2 text-sm text-black-700 hover:bg-gray-100"
+                    role="menuitem"
+                  >
+                    <div class="flex">
+                      <div class="mr-3">
+                        <p class="font-medium">Miko Basilio</p>
+                        <p class="text-sm text-black-500">
+                          Bugs and beats, coding and grooving
+                        </p>
+                        <p class="text-xs text-black-400">2 days ago</p>
+                      </div>
+                    </div>
+                  </a>
+                  <a
+                    href="#"
+                    class="block px-4 py-2 text-sm text-black-700 hover:bg-gray-100"
+                    role="menuitem"
+                  >
+                    <div class="flex">
+                      <div class="mr-3">
+                        <p class="font-medium">Daniel Digo</p>
+                        <p class="text-sm text-black-500">
+                          Catching up on sleep and relaxing.
+                        </p>
+                        <p class="text-xs text-black-400">2 days ago</p>
+                      </div>
+                    </div>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+
           <!-- Avatarbar -->
           <div class="relative dropdown">
             <button class="flex flex-row items-center gap-3 border border-black shadow-gray-700 shadow-sm bg-amber-400 text-black px-4 w-fit rounded-xl">
@@ -84,18 +185,16 @@
               <i class="fa-solid fa-angle-down fa-sm pl-3"></i>
             </button>
             <div class="dropdown-menu absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-2 z-20 hidden">
-              <a href="#"
+              <a href="accountsetting.html"
                 class="block px-4 py-2 text-gray-800 hover:bg-gray-200"
-                >Profile</a>
-              <a href="#"
-                class="block px-4 py-2 text-gray-800 hover:bg-gray-200"
-                >Settings</a>
+                >Account Settings</a>
               <a  href="#"
                 class="block px-4 py-2 text-gray-800 hover:bg-gray-200"
                 >Logout</a>
             </div>
           </div>
         </div>
+      </div>
 
         <!-- Main Content -->
         <div class="pt-22 py-6 laptop:px-10 phone:px-6">
@@ -396,6 +495,18 @@
 
     modalCancelButton2.addEventListener('click', () => {
         modal2.classList.add('hidden');
+    });
+  </script>
+
+  <!-- Script for Notification Bell Dropdown-->
+  <script>
+    const notificationButton = document.getElementById("notificationButton");
+    const notificationDropdown = document.getElementById(
+      "notificationDropdown"
+    );
+
+    notificationButton.addEventListener("click", () => {
+      notificationDropdown.classList.toggle("hidden");
     });
   </script>
 
