@@ -20,35 +20,28 @@
   </head>
   <body>
     <div class="flex">
-
       <!-- Sidebar -->
       <div class="w-1/5 bg-blue-950 text-white h-screen p-4 fixed">
         <h1 class="text-4xl mb-6 mt-2 font-medium font-russo">PhoneSwap</h1>
         <ul>
           <li class="mb-4">
-            <a
-              class="flex items-center hover:bg-blue-700 p-2 text-base font-medium rounded-lg"
-              href="dashboard.html"
-            >
+            <a class="flex items-center hover:bg-opacity-30 hover:bg-white p-2 text-base font-medium rounded-lg"
+              href="dashboard.html">
               <i class="fas fa-tachometer-alt mr-3"></i>
               Dashboard
             </a>
           </li>
           <li class="mb-4">
-            <a
-              class="flex items-center hover:bg-blue-700 p-2 text-base font-medium rounded-lg"
-              href="swapphones.html"
-            >
-              <i class="fa-solid fa-phone mr-3"></i>
+            <a class="flex items-center hover:bg-opacity-30 hover:bg-white p-2 text-base font-medium rounded-lg"
+              href="swapphones.html">
+              <i class="fa-solid fa-arrows-rotate mr-3"></i>
               Swap Phones
             </a>
           </li>
           <li class="mb-4">
-            <a
-              class="flex items-center hover:bg-blue-700 p-2 text-base font-medium rounded-lg"
-              href="usermanagement.html"
-            >
-              <i class="fas fa-users mr-3"></i>
+            <a class="flex items-center hover:bg-opacity-30 hover:bg-white p-2 text-base font-medium rounded-lg"
+              href="usermanagement.html">
+              <i class="fa-solid fa-user-group mr-3"></i>
               User Management
             </a>
           </li>
@@ -58,7 +51,7 @@
       <!-- Main Content -->
       <div class="w-4/5 ml-auto">
         <!-- Navbar section -->
-        <div class="fixed w-4/5 bg-white z-10 px-6 py-3 flex justify-between items-center shadow-md">
+        <div class="fixed w-4/5 bg-gray-200 z-10 px-6 py-3 flex justify-between items-center">
           <!-- Menubar -->
           <div class="flex flex-row items-center gap-4">
             <button class="text-black focus:outline-none">
@@ -67,13 +60,115 @@
             <h2 class="text-xl font-semibold mr-4">Account Settings</h2>
           </div>
 
+          <div class="flex gap-4">
+            <div class="flex flex-row items-center gap-4">
+              <!-- Notification Bell -->
+              <div class="relative inline-block text-left">
+                <button
+                  class="relative text-2xl"
+                  aria-label="Notifications"
+                  id="notificationButton"
+                >
+                  <i class="fa-regular fa-bell"></i>
+                </button>
+
+                <!-- Dropdown Message Notification -->
+                <div
+                  class="origin-top-right absolute right-0 mt-2 w-80 rounded-md shadow-lg bg-white border border-gray-400 ring-1 ring-black ring-opacity-5 focus:outline-none hidden"
+                  role="menu"
+                  aria-orientation="vertical"
+                  aria-labelledby="notificationButton"
+                  id="notificationDropdown"
+                >
+                  <div class="py-1" role="none">
+                    <a
+                      href="#"
+                      class="block px-4 py-2 text-sm text-black-700 hover:bg-gray-100"
+                      role="menuitem"
+                    >
+                      <div class="flex">
+                        <div>
+                          <p class="font-medium">
+                            New message from Yul Gatchalian
+                          </p>
+                          <p class="text-sm text-black-500">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                          <p class="text-xs text-black-400">5 minutes ago</p>
+                        </div>
+                      </div>
+                    </a>
+                    <a
+                      href="#"
+                      class="block px-4 py-2 text-sm text-black-700 hover:bg-gray-100"
+                      role="menuitem"
+                    >
+                      <div class="flex">
+                        <div class="mr-3">
+                          <p class="font-medium">Cylie Gonzales</p>
+                          <p class="text-sm text-black-500">
+                            Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                          </p>
+                          <p class="text-xs text-black-400">1 hour ago</p>
+                        </div>
+                      </div>
+                    </a>
+                    <a
+                    href="#"
+                    class="block px-4 py-2 text-sm text-black-700 hover:bg-gray-100"
+                    role="menuitem"
+                  >
+                    <div class="flex">
+                      <div class="mr-3">
+                        <p class="font-medium">Kian David</p>
+                        <p class="text-sm text-black-500">
+                          Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                        </p>
+                        <p class="text-xs text-black-400">2 days ago</p>
+                      </div>
+                    </div>
+                    </a>
+                    <a
+                      href="#"
+                      class="block px-4 py-2 text-sm text-black-700 hover:bg-gray-100"
+                      role="menuitem"
+                    >
+                      <div class="flex">
+                        <div class="mr-3">
+                          <p class="font-medium">Miko Basilio</p>
+                          <p class="text-sm text-black-500">
+                            Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                          </p>
+                          <p class="text-xs text-black-400">2 days ago</p>
+                        </div>
+                      </div>
+                    </a>
+                    <a
+                      href="#"
+                      class="block px-4 py-2 text-sm text-black-700 hover:bg-gray-100"
+                      role="menuitem"
+                    >
+                      <div class="flex">
+                        <div class="mr-3">
+                          <p class="font-medium">Daniel Digo</p>
+                          <p class="text-sm text-black-500">
+                            Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                          </p>
+                          <p class="text-xs text-black-400">2 days ago</p>
+                        </div>
+                      </div>
+                    </a>
+                  </div>
+              </div>
+            </div>
+          </div>
+
+
           <!-- Avatarbar -->
           <div class="relative dropdown">
             <button class="flex flex-row items-center gap-3 border border-black shadow-gray-700 shadow-sm bg-amber-400 text-black px-4 w-fit rounded-xl">
               <i class="fa-regular fa-user fa-xl"></i>
               <div class="flex flex-col items-start">
                 <h1 class="font-medium">Emily Dav</h1>
-                <h1 class="text-sm">Admin</h1>
+                <h1 class="text-sm">Team Leader 1</h1>
               </div>
               <i class="fa-solid fa-angle-down fa-sm pl-3"></i>
             </button>
@@ -85,6 +180,7 @@
                 class="block px-4 py-2 text-gray-800 hover:bg-gray-200"
                 >Logout</a>
             </div>
+          </div>
           </div>
         </div>
 
@@ -138,9 +234,11 @@
                 </div>
 
                 <div class="flex justify-end space-x-2 mt-4">
-                  <button id="closeModalBtn" class="w-24 px-4 py-2 shadow-md shadow-gray-300 bg-red-800 text-white border border-white-300 font-medium rounded-lg">
-                    Back
-                  </button>
+                  <a href="dashboard.html">
+                    <button class="w-24 px-4 py-2 shadow-md shadow-gray-300 bg-red-800 text-white border border-white-300 font-medium rounded-lg">
+                      Back
+                    </button>
+                  </a>
                   <button class="px-4 py-2 w-24 shadow-md shadow-gray-300 bg-amber-400 font-medium text-white border border-white rounded-lg">
                     Save
                   </button>
@@ -152,3 +250,15 @@
     </div>
   </body>
 </html>
+
+<!-- Script for notification bell dropdown-->
+<script>
+  const notificationButton = document.getElementById("notificationButton");
+  const notificationDropdown = document.getElementById(
+    "notificationDropdown"
+  );
+
+  notificationButton.addEventListener("click", () => {
+    notificationDropdown.classList.toggle("hidden");
+  });
+</script>
