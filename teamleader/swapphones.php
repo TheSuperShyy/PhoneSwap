@@ -4,7 +4,6 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Swap Phones</title>
-    <link rel="icon" href="../src/assets/images/iconswap.svg" type="image/svg">
     <link rel="stylesheet" href="/src/output.css" />
     <script
       src="https://kit.fontawesome.com/10d593c5dc.js"
@@ -81,36 +80,36 @@
               >
                 <div class="py-1" role="none">
                   <a
-                      href="#"
-                      class="block px-4 py-2 text-sm text-black-700 hover:bg-gray-100"
-                      role="menuitem"
-                    >
-                      <div class="flex">
-                        <div>
-                          <p class="font-medium">
-                            New message from Yul Gatchalian
-                          </p>
-                          <p class="text-sm text-black-500">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                          <p class="text-xs text-black-400">5 minutes ago</p>
-                        </div>
+                    href="#"
+                    class="block px-4 py-2 text-sm text-black-700 hover:bg-gray-100"
+                    role="menuitem"
+                  >
+                    <div class="flex">
+                      <div>
+                        <p class="font-medium">
+                          New message from Yul Gatchalian
+                        </p>
+                        <p class="text-sm text-black-500">Stress to the max.</p>
+                        <p class="text-xs text-black-400">5 minutes ago</p>
                       </div>
-                    </a>
-                    <a
-                      href="#"
-                      class="block px-4 py-2 text-sm text-black-700 hover:bg-gray-100"
-                      role="menuitem"
-                    >
-                      <div class="flex">
-                        <div class="mr-3">
-                          <p class="font-medium">Cylie Gonzales</p>
-                          <p class="text-sm text-black-500">
-                            Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                          </p>
-                          <p class="text-xs text-black-400">1 hour ago</p>
-                        </div>
+                    </div>
+                  </a>
+                  <a
+                    href="#"
+                    class="block px-4 py-2 text-sm text-black-700 hover:bg-gray-100"
+                    role="menuitem"
+                  >
+                    <div class="flex">
+                      <div class="mr-3">
+                        <p class="font-medium">Cylie Gonzales</p>
+                        <p class="text-sm text-black-500">
+                          Brain says code, stomach says feed me.
+                        </p>
+                        <p class="text-xs text-black-400">1 hour ago</p>
                       </div>
-                    </a>
-                    <a
+                    </div>
+                  </a>
+                  <a
                     href="#"
                     class="block px-4 py-2 text-sm text-black-700 hover:bg-gray-100"
                     role="menuitem"
@@ -119,42 +118,42 @@
                       <div class="mr-3">
                         <p class="font-medium">Kian David</p>
                         <p class="text-sm text-black-500">
-                          Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                          Coding with good vibes = ultimate chill.
                         </p>
                         <p class="text-xs text-black-400">2 days ago</p>
                       </div>
                     </div>
-                    </a>
-                    <a
-                      href="#"
-                      class="block px-4 py-2 text-sm text-black-700 hover:bg-gray-100"
-                      role="menuitem"
-                    >
-                      <div class="flex">
-                        <div class="mr-3">
-                          <p class="font-medium">Miko Basilio</p>
-                          <p class="text-sm text-black-500">
-                            Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                          </p>
-                          <p class="text-xs text-black-400">2 days ago</p>
-                        </div>
+                  </a>
+                  <a
+                    href="#"
+                    class="block px-4 py-2 text-sm text-black-700 hover:bg-gray-100"
+                    role="menuitem"
+                  >
+                    <div class="flex">
+                      <div class="mr-3">
+                        <p class="font-medium">Miko Basilio</p>
+                        <p class="text-sm text-black-500">
+                          Bugs and beats, coding and grooving
+                        </p>
+                        <p class="text-xs text-black-400">2 days ago</p>
                       </div>
-                    </a>
-                    <a
-                      href="#"
-                      class="block px-4 py-2 text-sm text-black-700 hover:bg-gray-100"
-                      role="menuitem"
-                    >
-                      <div class="flex">
-                        <div class="mr-3">
-                          <p class="font-medium">Daniel Digo</p>
-                          <p class="text-sm text-black-500">
-                            Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                          </p>
-                          <p class="text-xs text-black-400">2 days ago</p>
-                        </div>
+                    </div>
+                  </a>
+                  <a
+                    href="#"
+                    class="block px-4 py-2 text-sm text-black-700 hover:bg-gray-100"
+                    role="menuitem"
+                  >
+                    <div class="flex">
+                      <div class="mr-3">
+                        <p class="font-medium">Daniel Digo</p>
+                        <p class="text-sm text-black-500">
+                          Catching up on sleep and relaxing.
+                        </p>
+                        <p class="text-xs text-black-400">2 days ago</p>
                       </div>
-                    </a>
+                    </div>
+                  </a>
                 </div>
               </div>
             </div>
@@ -173,9 +172,14 @@
             </button>
             <div class="dropdown-menu absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-2 z-20 hidden">
               <a
-                href="accountsetting.html"
+                href="#"
                 class="block px-4 py-2 text-gray-800 hover:bg-gray-200"
-                >Account Settings</a
+                >Profile</a
+              >
+              <a
+                href="#"
+                class="block px-4 py-2 text-gray-800 hover:bg-gray-200"
+                >Settings</a
               >
               <a
                 href="#"
@@ -218,7 +222,7 @@
                         </form>
                       </div>
                       <div class="flex ml-auto gap-2">
-                        <button class="flex items-center gap-2 border border-white bg-blue-950 hover:bg-blue-950 hover:bg-opacity-95 text-white px-4 py-2 rounded-lg focus:ring-1 focus:outline-none focus:ring-black shadow-md">
+                        <button class="flex items-center gap-2 border border-white bg-blue-950 hover:bg-blue-950 hover:bg-opacity-95 text-white px-4 py-2 rounded-lg shadow-md">
                           <i class="fa-solid fa-filter"></i></i><span>Export</span>
                         </button>
                       </div>
@@ -261,7 +265,7 @@
     
                         <td class="py-5 px-4 whitespace-nowrap">Yul Grant Gatchalian</td>
                         <td class="py-2 px-4 whitespace-nowrap">
-                          <button id="openModalBtn1" class="flex flex-row gap-2 items-center border font-semibold border-black bg-amber-400 hover:bg-amber-600 text-black px-6 py-1.5 rounded-full focus:ring-1 focus:outline-none focus:ring-black shadow-lg">
+                          <button class="flex flex-row gap-2 items-center border font-semibold border-black bg-amber-400 hover:bg-amber-600 text-black px-6 py-1.5 rounded-full shadow-lg">
                             Swap
                           </button>
                         </td>
@@ -280,7 +284,7 @@
                         </td>
                         <td class="py-5 px-4 whitespace-nowrap">Cylie Gonzales</td>
                         <td class="py-2 px-4 whitespace-nowrap">
-                          <button class="flex flex-row gap-2 items-center border font-semibold border-black bg-amber-400 hover:bg-amber-600 text-black px-6 py-1.5 rounded-full focus:ring-1 focus:outline-none focus:ring-black shadow-lg">
+                          <button class="flex flex-row gap-2 items-center border font-semibold border-black bg-amber-400 hover:bg-amber-600 text-black px-6 py-1.5 rounded-full shadow-lg">
                             Swap
                           </button>
                         </td>
@@ -299,7 +303,7 @@
                         </td>
                         <td class="py-5 px-4 whitespace-nowrap">Kian David</td>
                         <td class="py-2 px-4 whitespace-nowrap">
-                          <button class="flex flex-row gap-2 items-center border font-semibold border-black bg-amber-400 hover:bg-amber-600 text-black px-6 py-1.5 rounded-full focus:ring-1 focus:outline-none focus:ring-black shadow-lg">
+                          <button class="flex flex-row gap-2 items-center border font-semibold border-black bg-amber-400 hover:bg-amber-600 text-black px-6 py-1.5 rounded-full shadow-lg">
                             Swap
                           </button>
                         </td>
@@ -318,7 +322,7 @@
                         </td>
                         <td class="py-5 px-4 whitespace-nowrap">Miko Basilio</td>
                         <td class="py-2 px-4 whitespace-nowrap">
-                          <button class="flex flex-row gap-2 items-center border font-semibold border-black bg-amber-400 hover:bg-amber-600 text-black px-6 py-1.5 rounded-full focus:ring-1 focus:outline-none focus:ring-black shadow-lg">
+                          <button class="flex flex-row gap-2 items-center border font-semibold border-black bg-amber-400 hover:bg-amber-600 text-black px-6 py-1.5 rounded-full shadow-lg">
                             Swap
                           </button>
                         </td>
@@ -333,11 +337,11 @@
                         </td>
                         <td class="py-5 px-4 whitespace-nowrap">Table 1</td>
                         <td class="py-2 px-4 whitespace-nowrap">
-                            <span class="text-red-800 bg-red-50 border border-red-800 rounded-full bg-opacity-100 py-2 px-6 font-medium shadow-lg">Inactive</span>
+                            <span class="text-green-800 bg-green-100 border border-green-800 rounded-full bg-opacity-100 py-2 px-6 font-medium shadow-lg">Active</span>
                         </td>
                         <td class="py-5 px-4 whitespace-nowrap">Daniel Quinzy Digo</td>
                         <td class="py-2 px-4 whitespace-nowrap">
-                          <button class="flex flex-row gap-2 items-center border font-semibold border-black bg-amber-400 hover:bg-amber-600 text-black px-6 py-1.5 rounded-full focus:ring-1 focus:outline-none focus:ring-black shadow-lg">
+                          <button class="flex flex-row gap-2 items-center border font-semibold border-black bg-amber-400 hover:bg-amber-600 text-black px-6 py-1.5 rounded-full shadow-lg">
                             Swap
                           </button>
                         </td>
@@ -346,78 +350,6 @@
                   </table>
                 </div>
             </div>
-
-            <!-- Modal for view employee -->
-          <div id="myModal" class="fixed inset-0 flex justify-center items-center hidden bg-black bg-opacity-50 z-50 pt-24 pb-24 h-full laptop:px-80 phone:px-4">
-            <div class="bg-white border border-gray-600 rounded-lg px-6 py-6 shadow-lg relative h-fit  laptop:w-1/3 phone:w-full">
-                <div class="flex flex-col gap-4">
-                    <h2 class="text-2xl font-russo mb-2">Swap Phone</h2>
-                    
-                    <div class="flex flex-col">
-                      <div class="flex laptop:flex-row phone:flex-col w-full mb-4">
-                        <div class="flex flex-col w-full">
-                          <label for="" class="text-sm font-normal">Team Leader</label>
-                          <span class="text-xl font-medium">Niel Digo</span>
-                        </div>
-                        <div class="flex flex-col w-full">
-                          <label for="" class="text-sm font-normal">Team Member</label>
-                          <span class="text-xl font-medium">Yul Gatchalian</span>
-                        </div>
-                      </div>
-
-                      <div class="flex flex-col w-full gap-4 mb-6">
-                        <div class="flex flex-row w-full gap-5">
-                          <div class="flex flex-col w-full">
-                            <label for="" class="text-sm font-normal">Device Model</label>
-                            <span class="text-xl font-medium">Iphone 8</span>
-                          </div>
-                          <div class="flex flex-col w-full">
-                            <label for="" class="text-sm font-normal">Serial Number</label>
-                            <span class="text-xl font-medium">02392439</span>
-                          </div>
-                          <div class="flex flex-col w-full">
-                            <label for="" class="text-sm font-normal">Status</label>
-                            <span class="text-xl font-semibold text-red-800">Inactive</span>
-                          </div>
-                        </div>
-                        <div class="flex flex-row gap-4 w-full items-center">
-                          <div class="flex flex-col gap-2 w-full">
-                            <label for="" class="text-sm font-medium">Device Model</label>
-                            <input type="text" placeholder="Device Model" class="border border-gray-700  p-2 rounded-lg">
-                          </div>
-                          <div class="flex flex-col gap-2 w-full">
-                            <label for="" class="text-sm font-medium">Serial Number</label>
-                            <select name="filter" id="filterSelect"
-                              class="p-2 h-10 w-full text-sm border border-gray-700 rounded-lg outline-none">
-                              <option value="">Select Serial Number</option>
-                              <option value="">123456</option>
-                              <option value="">789210</option>
-                            </select>
-                          </div>
-                          <div class="flex flex-col w-full">
-                            <label for="" class="text-sm font-normal">Status</label>
-                            <span class="text-xl font-semibold text-green-800">Active</span>
-                          </div>
-                        </div>
-                      </div>
-
-                      <div class="flex flex-col gap-1 w-full">
-                        <label for="" class="text-sm font-normal">Reason for being swap</label>
-                        <textarea name="" id="" class="max-h-min border border-black shadow-md rounded-md p-2" required></textarea>
-                      </div>
-                    </div>
-                </div>
-                <br>
-                <div class="flex justify-end gap-2 mt-4">
-                  <button id="closeModalBtn1" class="w-24 px-4 py-2 shadow-md shadow-gray-300 border border-black bg-white hover:bg-gray-100 hover:bg-opacity-95 text-black  focus:ring-1 focus:outline-none focus:ring-blackfont-medium rounded-lg">
-                    Cancel
-                  </button>
-                  <button class="px-4 py-2 w-24 shadow-md shadow-gray-300 bg-amber-400 hover:bg-amber-600 font-medium text-black border border-black focus:ring-1 focus:outline-none focus:ring-black rounded-lg">
-                    Save
-                  </button>
-                </div>
-            </div>
-          </div>
 
             <!-- Pagination -->
             <div class="flex space-x-2">
@@ -481,26 +413,6 @@
         if (checkboxes[i] != source) checkboxes[i].checked = source.checked;
       }
     }
-  </script>
-
-  <!-- Modal for assign -->
-  <script>
-    const modal = document.getElementById('myModal');
-    const openModalBtn1 = document.getElementById('openModalBtn1');
-    const closeModalBtn1 = document.getElementById('closeModalBtn1');
-    const modalCancelButton1 = document.getElementById('modalCancelButton1');
-
-    openModalBtn1.addEventListener('click', () => {
-        modal.classList.remove('hidden');
-    });
-
-    closeModalBtn1.addEventListener('click', () => {
-        modal.classList.add('hidden');
-    });
-
-    modalCancelButton1.addEventListener('click', () => {
-        modal.classList.add('hidden');
-    });
   </script>
 
 </html>
