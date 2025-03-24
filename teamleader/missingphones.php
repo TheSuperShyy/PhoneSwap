@@ -227,49 +227,48 @@ require __DIR__ . '/../queries/phone_query.php';
         </div>
       </div>
     </div>
+  </body>
 
-</body>
+  <!-- Selection for total assets -->
+  <script>
+    const selectButton = document.getElementById('selectButton');
+    const selectDropdown = document.getElementById('selectDropdown');
+    const selectedValue = document.getElementById('selectedValue');
 
-<!-- Selection for total assets -->
-<script>
-  const selectButton = document.getElementById('selectButton');
-  const selectDropdown = document.getElementById('selectDropdown');
-  const selectedValue = document.getElementById('selectedValue');
+    selectButton.addEventListener('click', () => {
+      selectDropdown.classList.toggle('hidden');
+    });
 
-  selectButton.addEventListener('click', () => {
-    selectDropdown.classList.toggle('hidden');
-  });
+    selectDropdown.addEventListener('click', (event) => {
+      if (event.target.tagName === 'A') {
+        event.preventDefault(); // Prevent link behavior
+        const value = event.target.dataset.value;
+        const text = event.target.textContent;
 
-  selectDropdown.addEventListener('click', (event) => {
-    if (event.target.tagName === 'A') {
-      event.preventDefault(); // Prevent link behavior
-      const value = event.target.dataset.value;
-      const text = event.target.textContent;
+        selectButton.textContent = text; // Update button text
+        selectedValue.value = value;      // Update hidden input value
+        selectDropdown.classList.add('hidden'); // Close dropdown
+      }
+    });
 
-      selectButton.textContent = text; // Update button text
-      selectedValue.value = value;      // Update hidden input value
-      selectDropdown.classList.add('hidden'); // Close dropdown
+   // Close dropdown if clicked outside
+    window.addEventListener('click', (event) => {
+      if (!selectButton.contains(event.target) && !selectDropdown.contains(event.target)) {
+        selectDropdown.classList.add('hidden');
+      }
+    });
+  </script>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <!-- Checkbox script -->
+  <script>
+    function toggleSelectAll(source) {
+      checkboxes = document.querySelectorAll('input[type="checkbox"]');
+      for (var i = 0; i < checkboxes.length; i++) {
+        if (checkboxes[i] != source) checkboxes[i].checked = source.checked;
+      }
     }
-  });
-
-  // Close dropdown if clicked outside
-  window.addEventListener('click', (event) => {
-    if (!selectButton.contains(event.target) && !selectDropdown.contains(event.target)) {
-      selectDropdown.classList.add('hidden');
-    }
-  });
-</script>
-
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-<!-- Checkbox script -->
-<script>
-  function toggleSelectAll(source) {
-    checkboxes = document.querySelectorAll('input[type="checkbox"]');
-    for (var i = 0; i < checkboxes.length; i++) {
-      if (checkboxes[i] != source) checkboxes[i].checked = source.checked;
-    }
-  }
-</script>
+  </script>
 
 </html>

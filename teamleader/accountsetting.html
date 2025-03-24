@@ -78,14 +78,12 @@
                   role="menu"
                   aria-orientation="vertical"
                   aria-labelledby="notificationButton"
-                  id="notificationDropdown"
-                >
+                  id="notificationDropdown">
                   <div class="py-1" role="none">
                     <a
                       href="#"
                       class="block px-4 py-2 text-sm text-black-700 hover:bg-gray-100"
-                      role="menuitem"
-                    >
+                      role="menuitem">
                       <div class="flex">
                         <div>
                           <p class="font-medium">
@@ -99,8 +97,7 @@
                     <a
                       href="#"
                       class="block px-4 py-2 text-sm text-black-700 hover:bg-gray-100"
-                      role="menuitem"
-                    >
+                      role="menuitem">
                       <div class="flex">
                         <div class="mr-3">
                           <p class="font-medium">Cylie Gonzales</p>
@@ -112,19 +109,18 @@
                       </div>
                     </a>
                     <a
-                    href="#"
-                    class="block px-4 py-2 text-sm text-black-700 hover:bg-gray-100"
-                    role="menuitem"
-                  >
-                    <div class="flex">
-                      <div class="mr-3">
-                        <p class="font-medium">Kian David</p>
-                        <p class="text-sm text-black-500">
-                          Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                        </p>
-                        <p class="text-xs text-black-400">2 days ago</p>
+                      href="#"
+                      class="block px-4 py-2 text-sm text-black-700 hover:bg-gray-100"
+                      role="menuitem">
+                      <div class="flex">
+                        <div class="mr-3">
+                          <p class="font-medium">Kian David</p>
+                          <p class="text-sm text-black-500">
+                            Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                          </p>
+                          <p class="text-xs text-black-400">2 days ago</p>
+                        </div>
                       </div>
-                    </div>
                     </a>
                     <a
                       href="#"
@@ -181,8 +177,8 @@
                 >Logout</a>
             </div>
           </div>
-          </div>
         </div>
+      </div>
 
          <!-- Main Content -->
         <div class="pt-22 py-6 laptop:px-12 phone:px-4">
@@ -190,13 +186,13 @@
           <div class="flex flex-col gap-1 items-end justify-center w-full mx-auto">
             <div class="flex flex-col gap-3 mx-auto py-4 w-full">
               <div class="bg-white border border-gray-600 rounded-lg px-6 py-6 shadow-lg relative h-fit w-full">
-                  <div class="flex justify-center">
-                    <!-- Profile Icon -->
-                    <div class="w-28 h-28 bg-gray-200 rounded-full flex items-center justify-center">
-                      <span class="text-gray-500 text-3xl">&#128100;</span>
-                    </div>
+                <div class="flex justify-center">
+                  <!-- Profile Icon -->
+                  <div class="w-28 h-28 bg-gray-200 rounded-full flex items-center justify-center">
+                    <span class="text-gray-500 text-3xl">&#128100;</span>
                   </div>
-                
+                </div>
+                  <!-- Form -->
                   <div class="flex flex-col gap-4 mt-4">
                     <div class="flex laptop:flex-row phone:flex-col gap-4">
                         <div class="flex flex-col gap-2 w-full">
@@ -222,16 +218,16 @@
                         </div>
                     </div>
                     <div class="flex laptop:flex-row phone:flex-col gap-4">
-                        <div class="flex flex-col gap-2 w-full">
-                            <label for="email" class="text-sm font-medium">Email</label>
-                            <input type="email" id="email" placeholder="yulgrant@gmail.com" class="border border-gray-700 p-2 rounded-lg text-black">
-                        </div>
-                        <div class="flex flex-col gap-2 w-full">
-                            <label for="contactNumber" class="text-sm font-medium">Contact Number</label>
-                            <input type="tel" id="contactNumber" placeholder="099098362627" class="border border-gray-700 p-2 rounded-lg text-black">
-                        </div>
+                      <div class="flex flex-col gap-2 w-full">
+                        <label for="email" class="text-sm font-medium">Email</label>
+                        <input type="email" id="email" placeholder="yulgrant@gmail.com" class="border border-gray-700 p-2 rounded-lg text-black">
+                      </div>
+                      <div class="flex flex-col gap-2 w-full">
+                        <label for="contactNumber" class="text-sm font-medium">Contact Number</label>
+                        <input type="tel" id="contactNumber" placeholder="099098362627" class="border border-gray-700 p-2 rounded-lg text-black">
+                      </div>
                     </div>
-                </div>
+                  </div>
 
                 <div class="flex justify-end space-x-2 mt-4">
                   <a href="dashboard.html">
@@ -246,19 +242,21 @@
               </div> 
             </div>
           </div>
-          </div>
+        </div>
+      </div>
     </div>
   </body>
+
+  <!-- Script for notification bell dropdown-->
+  <script>
+    const notificationButton = document.getElementById("notificationButton");
+    const notificationDropdown = document.getElementById(
+    "notificationDropdown"
+    );
+
+    notificationButton.addEventListener("click", () => {
+    notificationDropdown.classList.toggle("hidden");
+    });
+  </script>
 </html>
 
-<!-- Script for notification bell dropdown-->
-<script>
-  const notificationButton = document.getElementById("notificationButton");
-  const notificationDropdown = document.getElementById(
-    "notificationDropdown"
-  );
-
-  notificationButton.addEventListener("click", () => {
-    notificationDropdown.classList.toggle("hidden");
-  });
-</script>
