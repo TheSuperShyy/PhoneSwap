@@ -70,6 +70,80 @@ require __DIR__ . '/../queries/phone_query.php';
         <h2 class="text-xl font-semibold mr-4">Dashboard</h2>
       </div>
 
+      <!-- Notification Bell -->
+      <div class="flex gap-4">
+          <div class="flex flex-row items-center gap-4">
+           
+            <div class="relative inline-block text-left">
+              <button class="relative text-2xl" aria-label="Notifications" id="notificationButton">
+                <i class="fa-regular fa-bell"></i>
+              </button>
+
+              <!-- Dropdown Message Notification -->
+              <div
+                class="origin-top-right absolute right-0 mt-2 w-80 rounded-md shadow-lg bg-white border border-gray-400 ring-1 ring-black ring-opacity-5 focus:outline-none hidden"
+                role="menu" aria-orientation="vertical" aria-labelledby="notificationButton" id="notificationDropdown">
+                <div class="py-1" role="none">
+                  <a href="#" class="block px-4 py-2 text-sm text-black-700 hover:bg-gray-100" role="menuitem">
+                    <div class="flex">
+                      <div>
+                        <p class="font-medium">
+                          New message from Yul Gatchalian
+                        </p>
+                        <p class="text-sm text-black-500">Lorem ipsum dolor sit amet.</p>
+                        <p class="text-xs text-black-400">5 minutes ago</p>
+                      </div>
+                    </div>
+                  </a>
+                  <a href="#" class="block px-4 py-2 text-sm text-black-700 hover:bg-gray-100" role="menuitem">
+                    <div class="flex">
+                      <div class="mr-3">
+                        <p class="font-medium">Cylie Gonzales</p>
+                        <p class="text-sm text-black-500">
+                          Lorem ipsum dolor sit amet.
+                        </p>
+                        <p class="text-xs text-black-400">1 hour ago</p>
+                      </div>
+                    </div>
+                  </a>
+                  <a href="#" class="block px-4 py-2 text-sm text-black-700 hover:bg-gray-100" role="menuitem">
+                    <div class="flex">
+                      <div class="mr-3">
+                        <p class="font-medium">Kian David</p>
+                        <p class="text-sm text-black-500">
+                          Lorem ipsum dolor sit amet.
+                        </p>
+                        <p class="text-xs text-black-400">2 days ago</p>
+                      </div>
+                    </div>
+                  </a>
+                  <a href="#" class="block px-4 py-2 text-sm text-black-700 hover:bg-gray-100" role="menuitem">
+                    <div class="flex">
+                      <div class="mr-3">
+                        <p class="font-medium">Miko Basilio</p>
+                        <p class="text-sm text-black-500">
+                          Lorem ipsum dolor sit amet.
+                        </p>
+                        <p class="text-xs text-black-400">2 days ago</p>
+                      </div>
+                    </div>
+                  </a>
+                  <a href="#" class="block px-4 py-2 text-sm text-black-700 hover:bg-gray-100" role="menuitem">
+                    <div class="flex">
+                      <div class="mr-3">
+                        <p class="font-medium">Daniel Digo</p>
+                        <p class="text-sm text-black-500">
+                          Lorem ipsum dolor sit amet.
+                        </p>
+                        <p class="text-xs text-black-400">2 days ago</p>
+                      </div>
+                    </div>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+
       <!-- Avatarbar -->
       <div class="relative dropdown">
         <button
@@ -87,6 +161,7 @@ require __DIR__ . '/../queries/phone_query.php';
           <a href="#" class="block px-4 py-2 text-gray-800 hover:bg-gray-200">Logout</a>
         </div>
       </div>
+    </div>
     </div>
 
     <!-- Main Content -->
@@ -219,7 +294,7 @@ require __DIR__ . '/../queries/phone_query.php';
                         class="flex flex-row gap-2 items-center font-semibold border border-white bg-blue-500 hover:bg-blue-700 text-white px-6 py-1.5 rounded-full shadow-lg">
                         Assign
                       </button>
-                      <button onclick="openMissingModal('<?php echo $phone['serial_number']; ?>')"
+                      <button onclick="window.location.href='missingphones.php'"
                         class="flex flex-row gap-2 items-center border font-semibold border-white bg-red-700 hover:bg-red-900 text-white px-6 py-1.5 rounded-full shadow-lg">
                         Missing
                       </button>
@@ -431,7 +506,18 @@ require __DIR__ . '/../queries/phone_query.php';
     }
 
   </script>
+  
+  <!-- Script for notification bell dropdown-->
+  <script>
+    const notificationButton = document.getElementById("notificationButton");
+    const notificationDropdown = document.getElementById(
+      "notificationDropdown"
+    );
 
+    notificationButton.addEventListener("click", () => {
+      notificationDropdown.classList.toggle("hidden");
+    });
+  </script>
 
 
 
