@@ -3,9 +3,6 @@ require __DIR__ . '/../dbcon/dbcon.php';
 require __DIR__ . '/../queries/phone_query.php';
 ?>
 
-
-
-
 <!DOCTYPE html>
 <html lang="en">
 

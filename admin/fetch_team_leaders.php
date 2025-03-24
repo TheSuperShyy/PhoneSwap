@@ -1,25 +1,29 @@
 <?php
 require __DIR__ . '/../dbcon/dbcon.php';
-require __DIR__ . '/../queries/phone_query.php';
 
 header('Content-Type: application/json');
 
 try {
-    $teamLeaders = $db->users->find(['userType' => 'TL']);
-
-    if (!$teamLeaders) {
-        echo json_encode(['success' => false, 'message' => 'No Team Leaders found']);
-        exit;
+    if (!$db) {
+        throw new Exception("Database connection failed.");
     }
 
-    $tlArray = [];
-    foreach ($teamLeaders as $tl) {
-        $formattedName = "({$tl['hfId']}) {$tl['first_name']} {$tl['last_name']}";
-        $tlArray[] = ['hfId' => $tl['hfId'], 'formattedName' => $formattedName];
+    $collection = $db->users;
+
+    $teamLeaders = $collection->find(["userType" => "TL"]);
+    $result = [];
+
+    foreach ($teamLeaders as $user) {
+        $result[] = [
+            "hfId" => $user["hfId"] ?? "UNKNOWN",
+            "username" => ($user["first_name"] ?? "") . " " . ($user["last_name"] ?? ""),
+            "userType" => $user["userType"] ?? "UNKNOWN"
+        ];
     }
 
-    echo json_encode($tlArray);
+    echo json_encode($result);
 } catch (Exception $e) {
-    echo json_encode(['success' => false, 'error' => $e->getMessage()]);
+    echo json_encode(["success" => false, "message" => "Error: " . $e->getMessage()]);
 }
+
 ?>
