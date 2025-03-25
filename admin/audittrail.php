@@ -55,7 +55,7 @@ require __DIR__ . '/../queries/phone_query.php';
           <li class="mb-4">
             <a
               class="flex items-center hover:bg-blue-700 p-2 text-base font-medium rounded-lg"
-              href="audittrail.html"
+              href="audittrail.php"
             >
               <i class="fas fa-list-alt mr-3"></i>
               Audit Trail
@@ -64,7 +64,7 @@ require __DIR__ . '/../queries/phone_query.php';
           <li class="mb-4">
             <a
               class="flex items-center hover:bg-blue-700 p-2 text-base font-medium rounded-lg"
-              href="swapphones.html"
+              href="swapphones.php"
             >
               <i class="fa-solid fa-phone mr-3"></i>
               Swap Phones
@@ -73,7 +73,7 @@ require __DIR__ . '/../queries/phone_query.php';
           <li class="mb-4">
             <a
               class="flex items-center hover:bg-blue-700 p-2 text-base font-medium rounded-lg"
-              href="usermanagement.html"
+              href="usermanagement.php"
             >
               <i class="fas fa-users mr-3"></i>
               User Management

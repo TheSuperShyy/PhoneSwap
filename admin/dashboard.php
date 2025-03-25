@@ -29,7 +29,7 @@ require __DIR__ . '/../queries/phone_query.php';
     <h1 class="text-4xl mb-6 mt-2 font-medium font-russo">PhoneSwap</h1>
     <ul>
       <li class="mb-4">
-        <a class="flex items-center bg-opacity-30 bg-white p-2 text-base font-medium rounded-lg" href="dashboard.html">
+        <a class="flex items-center bg-opacity-30 bg-white p-2 text-base font-medium rounded-lg" href="dashboard.php">
           <i class="fas fa-tachometer-alt mr-3"></i>
           Dashboard
         </a>
@@ -43,14 +43,14 @@ require __DIR__ . '/../queries/phone_query.php';
       </li>
       <li class="mb-4">
         <a class="flex items-center hover:bg-opacity-30 hover:bg-white p-2 text-base font-medium rounded-lg"
-          href="swapphones.html">
+          href="swapphones.php">
           <i class="fas fa-warehouse mr-3"></i>
           Swap Phones
         </a>
       </li>
       <li class="mb-4">
         <a class="flex items-center hover:bg-opacity-30 hover:bg-white p-2 text-base font-medium rounded-lg"
-          href="usermanagement.html">
+          href="usermanagement.php">
           <i class="fas fa-tools mr-3"></i>
           User Management
         </a>
@@ -384,7 +384,7 @@ require __DIR__ . '/../queries/phone_query.php';
     </div>
   </div>
 
-  <!-- 🔥 Place this script at the bottom of the body -->
+  <!-- assign phone script -->
   <script>
     document.addEventListener("DOMContentLoaded", function () {
       console.log("JS Loaded");
@@ -506,7 +506,7 @@ require __DIR__ . '/../queries/phone_query.php';
     }
 
   </script>
-  
+
   <!-- Script for notification bell dropdown-->
   <script>
     const notificationButton = document.getElementById("notificationButton");

@@ -1,23 +1,47 @@
 <?php
 require __DIR__ . '/../dbcon/dbcon.php';
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $serial_number = $_POST['serial_number'] ?? '';
-    $status = $_POST['status'] ?? '';
-
-    if (!empty($serial_number) && !empty($status)) {
-        $db->phones->updateOne(
-            ['serial_number' => $serial_number],
-            ['$set' => ['status' => $status]]
-        );
-        header("Location: dashboard.php?success=Phone status updated");
-        exit();
-    } else {
-        header("Location: dashboard.php?error=Please select a phone and status");
-        exit();
+if ($_SERVER["REQUEST_METHOD"] === "POST") {
+    if (!isset($_POST["serial_number"]) || !isset($_POST["status"])) {
+        header("Location: managephones.php?error=Missing required fields.");
+        exit;
     }
-} else {
-    header("Location: dashboard.php");
-    exit();
+
+    $serialNumber = $_POST["serial_number"];
+    $newStatus = $_POST["status"];
+
+    try {
+        // ✅ Fetch current status of the phone
+        $phone = $db->phones->findOne(["serial_number" => $serialNumber]);
+
+        if (!$phone) {
+            header("Location: managephones.php?error=Phone not found.");
+            exit;
+        }
+
+        // ✅ Prevent update if the current status is "Missing"
+        if ($phone["status"] === "Missing") {
+            header("Location: managephones.php?error=Cannot update. Phone is marked as Missing.");
+            exit;
+        }
+
+        // ✅ Update phone status in MongoDB
+        $updateResult = $db->phones->updateOne(
+            ["serial_number" => $serialNumber],
+            ['$set' => ["status" => $newStatus]]
+        );
+
+        if ($updateResult->getModifiedCount() > 0) {
+            // ✅ Redirect with success message
+            header("Location: managephones.php?success=Status updated successfully!");
+            exit;
+        } else {
+            header("Location: managephones.php?error=No changes made.");
+            exit;
+        }
+    } catch (Exception $e) {
+        header("Location: managephones.php?error=Database error: " . urlencode($e->getMessage()));
+        exit;
+    }
 }
 ?>

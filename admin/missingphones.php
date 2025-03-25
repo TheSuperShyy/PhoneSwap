@@ -38,21 +38,21 @@ require __DIR__ . '/../queries/phone_query.php';
         </li>
         <li class="mb-4">
           <a class="flex items-center hover:bg-opacity-30 hover:bg-white p-2 text-base font-medium rounded-lg"
-            href="audittrail.html">
+            href="audittrail.php">
             <i class="fas fa-list-alt mr-3"></i>
             Audit Trail
           </a>
         </li>
         <li class="mb-4">
           <a class="flex items-center hover:bg-opacity-30 hover:bg-white p-2 text-base font-medium rounded-lg"
-            href="swapphones.html">
+            href="swapphones.php">
             <i class="fas fa-warehouse mr-3"></i>
             Swap Phones
           </a>
         </li>
         <li class="mb-4">
           <a class="flex items-center hover:bg-opacity-30 hover:bg-white p-2 text-base font-medium rounded-lg"
-            href="usermanagement.html">
+            href="usermanagement.php">
             <i class="fas fa-tools mr-3"></i>
             User Management
           </a>
@@ -69,7 +69,7 @@ require __DIR__ . '/../queries/phone_query.php';
           <button class="text-black focus:outline-none">
             <i class="fas fa-bars"></i>
           </button>
-          <h2 class="text-xl font-semibold mr-4">Dashboard</h2>
+          <h2 class="text-xl font-semibold mr-4">Missing Phones</h2>
         </div>
 
          <!-- Notification Bell -->
