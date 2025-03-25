@@ -3,6 +3,7 @@ require __DIR__ . '/../dbcon/dbcon.php';
 
 // Fetch all phones
 $phones = $phonesCollection->find([]);
+$audit = $auditCollection->find([]); 
 
 // Count total phones in the database
 $totalPhones = $db->phones->countDocuments();
@@ -149,8 +150,8 @@ require __DIR__ . '/../queries/phone_query.php';
                           Date
                         </th>
                         <th class="py-3 px-4 whitespace-nowrap">User</th>
-                        <th class="py-3 px-4 whitespace-nowrap">Time In</th>
-                        <th class="py-3 px-4 whitespace-nowrap">Time Out</th>
+                        <th class="py-3 px-4 whitespace-nowrap">Serial Device</th>
+                        <th class="py-3 px-4 whitespace-nowrap">Device Model</th>
                         <th class="py-3 px-4 whitespace-nowrap">Action</th>
                       </tr> 
                     </thead>

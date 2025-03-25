@@ -1,6 +1,7 @@
 <?php
-require __DIR__ . '/../dbcon/dbcon.php';
-require __DIR__ . '/../queries/phone_query.php';
+require __DIR__ . '/../../dbcon/dbcon.php';
+require __DIR__ . '/../../queries/phone_query.php';
+require __DIR__ . '/../../dbcon/authentication.php';
 $phones = iterator_to_array($db->phones->find([]));
 ?>
 
@@ -12,7 +13,7 @@ $phones = iterator_to_array($db->phones->find([]));
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Manage Phones</title>
   <link rel="icon" href="../src/assets/images/iconswap.svg" type="image/svg">
-  <link rel="stylesheet" href="../src/output.css" />
+  <link rel="stylesheet" href="../../src/output.css" />
   <script src="https://kit.fontawesome.com/10d593c5dc.js" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
@@ -41,21 +42,21 @@ $phones = iterator_to_array($db->phones->find([]));
         </li>
         <li class="mb-4">
           <a class="flex items-center hover:bg-opacity-30 hover:bg-white p-2 text-base font-medium rounded-lg"
-            href="audittrail.php">
+            href="../audittrail.php">
             <i class="fas fa-list-alt mr-3"></i>
             Audit Trail
           </a>
         </li>
         <li class="mb-4">
           <a class="flex items-center hover:bg-opacity-30 hover:bg-white p-2 text-base font-medium rounded-lg"
-            href="swapphones.php">
+            href="../swapphones.php">
             <i class="fas fa-warehouse mr-3"></i>
             Swap Phones
           </a>
         </li>
         <li class="mb-4">
           <a class="flex items-center hover:bg-opacity-30 hover:bg-white p-2 text-base font-medium rounded-lg"
-            href="usermanagement.php">
+            href="../usermanagement.php">
             <i class="fas fa-tools mr-3"></i>
             User Management
           </a>
@@ -161,7 +162,7 @@ $phones = iterator_to_array($db->phones->find([]));
             </button>
             <div class="dropdown-menu absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-2 z-20 hidden">
               <a href="accountsetting.php" class="block px-4 py-2 text-gray-800 hover:bg-gray-200">Account Settings</a>
-              <a href="#" class="block px-4 py-2 text-gray-800 hover:bg-gray-200">Logout</a>
+              <a href="../src/logout.php" class="block px-4 py-2 text-gray-800 hover:bg-gray-200">Logout</a>
             </div>
           </div>
         </div>
@@ -320,7 +321,7 @@ $phones = iterator_to_array($db->phones->find([]));
         <div id="myModal1"
           class="fixed inset-0 flex justify-center items-center hidden bg-black bg-opacity-50 z-50 pt-24 pb-24 h-full laptop:px-80 laptop:w-full phone:w-full phone:px-4">
           <div class="bg-white border border-gray-600 rounded-lg px-6 py-6 shadow-lg relative h-fit w-full">
-            <form action="update_phone_status.php" method="POST">
+            <form action="../manage_phones/update_phone_status.php" method="POST">
               <div class="flex flex-col gap-4">
                 <h2 class="text-3xl font-russo mb-2">Edit Phone</h2>
 
@@ -461,7 +462,7 @@ $phones = iterator_to_array($db->phones->find([]));
             }).then((result) => {
               if (result.isConfirmed) {
                 // Send request to delete phone
-                fetch("delete_phone.php", {
+                fetch("../manage_phones/delete_phone.php", {
                   method: "POST",
                   headers: { "Content-Type": "application/x-www-form-urlencoded" },
                   body: "serial_number=" + encodeURIComponent(serialNumber)
@@ -491,7 +492,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         let formData = new FormData(this);
 
-        fetch("add_phone.php", {
+        fetch("../manage_phones/add_phone.php", {
             method: "POST",
             body: formData
         })

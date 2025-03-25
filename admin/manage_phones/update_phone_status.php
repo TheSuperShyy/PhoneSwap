@@ -1,5 +1,5 @@
 <?php
-require __DIR__ . '/../dbcon/dbcon.php';
+require __DIR__ . '/../../dbcon/dbcon.php';
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     if (!isset($_POST["serial_number"]) || !isset($_POST["status"])) {
@@ -15,13 +15,13 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $phone = $db->phones->findOne(["serial_number" => $serialNumber]);
 
         if (!$phone) {
-            header("Location: managephones.php?error=Phone not found.");
+            header("Location: ../dashboard/managephones.php?error=Phone not found.");
             exit;
         }
 
         // ✅ Prevent update if the current status is "Missing"
         if ($phone["status"] === "Missing") {
-            header("Location: managephones.php?error=Cannot update. Phone is marked as Missing.");
+            header("Location: ../dashboard/managephones.php?error=Cannot update. Phone is marked as Missing.");
             exit;
         }
 
@@ -33,14 +33,14 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
         if ($updateResult->getModifiedCount() > 0) {
             // ✅ Redirect with success message
-            header("Location: managephones.php?success=Status updated successfully!");
+            header("Location: ../dashboard/managephones.php?success=Status updated successfully!");
             exit;
         } else {
-            header("Location: managephones.php?error=No changes made.");
+            header("Location: ../dashboard/managephones.php?error=No changes made.");
             exit;
         }
     } catch (Exception $e) {
-        header("Location: managephones.php?error=Database error: " . urlencode($e->getMessage()));
+        header("Location: ../dashboard/managephones.php?error=Database error: " . urlencode($e->getMessage()));
         exit;
     }
 }

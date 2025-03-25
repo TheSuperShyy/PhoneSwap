@@ -1,6 +1,7 @@
 <?php
-require __DIR__ . '/../dbcon/dbcon.php';
-require __DIR__ . '/../queries/phone_query.php';
+require __DIR__ . '/../../dbcon/authentication.php';
+require __DIR__ . '/../../dbcon/dbcon.php';
+require __DIR__ . '/../../queries/phone_query.php';
 ?>
 
 <!DOCTYPE html>
@@ -10,8 +11,8 @@ require __DIR__ . '/../queries/phone_query.php';
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Missing Phones</title>
-  <link rel="icon" href="../src/assets/images/icon1.svg" type="image/svg">
-  <link rel="stylesheet" href="../src/output.css" />
+  <link rel="icon" href="../../src/assets/images/icon1.svg" type="image/svg">
+  <link rel="stylesheet" href="../../src/output.css" />
   <script src="https://kit.fontawesome.com/10d593c5dc.js" crossorigin="anonymous"></script>
   <style>
     .dropdown-menu {
@@ -38,21 +39,21 @@ require __DIR__ . '/../queries/phone_query.php';
         </li>
         <li class="mb-4">
           <a class="flex items-center hover:bg-opacity-30 hover:bg-white p-2 text-base font-medium rounded-lg"
-            href="audittrail.php">
+            href="../audittrail.php">
             <i class="fas fa-list-alt mr-3"></i>
             Audit Trail
           </a>
         </li>
         <li class="mb-4">
           <a class="flex items-center hover:bg-opacity-30 hover:bg-white p-2 text-base font-medium rounded-lg"
-            href="swapphones.php">
+            href="../swapphones.php">
             <i class="fas fa-warehouse mr-3"></i>
             Swap Phones
           </a>
         </li>
         <li class="mb-4">
           <a class="flex items-center hover:bg-opacity-30 hover:bg-white p-2 text-base font-medium rounded-lg"
-            href="usermanagement.php">
+            href="../usermanagement.php">
             <i class="fas fa-tools mr-3"></i>
             User Management
           </a>
@@ -158,9 +159,8 @@ require __DIR__ . '/../queries/phone_query.php';
               <i class="fa-solid fa-angle-down fa-sm pl-3"></i>
             </button>
             <div class="dropdown-menu absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-2 z-20 hidden">
-              <a href="#" class="block px-4 py-2 text-gray-800 hover:bg-gray-200">Profile</a>
-              <a href="#" class="block px-4 py-2 text-gray-800 hover:bg-gray-200">Settings</a>
-              <a href="#" class="block px-4 py-2 text-gray-800 hover:bg-gray-200">Logout</a>
+              <a href="accountsetting.php" class="block px-4 py-2 text-gray-800 hover:bg-gray-200">Account Settings</a>
+              <a href="../../src/logout.php" class="block px-4 py-2 text-gray-800 hover:bg-gray-200">Logout</a>
             </div>
           </div>
         </div>
