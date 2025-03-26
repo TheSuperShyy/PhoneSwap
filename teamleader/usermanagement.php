@@ -88,7 +88,7 @@ require __DIR__ . '/../queries/phone_query.php';
                       <p class="font-medium">
                         New message from Yul Gatchalian
                       </p>
-                      <p class="text-sm text-black-500">Stress to the max.</p>
+                      <p class="text-sm text-black-500">Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
                       <p class="text-xs text-black-400">5 minutes ago</p>
                     </div>
                   </div>
@@ -98,7 +98,7 @@ require __DIR__ . '/../queries/phone_query.php';
                     <div class="mr-3">
                       <p class="font-medium">Cylie Gonzales</p>
                       <p class="text-sm text-black-500">
-                        Brain says code, stomach says feed me.
+                        Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
                       </p>
                       <p class="text-xs text-black-400">1 hour ago</p>
                     </div>
@@ -109,7 +109,7 @@ require __DIR__ . '/../queries/phone_query.php';
                     <div class="mr-3">
                       <p class="font-medium">Kian David</p>
                       <p class="text-sm text-black-500">
-                        Coding with good vibes = ultimate chill.
+                        Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
                       </p>
                       <p class="text-xs text-black-400">2 days ago</p>
                     </div>
@@ -120,7 +120,7 @@ require __DIR__ . '/../queries/phone_query.php';
                     <div class="mr-3">
                       <p class="font-medium">Miko Basilio</p>
                       <p class="text-sm text-black-500">
-                        Bugs and beats, coding and grooving
+                        Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
                       </p>
                       <p class="text-xs text-black-400">2 days ago</p>
                     </div>
@@ -129,9 +129,9 @@ require __DIR__ . '/../queries/phone_query.php';
                 <a href="#" class="block px-4 py-2 text-sm text-black-700 hover:bg-gray-100" role="menuitem">
                   <div class="flex">
                     <div class="mr-3">
-                      <p class="font-medium">Daniel Digo</p>
+                      <p class="font-medium">Yul Grant Gatchalian</p>
                       <p class="text-sm text-black-500">
-                        Catching up on sleep and relaxing.
+                        Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
                       </p>
                       <p class="text-xs text-black-400">2 days ago</p>
                     </div>
