@@ -9,4 +9,5 @@ $client = new Client("mongodb://localhost:27017");
 $db = $client->selectDatabase('phoneSwap');
 $usersCollection = $db->selectCollection('users');
 $phonesCollection = $db->selectCollection('phones');
+$auditCollection = $db->selectCollection('audit');
 ?>

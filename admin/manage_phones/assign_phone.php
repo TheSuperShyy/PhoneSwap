@@ -16,8 +16,8 @@ $serialNumber = strval($data['serial_number']); // Ensure it's a string
 $hfId = strval($data['hfId']);
 
 try {
-    $phoneCollection = $db->phones;  // Access the 'phone' collection
-    $userCollection = $db->users;   // Access the 'users' collection
+    $phoneCollection = $db->phones;
+    $userCollection = $db->users;
 
     // ✅ Step 1: Check if the phone exists
     $phone = $phoneCollection->findOne(["serial_number" => $serialNumber]);
@@ -37,7 +37,7 @@ try {
     $previousOwner = $userCollection->findOne(["assigned_phone" => $serialNumber]);
 
     if ($previousOwner) {
-        // ✅ Step 4: Remove the phone from the previous TL's assigned_phone array
+        // ✅ Remove phone from previous TL
         $removeResult = $userCollection->updateOne(
             ["hfId" => $previousOwner['hfId']],
             ['$pull' => ["assigned_phone" => $serialNumber]]
@@ -50,18 +50,25 @@ try {
         }
     }
 
+    // ✅ Step 4: Handle "Unassigned" Case
+    if ($hfId === "unassigned") {
+        echo json_encode(["success" => true, "message" => "Phone successfully unassigned."]);
+        exit;
+    }
+
     // ✅ Step 5: Assign the phone to the new TL
     $updateResult = $userCollection->updateOne(
-        ["hfId" => $hfId], 
+        ["hfId" => $hfId],
         ['$addToSet' => ["assigned_phone" => $serialNumber]]
     );
 
     if ($updateResult->getModifiedCount() > 0) {
-        echo json_encode(["success" => true, "message" => "Phone successfully reassigned."]);
+        echo json_encode(["success" => true, "message" => "Phone successfully assigned."]);
     } else {
         echo json_encode(["success" => false, "message" => "Failed to assign phone."]);
     }
 } catch (Exception $e) {
     echo json_encode(["success" => false, "message" => "Error: " . $e->getMessage()]);
 }
+    
 ?>
