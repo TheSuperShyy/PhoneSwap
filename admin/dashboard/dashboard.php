@@ -37,7 +37,7 @@ require __DIR__ . '/../../dbcon/authentication.php';
       </li>
       <li class="mb-4">
         <a class="flex items-center hover:bg-opacity-30 hover:bg-white p-2 text-base font-medium rounded-lg"
-          href="audittrail.php">
+          href="../audittrail.php">
           <i class="fas fa-list-alt mr-3"></i>
           Audit Trail
         </a>

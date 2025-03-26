@@ -1,21 +1,79 @@
 <?php
-require __DIR__ . '/../dbcon/dbcon.php';
+require __DIR__ . '/../../dbcon/dbcon.php';
 
-// Fetch all phones
-$phones = $phonesCollection->find([]);
-$audit = $auditCollection->find([]); 
+header('Content-Type: application/json');
 
-// Count total phones in the database
-$totalPhones = $db->phones->countDocuments();
+// Decode JSON input
+$data = json_decode(file_get_contents("php://input"), true);
 
-// Fetch all users with userType = 'TL'
-$teamLeadersCursor = $usersCollection->find(['userType' => 'TL']);
-$teamLeaders = [];
-foreach ($teamLeadersCursor as $tl) {
-  $teamLeaders[] = $tl['first_name']; // Store TL usernames in an array
+// Validate input fields
+if (!isset($data['serial_number'], $data['hfId'])) {
+    echo json_encode(["success" => false, "message" => "Missing required fields."]);
+    exit;
 }
-require __DIR__ . '/../queries/phone_query.php';
+
+$serialNumber = strval($data['serial_number']); // Ensure it's a string
+$hfId = strval($data['hfId']);
+$dateTime = new MongoDB\BSON\UTCDateTime((new DateTime())->getTimestamp() * 1000); // Current timestamp
+
+try {
+    $phoneCollection = $db->phones;
+    $userCollection = $db->users;
+    $auditCollection = $db->audit; // ✅ Access the 'audit' collection
+
+    // ✅ Step 1: Check if the phone exists
+    $phone = $phoneCollection->findOne(["serial_number" => $serialNumber]);
+
+    if (!$phone) {
+        echo json_encode(["success" => false, "message" => "Phone not found."]);
+        exit;
+    }
+
+    // ✅ Step 2: Prevent assigning if the phone is missing
+    if ($phone['status'] === 'Missing') {
+        echo json_encode(["success" => false, "message" => "Cannot assign a missing phone."]);
+        exit;
+    }
+
+    // ✅ Step 3: Find the previous TL who has this phone
+    $previousOwner = $userCollection->findOne(["assigned_phone" => $serialNumber]);
+    $previousOwnerId = $previousOwner ? $previousOwner['hfId'] : null;
+
+    if ($previousOwner) {
+        // ✅ Step 4: Remove the phone from the previous TL's assigned_phone array
+        $userCollection->updateOne(
+            ["hfId" => $previousOwnerId],
+            ['$pull' => ["assigned_phone" => $serialNumber]]
+        );
+    }
+
+    // ✅ Step 5: Assign the phone to the new TL
+    $updateResult = $userCollection->updateOne(
+        ["hfId" => $hfId], 
+        ['$addToSet' => ["assigned_phone" => $serialNumber]]
+    );
+
+    if ($updateResult->getModifiedCount() > 0) {
+        // ✅ Step 6: Log the assignment in the audit collection
+        $auditEntry = [
+            "date" => $dateTime,
+            "action" => "Phone Reassigned",
+            "serial_number" => $serialNumber,
+            "device_model" => $phone['model'],
+            "assigned_to" => $hfId,
+            "previous_owner" => $previousOwnerId ?? "None"
+        ];
+        $auditCollection->insertOne($auditEntry);
+
+        echo json_encode(["success" => true, "message" => "Phone successfully reassigned."]);
+    } else {
+        echo json_encode(["success" => false, "message" => "Failed to assign phone."]);
+    }
+} catch (Exception $e) {
+    echo json_encode(["success" => false, "message" => "Error: " . $e->getMessage()]);
+}
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
