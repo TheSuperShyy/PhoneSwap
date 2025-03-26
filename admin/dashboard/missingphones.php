@@ -2,6 +2,7 @@
 require __DIR__ . '/../../dbcon/authentication.php';
 require __DIR__ . '/../../dbcon/dbcon.php';
 require __DIR__ . '/../../queries/phone_query.php';
+require __DIR__ . '/../../dbcon/session_get.php';
 ?>
 
 <!DOCTYPE html>
@@ -73,10 +74,10 @@ require __DIR__ . '/../../queries/phone_query.php';
           <h2 class="text-xl font-semibold mr-4">Missing Phones</h2>
         </div>
 
-         <!-- Notification Bell -->
+        <!-- Notification Bell -->
         <div class="flex gap-4">
           <div class="flex flex-row items-center gap-4">
-           
+
             <div class="relative inline-block text-left">
               <button class="relative text-2xl" aria-label="Notifications" id="notificationButton">
                 <i class="fa-regular fa-bell"></i>
@@ -153,8 +154,8 @@ require __DIR__ . '/../../queries/phone_query.php';
               class="flex flex-row items-center gap-3 border border-black shadow-gray-700 shadow-sm bg-amber-400 text-black px-4 w-fit rounded-xl">
               <i class="fa-regular fa-user fa-xl"></i>
               <div class="flex flex-col items-start">
-                <h1 class="font-medium">Emily Dav</h1>
-                <h1 class="text-sm">Admin</h1>
+                <h1 class="font-medium"><?= htmlspecialchars($userName) ?></h1>
+                <h1 class="text-sm"><?= htmlspecialchars($userRole) ?></h1>
               </div>
               <i class="fa-solid fa-angle-down fa-sm pl-3"></i>
             </button>
@@ -247,6 +248,9 @@ require __DIR__ . '/../../queries/phone_query.php';
               </thead>
               <tbody>
                 <?php
+                if ($totalActivePhones == 0) {
+                  echo '<tr class="border-b text-left"><td class="py-2 px-4" colspan="5">No phones found.</td></tr>';
+                }
                 // Fetch all phones
                 $phonesCursor = $db->phones->find(['status' => 'Missing']);
 
@@ -280,7 +284,7 @@ require __DIR__ . '/../../queries/phone_query.php';
                         ['assigned_phone' => $phone['serial_number']],
                         ['projection' => ['hfId' => 1, 'first_name' => 1, 'last_name' => 1]]
                       );
-                      echo $tl ? htmlspecialchars('('.$tl['hfId'] . ') ' . $tl['first_name'] . ' ' . $tl['last_name']) : 'Unassigned';
+                      echo $tl ? htmlspecialchars('(' . $tl['hfId'] . ') ' . $tl['first_name'] . ' ' . $tl['last_name']) : 'Unassigned';
                       ?>
                     </td>
                   </tr>

@@ -2,11 +2,11 @@
 require __DIR__ . '/../../dbcon/dbcon.php';
 require __DIR__ . '/../../queries/phone_query.php';
 require __DIR__ . '/../../dbcon/authentication.php';
+require __DIR__ . '/../../dbcon/session_get.php';
 ?>
 
 
 <!DOCTYPE html>
-
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -73,95 +73,95 @@ require __DIR__ . '/../../dbcon/authentication.php';
 
       <!-- Notification Bell -->
       <div class="flex gap-4">
-          <div class="flex flex-row items-center gap-4">
-           
-            <div class="relative inline-block text-left">
-              <button class="relative text-2xl" aria-label="Notifications" id="notificationButton">
-                <i class="fa-regular fa-bell"></i>
-              </button>
+        <div class="flex flex-row items-center gap-4">
 
-              <!-- Dropdown Message Notification -->
-              <div
-                class="origin-top-right absolute right-0 mt-2 w-80 rounded-md shadow-lg bg-white border border-gray-400 ring-1 ring-black ring-opacity-5 focus:outline-none hidden"
-                role="menu" aria-orientation="vertical" aria-labelledby="notificationButton" id="notificationDropdown">
-                <div class="py-1" role="none">
-                  <a href="#" class="block px-4 py-2 text-sm text-black-700 hover:bg-gray-100" role="menuitem">
-                    <div class="flex">
-                      <div>
-                        <p class="font-medium">
-                          New message from Yul Gatchalian
-                        </p>
-                        <p class="text-sm text-black-500">Lorem ipsum dolor sit amet.</p>
-                        <p class="text-xs text-black-400">5 minutes ago</p>
-                      </div>
+          <div class="relative inline-block text-left">
+            <button class="relative text-2xl" aria-label="Notifications" id="notificationButton">
+              <i class="fa-regular fa-bell"></i>
+            </button>
+
+            <!-- Dropdown Message Notification -->
+            <div
+              class="origin-top-right absolute right-0 mt-2 w-80 rounded-md shadow-lg bg-white border border-gray-400 ring-1 ring-black ring-opacity-5 focus:outline-none hidden"
+              role="menu" aria-orientation="vertical" aria-labelledby="notificationButton" id="notificationDropdown">
+              <div class="py-1" role="none">
+                <a href="#" class="block px-4 py-2 text-sm text-black-700 hover:bg-gray-100" role="menuitem">
+                  <div class="flex">
+                    <div>
+                      <p class="font-medium">
+                        New message from Yul Gatchalian
+                      </p>
+                      <p class="text-sm text-black-500">Lorem ipsum dolor sit amet.</p>
+                      <p class="text-xs text-black-400">5 minutes ago</p>
                     </div>
-                  </a>
-                  <a href="#" class="block px-4 py-2 text-sm text-black-700 hover:bg-gray-100" role="menuitem">
-                    <div class="flex">
-                      <div class="mr-3">
-                        <p class="font-medium">Cylie Gonzales</p>
-                        <p class="text-sm text-black-500">
-                          Lorem ipsum dolor sit amet.
-                        </p>
-                        <p class="text-xs text-black-400">1 hour ago</p>
-                      </div>
+                  </div>
+                </a>
+                <a href="#" class="block px-4 py-2 text-sm text-black-700 hover:bg-gray-100" role="menuitem">
+                  <div class="flex">
+                    <div class="mr-3">
+                      <p class="font-medium">Cylie Gonzales</p>
+                      <p class="text-sm text-black-500">
+                        Lorem ipsum dolor sit amet.
+                      </p>
+                      <p class="text-xs text-black-400">1 hour ago</p>
                     </div>
-                  </a>
-                  <a href="#" class="block px-4 py-2 text-sm text-black-700 hover:bg-gray-100" role="menuitem">
-                    <div class="flex">
-                      <div class="mr-3">
-                        <p class="font-medium">Kian David</p>
-                        <p class="text-sm text-black-500">
-                          Lorem ipsum dolor sit amet.
-                        </p>
-                        <p class="text-xs text-black-400">2 days ago</p>
-                      </div>
+                  </div>
+                </a>
+                <a href="#" class="block px-4 py-2 text-sm text-black-700 hover:bg-gray-100" role="menuitem">
+                  <div class="flex">
+                    <div class="mr-3">
+                      <p class="font-medium">Kian David</p>
+                      <p class="text-sm text-black-500">
+                        Lorem ipsum dolor sit amet.
+                      </p>
+                      <p class="text-xs text-black-400">2 days ago</p>
                     </div>
-                  </a>
-                  <a href="#" class="block px-4 py-2 text-sm text-black-700 hover:bg-gray-100" role="menuitem">
-                    <div class="flex">
-                      <div class="mr-3">
-                        <p class="font-medium">Miko Basilio</p>
-                        <p class="text-sm text-black-500">
-                          Lorem ipsum dolor sit amet.
-                        </p>
-                        <p class="text-xs text-black-400">2 days ago</p>
-                      </div>
+                  </div>
+                </a>
+                <a href="#" class="block px-4 py-2 text-sm text-black-700 hover:bg-gray-100" role="menuitem">
+                  <div class="flex">
+                    <div class="mr-3">
+                      <p class="font-medium">Miko Basilio</p>
+                      <p class="text-sm text-black-500">
+                        Lorem ipsum dolor sit amet.
+                      </p>
+                      <p class="text-xs text-black-400">2 days ago</p>
                     </div>
-                  </a>
-                  <a href="#" class="block px-4 py-2 text-sm text-black-700 hover:bg-gray-100" role="menuitem">
-                    <div class="flex">
-                      <div class="mr-3">
-                        <p class="font-medium">Daniel Digo</p>
-                        <p class="text-sm text-black-500">
-                          Lorem ipsum dolor sit amet.
-                        </p>
-                        <p class="text-xs text-black-400">2 days ago</p>
-                      </div>
+                  </div>
+                </a>
+                <a href="#" class="block px-4 py-2 text-sm text-black-700 hover:bg-gray-100" role="menuitem">
+                  <div class="flex">
+                    <div class="mr-3">
+                      <p class="font-medium">Daniel Digo</p>
+                      <p class="text-sm text-black-500">
+                        Lorem ipsum dolor sit amet.
+                      </p>
+                      <p class="text-xs text-black-400">2 days ago</p>
                     </div>
-                  </a>
-                </div>
+                  </div>
+                </a>
               </div>
             </div>
           </div>
+        </div>
 
-      <!-- Avatarbar -->
-      <div class="relative dropdown">
-        <button
-          class="flex flex-row items-center gap-3 border border-black shadow-gray-700 shadow-sm bg-amber-400 text-black px-4 w-fit rounded-xl">
-          <i class="fa-regular fa-user fa-xl"></i>
-          <div class="flex flex-col items-start">
-            <h1 class="font-medium">Emily Dav</h1>
-            <h1 class="text-sm">Admin</h1>
-          </div>
-          <i class="fa-solid fa-angle-down fa-sm pl-3"></i>
-        </button>
-        <div class="dropdown-menu absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-2 z-20 hidden">
-              <a href="../accountsetting.php" class="block px-4 py-2 text-gray-800 hover:bg-gray-200">Account Settings</a>
-              <a href="../../src/logout.php" class="block px-4 py-2 text-gray-800 hover:bg-gray-200">Logout</a>
+        <!-- Avatarbar -->
+        <div class="relative dropdown">
+          <button
+            class="flex flex-row items-center gap-3 border border-black shadow-gray-700 shadow-sm bg-amber-400 text-black px-4 w-fit rounded-xl">
+            <i class="fa-regular fa-user fa-xl"></i>
+            <div class="flex flex-col items-start">
+              <h1 class="font-medium"><?= htmlspecialchars($userName) ?></h1>
+              <h1 class="text-sm"><?= htmlspecialchars($userRole) ?></h1>
             </div>
+            <i class="fa-solid fa-angle-down fa-sm pl-3"></i>
+          </button>
+          <div class="dropdown-menu absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-2 z-20 hidden">
+            <a href="../accountsetting.php" class="block px-4 py-2 text-gray-800 hover:bg-gray-200">Account Settings</a>
+            <a href="../../src/logout.php" class="block px-4 py-2 text-gray-800 hover:bg-gray-200">Logout</a>
+          </div>
+        </div>
       </div>
-    </div>
     </div>
 
     <!-- Main Content -->
@@ -333,14 +333,6 @@ require __DIR__ . '/../../dbcon/authentication.php';
             <div class="mb-4">
               <label class="text-sm font-medium">Select Team Leader</label>
               <select id="teamLeaderSelect" class="border border-gray-700 p-2 w-full rounded-lg">
-                <option value="">Select Team Leader</option>
-                <?php foreach ($users as $user): ?>
-                  <?php if ($user['userType'] === 'TL'): ?>
-                    <option value="<?= htmlspecialchars($user['hfId']) ?>">
-                      <?= htmlspecialchars($user['first_name'] . ' ' . $user['last_name']) ?>
-                    </option>
-                  <?php endif; ?>
-                <?php endforeach; ?>
               </select>
 
             </div>
@@ -384,128 +376,159 @@ require __DIR__ . '/../../dbcon/authentication.php';
     </div>
   </div>
 
-  <!-- assign phone script -->
-  <script>
-    document.addEventListener("DOMContentLoaded", function () {
-      console.log("JS Loaded");
+  <!-- Include SweetAlert2 -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-      const assignModal = document.getElementById("assignModal");
-      const closeAssignModal = document.getElementById("closeAssignModal");
-      const assignForm = document.getElementById("assignForm");
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    console.log("JS Loaded");
 
-      if (!assignModal) {
-        console.error("Error: assignModal element not found!");
-        return;
-      }
+    const assignModal = document.getElementById("assignModal");
+    const closeAssignModal = document.getElementById("closeAssignModal");
+    const assignForm = document.getElementById("assignForm");
 
-      if (closeAssignModal) {
-        closeAssignModal.addEventListener("click", function () {
-          assignModal.classList.add("hidden");
-          console.log("Modal closed");
-        });
-      } else {
-        console.warn("Warning: closeAssignModal button not found.");
-      }
+    if (!assignModal) {
+      console.error("Error: assignModal element not found!");
+      return;
+    }
 
-      // ✅ Handle form submission
-      assignForm.addEventListener("submit", function (event) {
-        event.preventDefault(); // Prevent default form submission
-
-        const serialNumber = document.getElementById("serialNumber").value;
-        const deviceModel = document.getElementById("deviceModel").value;
-        const teamLeaderId = document.getElementById("teamLeaderSelect").value; // This is hfId
-
-        if (!serialNumber || !deviceModel || !teamLeaderId) {
-          alert("Please select all fields before assigning.");
-          return;
-        }
-
-        console.log("Assigning phone to Team Leader (hfId):", teamLeaderId);
-
-        // ✅ Send assignment request to backend
-        fetch("../manage_phones/assign_phone.php", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            serial_number: serialNumber,
-            device_model: deviceModel,
-            hfId: teamLeaderId,
-          }),
-        })
-          .then((response) => response.json())
-          .then((data) => {
-            if (data.success) {
-              alert("Phone assigned successfully!");
-              assignModal.classList.add("hidden");
-              location.reload(); // Reload the page to reflect changes
-            } else {
-              alert("Error: " + data.message);
-            }
-          })
-          .catch((error) => {
-            console.error("Fetch Error:", error);
-            alert("Failed to assign phone. Please try again.");
-          });
+    if (closeAssignModal) {
+      closeAssignModal.addEventListener("click", function () {
+        assignModal.classList.add("hidden");
+        console.log("Modal closed");
       });
-    });
+    } else {
+      console.warn("Warning: closeAssignModal button not found.");
+    }
 
-    // ✅ Open Assign Modal
-    function openAssignModal(serial, model) {
-      console.log("Opening modal for:", serial, model);
+    // ✅ Handle form submission
+    assignForm.addEventListener("submit", function (event) {
+      event.preventDefault(); // Prevent default form submission
 
-      const assignModal = document.getElementById("assignModal");
-      const teamLeaderSelect = document.getElementById("teamLeaderSelect");
+      const serialNumber = document.getElementById("serialNumber").value;
+      const deviceModel = document.getElementById("deviceModel").value;
+      const teamLeaderId = document.getElementById("teamLeaderSelect").value; // This is hfId
 
-      if (!assignModal || !teamLeaderSelect) {
-        console.error("Modal elements missing!");
+      if (!serialNumber || !deviceModel || !teamLeaderId) {
+        Swal.fire({
+          icon: "warning",
+          title: "Incomplete Details",
+          text: "Please select all fields before assigning.",
+          confirmButtonColor: "#3085d6"
+        });
         return;
       }
 
-      document.getElementById("serialNumber").value = serial;
-      document.getElementById("deviceModel").value = model;
+      console.log("Assigning phone to Team Leader (hfId):", teamLeaderId);
 
-      // ✅ Fetch Team Leaders
-      fetch("../manage_phones/fetch_team_leaders.php")
+      // ✅ Send assignment request to backend
+      fetch("../manage_phones/assign_phone.php", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          serial_number: serialNumber,
+          device_model: deviceModel,
+          hfId: teamLeaderId,
+        }),
+      })
         .then((response) => response.json())
         .then((data) => {
-          console.log("Fetched Data:", data);
-
-          if (!Array.isArray(data)) {
-            console.error("Unexpected response format.");
-            return;
-          }
-
-          teamLeaderSelect.innerHTML = '<option value="">Select Team Leader</option>';
-
-          // ✅ Debugging: Check if `userType` exists in response
-          data.forEach((user) => {
-            console.log("User Data:", user);
-          });
-
-          // ✅ Filter TLs
-          const teamLeaders = data.filter(user => user.userType === "TL");
-
-          if (teamLeaders.length === 0) {
-            alert("No available Team Leaders to assign phones.");
-            teamLeaderSelect.innerHTML = '<option value="">No Team Leaders Found</option>';
-            teamLeaderSelect.disabled = true;
+          if (data.success) {
+            Swal.fire({
+              icon: "success",
+              title: "Phone Assigned!",
+              text: "The phone has been successfully assigned.",
+              confirmButtonColor: "#3085d6"
+            }).then(() => {
+              assignModal.classList.add("hidden");
+              location.reload(); // Reload the page to reflect changes
+            });
           } else {
-            teamLeaderSelect.disabled = false;
-            teamLeaders.forEach((user) => {
-              let displayName = `(${user.hfId}) ${user.username}`;
-              teamLeaderSelect.innerHTML += `<option value="${user.hfId}">${displayName}</option>`;
+            Swal.fire({
+              icon: "error",
+              title: "Error",
+              text: data.message,
+              confirmButtonColor: "#d33"
             });
           }
-
-          assignModal.classList.remove("hidden");
         })
         .catch((error) => {
           console.error("Fetch Error:", error);
-          alert("Failed to fetch team leaders. Please try again.");
+          Swal.fire({
+            icon: "error",
+            title: "Failed to Assign Phone",
+            text: "An error occurred. Please try again.",
+            confirmButtonColor: "#d33"
+          });
         });
+    });
+  });
+
+  // ✅ Open Assign Modal
+  function openAssignModal(serial, model) {
+    console.log("Opening modal for:", serial, model);
+
+    const assignModal = document.getElementById("assignModal");
+    const teamLeaderSelect = document.getElementById("teamLeaderSelect");
+
+    if (!assignModal || !teamLeaderSelect) {
+      console.error("Modal elements missing!");
+      return;
     }
 
-  </script>
+    document.getElementById("serialNumber").value = serial;
+    document.getElementById("deviceModel").value = model;
+
+    // ✅ Fetch Team Leaders
+    fetch("../manage_phones/fetch_team_leaders.php")
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("Fetched Data:", data);
+
+        if (!Array.isArray(data)) {
+          console.error("Unexpected response format.");
+          return;
+        }
+
+        teamLeaderSelect.innerHTML = `
+          <option value="">Select Team Leader</option>
+          <option value="unassigned">Unassigned</option>
+        `;
+
+        // ✅ Filter TLs
+        const teamLeaders = data.filter(user => user.userType === "TL");
+
+        if (teamLeaders.length === 0) {
+          Swal.fire({
+            icon: "info",
+            title: "No Team Leaders Found",
+            text: "There are no available Team Leaders to assign phones.",
+            confirmButtonColor: "#3085d6"
+          });
+          teamLeaderSelect.innerHTML = '<option value="">No Team Leaders Found</option>';
+          teamLeaderSelect.disabled = true;
+        } else {
+          teamLeaderSelect.disabled = false;
+          teamLeaders.forEach((user) => {
+            let displayName = `(${user.hfId}) ${user.username}`;
+            teamLeaderSelect.innerHTML += `<option value="${user.hfId}">${displayName}</option>`;
+          });
+        }
+
+        assignModal.classList.remove("hidden");
+      })
+      .catch((error) => {
+        console.error("Fetch Error:", error);
+        Swal.fire({
+          icon: "error",
+          title: "Fetch Error",
+          text: "Failed to fetch team leaders. Please try again.",
+          confirmButtonColor: "#d33"
+        });
+      });
+  }
+</script>
+
 
   <!-- Script for notification bell dropdown-->
   <script>

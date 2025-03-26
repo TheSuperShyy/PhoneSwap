@@ -1,9 +1,12 @@
 <?php
 require __DIR__ . '/../../dbcon/dbcon.php';
+require __DIR__ . '/../../dbcon/authentication.php';
+header("Content-Type: application/json"); // ✅ Ensure JSON response
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
+    // Check if required fields are present
     if (!isset($_POST["serial_number"]) || !isset($_POST["status"])) {
-        header("Location: managephones.php?error=Missing required fields.");
+        echo json_encode(["success" => false, "error" => "Missing required fields."]);
         exit;
     }
 
@@ -15,15 +18,33 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $phone = $db->phones->findOne(["serial_number" => $serialNumber]);
 
         if (!$phone) {
-            header("Location: ../dashboard/managephones.php?error=Phone not found.");
+            echo json_encode(["success" => false, "error" => "Phone not found."]);
             exit;
         }
 
         // ✅ Prevent update if the current status is "Missing"
         if ($phone["status"] === "Missing") {
-            header("Location: ../dashboard/managephones.php?error=Cannot update. Phone is marked as Missing.");
+            echo json_encode(["success" => false, "error" => "Cannot update. Phone is marked as Missing."]);
             exit;
         }
+
+        // ✅ Get admin details from session
+        if (!isset($_SESSION['user'])) {
+            echo json_encode(["success" => false, "error" => "User not authenticated."]);
+            exit;
+        }
+
+        $adminEmail = $_SESSION['user'];
+        $admin = $db->users->findOne(["username" => $adminEmail]);
+
+        if (!$admin) {
+            echo json_encode(["success" => false, "error" => "Admin not found."]);
+            exit;
+        }
+
+        // Extract admin details
+        $adminId = $admin['hfId'] ?? 'Unknown ID';
+        $adminName = ($admin['first_name'] ?? 'Unknown') . ' ' . ($admin['last_name'] ?? '');
 
         // ✅ Update phone status in MongoDB
         $updateResult = $db->phones->updateOne(
@@ -32,15 +53,31 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         );
 
         if ($updateResult->getModifiedCount() > 0) {
+            // ✅ Insert into audit log for edits
+            $auditData = [
+                "timestamp" => date("Y-m-d H:i:s"), // Current date and time
+                "user" => [
+                    "hfId" => $adminId,
+                    "name" => $adminName,
+                ],
+                "serial_number" => $serialNumber,
+                "model" => $phone["model"],
+                "action" => "Edited Status to: " . $newStatus
+            ];
+
+            $db->audit->insertOne($auditData);
+
             // ✅ Redirect with success message
-            header("Location: ../dashboard/managephones.php?success=Status updated successfully!");
+            header("Location: ../dashboard/dashboard.php?success=Status updated successfully!");
             exit;
         } else {
-            header("Location: ../dashboard/managephones.php?error=No changes made.");
+            // ✅ Redirect with error message
+            header("Location: ../dashboard/dashboard.php?error=No changes made.");
             exit;
         }
+
     } catch (Exception $e) {
-        header("Location: ../dashboard/managephones.php?error=Database error: " . urlencode($e->getMessage()));
+        echo json_encode(["success" => false, "error" => "Database error: " . $e->getMessage()]);
         exit;
     }
 }

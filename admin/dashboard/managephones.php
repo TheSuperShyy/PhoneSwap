@@ -2,6 +2,7 @@
 require __DIR__ . '/../../dbcon/dbcon.php';
 require __DIR__ . '/../../queries/phone_query.php';
 require __DIR__ . '/../../dbcon/authentication.php';
+require __DIR__ . '/../../dbcon/session_get.php';
 $phones = iterator_to_array($db->phones->find([]));
 ?>
 
@@ -155,8 +156,8 @@ $phones = iterator_to_array($db->phones->find([]));
               class="flex flex-row items-center gap-3 border border-black shadow-gray-700 shadow-sm bg-amber-400 text-black px-4 w-fit rounded-xl">
               <i class="fa-regular fa-user fa-xl"></i>
               <div class="flex flex-col items-start">
-                <h1 class="font-medium">Emily Dav</h1>
-                <h1 class="text-sm">Admin</h1>
+                <h1 class="font-medium"><?= htmlspecialchars($userName) ?></h1>
+                <h1 class="text-sm"><?= htmlspecialchars($userRole) ?></h1>
               </div>
               <i class="fa-solid fa-angle-down fa-sm pl-3"></i>
             </button>
@@ -486,34 +487,34 @@ $phones = iterator_to_array($db->phones->find([]));
 
     <!-- add phone script -->
     <script>
-document.addEventListener("DOMContentLoaded", function () {
-    document.getElementById("addPhoneForm").addEventListener("submit", function (e) {
-        e.preventDefault(); // Prevent default form submission
+      document.addEventListener("DOMContentLoaded", function () {
+        document.getElementById("addPhoneForm").addEventListener("submit", function (e) {
+          e.preventDefault(); // Prevent default form submission
 
-        let formData = new FormData(this);
+          let formData = new FormData(this);
 
-        fetch("../manage_phones/add_phone.php", {
+          fetch("../manage_phones/add_phone.php", {
             method: "POST",
             body: formData
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
+          })
+            .then(response => response.json())
+            .then(data => {
+              if (data.success) {
                 Swal.fire("Success!", "Phone has been added.", "success")
-                .then(() => window.location.reload()); // Reload page to update list
-            } else {
+                  .then(() => window.location.reload()); // Reload page to update list
+              } else {
                 Swal.fire("Error!", data.error, "error");
-            }
-        })
-        .catch(error => Swal.fire("Error!", "Something went wrong.", "error"));
-    });
+              }
+            })
+            .catch(error => Swal.fire("Error!", "Something went wrong.", "error"));
+        });
 
-    // Close modal
-    document.getElementById("closeModalBtn2").addEventListener("click", function () {
-        document.getElementById("myModal2").classList.add("hidden");
-    });
-});
-</script>
+        // Close modal
+        document.getElementById("closeModalBtn2").addEventListener("click", function () {
+          document.getElementById("myModal2").classList.add("hidden");
+        });
+      });
+    </script>
 
 
 </body>
@@ -523,65 +524,79 @@ document.addEventListener("DOMContentLoaded", function () {
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <!-- Script for modal edit assets -->
-<script>
-  document.addEventListener("DOMContentLoaded", function () {
-    const modal1 = document.getElementById("myModal1");
-    const closeModalBtn1 = document.getElementById("closeModalBtn1");
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const modal1 = document.getElementById("myModal1");
+      const closeModalBtn1 = document.getElementById("closeModalBtn1");
+      const editButtons = document.querySelectorAll(".openModalBtn1");
 
-    // ✅ Select all Edit buttons
-    const editButtons = document.querySelectorAll(".openModalBtn1");
+      const editForm = document.querySelector("#myModal1 form"); // Select the form inside modal
 
-    editButtons.forEach(button => {
-      button.addEventListener("click", function () {
-        const serial = this.getAttribute("data-serial");
-        const model = this.getAttribute("data-model");
+      editButtons.forEach(button => {
+        button.addEventListener("click", function () {
+          const serial = this.getAttribute("data-serial");
+          const model = this.getAttribute("data-model");
 
-        console.log("Editing phone:", serial, model);
+          document.getElementById("serialNumber").value = serial;
+          document.getElementById("deviceModel").value = model;
 
-        document.getElementById("serialNumber").value = serial;
-        document.getElementById("deviceModel").value = model;
-
-        // ✅ Show modal
-        modal1.classList.remove("hidden");
+          // ✅ Show modal
+          modal1.classList.remove("hidden");
+        });
       });
+
+      // ✅ Close modal when clicking cancel
+      closeModalBtn1.addEventListener("click", function () {
+        modal1.classList.add("hidden");
+      });
+
+      // ✅ Handle form submission with AJAX
+      editForm.addEventListener("submit", function (e) {
+        e.preventDefault(); // Prevent default form submission
+
+        const formData = new FormData(this);
+
+        fetch(this.action, {
+          method: "POST",
+          body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+          console.log("Response Data:", data); // ✅ Debug response
+          if (data.success) {
+            Swal.fire({
+              icon: "success",
+              title: "Updated Successfully!",
+              text: data.message,
+              confirmButtonColor: "#3085d6",
+            }).then(() => {
+              modal1.classList.add("hidden"); // Close modal
+              location.reload(); // Refresh page to update table
+            });
+          } else {
+            Swal.fire({
+              icon: "error",
+              title: "Error!",
+              text: data.error,
+              confirmButtonColor: "#d33",
+            });
+          }
+        })
+        .catch(error => {
+          console.error("Error:", error);
+          Swal.fire({
+            icon: "error",
+            title: "Oops!",
+            text: "Something went wrong. Please try again.",
+            confirmButtonColor: "#d33",
+          });
+        });
+      });
+
     });
+  </script>
 
 
-    // ✅ Close modal when clicking cancel
-    closeModalBtn1.addEventListener("click", function () {
-      modal1.classList.add("hidden");
-    });
-  });
-
-</script>
-<script>
-  document.addEventListener("DOMContentLoaded", function () {
-    // ✅ Check URL for success or error messages
-    const urlParams = new URLSearchParams(window.location.search);
-
-    if (urlParams.has("success")) {
-      Swal.fire({
-        icon: "success",
-        title: "Success!",
-        text: urlParams.get("success"),
-        confirmButtonColor: "#3085d6",
-      }).then(() => {
-        window.history.replaceState(null, null, window.location.pathname); // ✅ Remove query params
-      });
-    }
-
-    if (urlParams.has("error")) {
-      Swal.fire({
-        icon: "error",
-        title: "Error!",
-        text: urlParams.get("error"),
-        confirmButtonColor: "#d33",
-      }).then(() => {
-        window.history.replaceState(null, null, window.location.pathname); // ✅ Remove query params
-      });
-    }
-  });
-</script>
 
 
 <!-- Script for add modal -->
