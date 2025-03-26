@@ -1,5 +1,5 @@
 <?php
-require __DIR__ . '/../dbcon/dbcon.php';
+require __DIR__ . '/../../dbcon/dbcon.php';
 
 header('Content-Type: application/json');
 

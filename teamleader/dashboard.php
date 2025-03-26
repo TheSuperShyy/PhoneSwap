@@ -1,6 +1,12 @@
 <?php
 require __DIR__ . '/../dbcon/dbcon.php';
 require __DIR__ . '/../queries/phone_query.php';
+
+// Check if user session is set
+if (!isset($_SESSION['user'])) {
+  header("Location: ../src/loginpage.php"); // Redirect to login page if not logged in
+  exit();
+}
 ?>
 
 <!DOCTYPE html>
@@ -152,7 +158,7 @@ require __DIR__ . '/../queries/phone_query.php';
             </button>
             <div class="dropdown-menu absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-2 z-20 hidden">
               <a href="accountsetting.html" class="block px-4 py-2 text-gray-800 hover:bg-gray-200">Account Settings</a>
-              <a href="#" class="block px-4 py-2 text-gray-800 hover:bg-gray-200">Logout</a>
+              <a href="../src/logout.php" class="block px-4 py-2 text-gray-800 hover:bg-gray-200">Logout</a>
             </div>
           </div>
         </div>

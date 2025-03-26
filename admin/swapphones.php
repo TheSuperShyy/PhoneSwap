@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Swap Phones</title>
     <link rel="icon" href="../src/assets/images/icon1.svg" type="image/svg">
-    <link rel="stylesheet" href="/src/output.css" />
+    <link rel="stylesheet" href="../src/output.css" />
     <script
       src="https://kit.fontawesome.com/10d593c5dc.js"
       crossorigin="anonymous"
@@ -27,7 +27,7 @@
         <ul>
           <li class="mb-4">
             <a class="flex items-center hover:bg-opacity-30 hover:bg-white p-2 text-base font-medium rounded-lg"
-              href="dashboard.html">
+              href="dashboard.php">
               <i class="fas fa-tachometer-alt mr-3"></i>
               Dashboard
             </a>
@@ -35,7 +35,7 @@
           <li class="mb-4">
             <a
               class="flex items-center hover:bg-opacity-30 hover:bg-white p-2 text-base font-medium rounded-lg"
-              href="audittrail.html"
+              href="audittrail.php"
             >
               <i class="fas fa-list-alt mr-3"></i>
               Audit Trail
@@ -44,7 +44,7 @@
           <li class="mb-4">
             <a
               class="flex items-center bg-opacity-30 bg-white p-2 text-base font-medium rounded-lg"
-              href="swapphones.html"
+              href="swapphones.php"
             >
               <i class="fas fa-warehouse mr-3"></i>
               Swap Phones
@@ -53,7 +53,7 @@
           <li class="mb-4">
             <a
               class="flex items-center hover:bg-opacity-30 hover:bg-white p-2 text-base font-medium rounded-lg"
-              href="usermanagement.html"
+              href="usermanagement.php"
             >
               <i class="fas fa-tools mr-3"></i>
               User Management

@@ -1,6 +1,7 @@
 <?php
-require __DIR__ . '/../dbcon/dbcon.php';
-require __DIR__ . '/../queries/phone_query.php';
+require __DIR__ . '/../../dbcon/dbcon.php';
+require __DIR__ . '/../../queries/phone_query.php';
+require __DIR__ . '/../../dbcon/authentication.php';
 ?>
 
 
@@ -10,7 +11,7 @@ require __DIR__ . '/../queries/phone_query.php';
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Dashboard</title>
-  <link rel="stylesheet" href="../src/output.css" />
+  <link rel="stylesheet" href="../../src/output.css" />
   <script src="https://kit.fontawesome.com/10d593c5dc.js" crossorigin="anonymous"></script>
   <style>
     .dropdown-menu {
@@ -29,28 +30,28 @@ require __DIR__ . '/../queries/phone_query.php';
     <h1 class="text-4xl mb-6 mt-2 font-medium font-russo">PhoneSwap</h1>
     <ul>
       <li class="mb-4">
-        <a class="flex items-center bg-opacity-30 bg-white p-2 text-base font-medium rounded-lg" href="dashboard.html">
+        <a class="flex items-center bg-opacity-30 bg-white p-2 text-base font-medium rounded-lg" href="dashboard.php">
           <i class="fas fa-tachometer-alt mr-3"></i>
           Dashboard
         </a>
       </li>
       <li class="mb-4">
         <a class="flex items-center hover:bg-opacity-30 hover:bg-white p-2 text-base font-medium rounded-lg"
-          href="audittrail.php">
+          href="../audittrail.php">
           <i class="fas fa-list-alt mr-3"></i>
           Audit Trail
         </a>
       </li>
       <li class="mb-4">
         <a class="flex items-center hover:bg-opacity-30 hover:bg-white p-2 text-base font-medium rounded-lg"
-          href="swapphones.html">
+          href="swapphones.php">
           <i class="fas fa-warehouse mr-3"></i>
           Swap Phones
         </a>
       </li>
       <li class="mb-4">
         <a class="flex items-center hover:bg-opacity-30 hover:bg-white p-2 text-base font-medium rounded-lg"
-          href="usermanagement.html">
+          href="usermanagement.php">
           <i class="fas fa-tools mr-3"></i>
           User Management
         </a>
@@ -156,10 +157,9 @@ require __DIR__ . '/../queries/phone_query.php';
           <i class="fa-solid fa-angle-down fa-sm pl-3"></i>
         </button>
         <div class="dropdown-menu absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-2 z-20 hidden">
-          <a href="#" class="block px-4 py-2 text-gray-800 hover:bg-gray-200">Profile</a>
-          <a href="#" class="block px-4 py-2 text-gray-800 hover:bg-gray-200">Settings</a>
-          <a href="#" class="block px-4 py-2 text-gray-800 hover:bg-gray-200">Logout</a>
-        </div>
+              <a href="../accountsetting.php" class="block px-4 py-2 text-gray-800 hover:bg-gray-200">Account Settings</a>
+              <a href="../../src/logout.php" class="block px-4 py-2 text-gray-800 hover:bg-gray-200">Logout</a>
+            </div>
       </div>
     </div>
     </div>
@@ -384,7 +384,7 @@ require __DIR__ . '/../queries/phone_query.php';
     </div>
   </div>
 
-  <!-- 🔥 Place this script at the bottom of the body -->
+  <!-- assign phone script -->
   <script>
     document.addEventListener("DOMContentLoaded", function () {
       console.log("JS Loaded");
@@ -423,7 +423,7 @@ require __DIR__ . '/../queries/phone_query.php';
         console.log("Assigning phone to Team Leader (hfId):", teamLeaderId);
 
         // ✅ Send assignment request to backend
-        fetch("assign_phone.php", {
+        fetch("../manage_phones/assign_phone.php", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
@@ -465,7 +465,7 @@ require __DIR__ . '/../queries/phone_query.php';
       document.getElementById("deviceModel").value = model;
 
       // ✅ Fetch Team Leaders
-      fetch("fetch_team_leaders.php")
+      fetch("../manage_phones/fetch_team_leaders.php")
         .then((response) => response.json())
         .then((data) => {
           console.log("Fetched Data:", data);
@@ -506,7 +506,7 @@ require __DIR__ . '/../queries/phone_query.php';
     }
 
   </script>
-  
+
   <!-- Script for notification bell dropdown-->
   <script>
     const notificationButton = document.getElementById("notificationButton");
