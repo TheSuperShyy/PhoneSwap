@@ -60,103 +60,97 @@
             <h2 class="text-xl font-semibold mr-4">Swap Phones</h2>
           </div>
         <div class="flex flex-row items-center gap-4">
-            <!-- Notification Bell -->
-            <div class="relative inline-block text-left">
-              <button
-                class="relative text-2xl"
-                aria-label="Notifications"
-                id="notificationButton"
-              >
-                <i class="fa-regular fa-bell"></i>
-              </button>
+          
+          <!-- Notification Bell -->
+          <div class="relative inline-block text-left">
+            <button
+              class="relative text-2xl"
+              aria-label="Notifications"
+              id="notificationButton">
+              <i class="fa-regular fa-bell"></i>
+            </button>
 
-              <!-- Dropdown Message Notification -->
-              <div
-                class="origin-top-right absolute right-0 mt-2 w-80 rounded-md shadow-lg bg-white border border-gray-400 ring-1 ring-black ring-opacity-5 focus:outline-none hidden"
-                role="menu"
-                aria-orientation="vertical"
-                aria-labelledby="notificationButton"
-                id="notificationDropdown"
-              >
-                <div class="py-1" role="none">
-                  <a
-                    href="#"
-                    class="block px-4 py-2 text-sm text-black-700 hover:bg-gray-100"
-                    role="menuitem"
-                  >
-                    <div class="flex">
-                      <div>
-                        <p class="font-medium">
-                          New message from Yul Gatchalian
-                        </p>
-                        <p class="text-sm text-black-500">Stress to the max.</p>
-                        <p class="text-xs text-black-400">5 minutes ago</p>
-                      </div>
+            <!-- Dropdown Message Notification -->
+            <div
+              class="origin-top-right absolute right-0 mt-2 w-80 rounded-md shadow-lg bg-white border border-gray-400 ring-1 ring-black ring-opacity-5 focus:outline-none hidden"
+              role="menu"
+              aria-orientation="vertical"
+              aria-labelledby="notificationButton"
+              id="notificationDropdown" >
+              <div class="py-1" role="none">
+                <a
+                  href="#"
+                  class="block px-4 py-2 text-sm text-black-700 hover:bg-gray-100"
+                  role="menuitem">
+                  <div class="flex">
+                    <div>
+                      <p class="font-medium">
+                        New message from Yul Gatchalian
+                      </p>
+                      <p class="text-sm text-black-500">Stress to the max.</p>
+                      <p class="text-xs text-black-400">5 minutes ago</p>
                     </div>
-                  </a>
-                  <a
-                    href="#"
-                    class="block px-4 py-2 text-sm text-black-700 hover:bg-gray-100"
-                    role="menuitem"
-                  >
-                    <div class="flex">
-                      <div class="mr-3">
-                        <p class="font-medium">Cylie Gonzales</p>
-                        <p class="text-sm text-black-500">
-                          Brain says code, stomach says feed me.
-                        </p>
-                        <p class="text-xs text-black-400">1 hour ago</p>
-                      </div>
+                  </div>
+                </a>
+                <a
+                  href="#"
+                  class="block px-4 py-2 text-sm text-black-700 hover:bg-gray-100"
+                  role="menuitem">
+                  <div class="flex">
+                    <div class="mr-3">
+                      <p class="font-medium">Cylie Gonzales</p>
+                      <p class="text-sm text-black-500">
+                        Brain says code, stomach says feed me.
+                      </p>
+                      <p class="text-xs text-black-400">1 hour ago</p>
                     </div>
-                  </a>
-                  <a
-                    href="#"
-                    class="block px-4 py-2 text-sm text-black-700 hover:bg-gray-100"
-                    role="menuitem"
-                  >
-                    <div class="flex">
-                      <div class="mr-3">
-                        <p class="font-medium">Kian David</p>
-                        <p class="text-sm text-black-500">
-                          Coding with good vibes = ultimate chill.
-                        </p>
-                        <p class="text-xs text-black-400">2 days ago</p>
-                      </div>
+                  </div>
+                </a>
+                <a
+                  href="#"
+                  class="block px-4 py-2 text-sm text-black-700 hover:bg-gray-100"
+                  role="menuitem">
+                  <div class="flex">
+                    <div class="mr-3">
+                      <p class="font-medium">Kian David</p>
+                      <p class="text-sm text-black-500">
+                        Coding with good vibes = ultimate chill.
+                      </p>
+                      <p class="text-xs text-black-400">2 days ago</p>
                     </div>
-                  </a>
-                  <a
-                    href="#"
-                    class="block px-4 py-2 text-sm text-black-700 hover:bg-gray-100"
-                    role="menuitem"
-                  >
-                    <div class="flex">
-                      <div class="mr-3">
-                        <p class="font-medium">Miko Basilio</p>
-                        <p class="text-sm text-black-500">
-                          Bugs and beats, coding and grooving
-                        </p>
-                        <p class="text-xs text-black-400">2 days ago</p>
-                      </div>
+                  </div>
+                </a>
+                <a
+                  href="#"
+                  class="block px-4 py-2 text-sm text-black-700 hover:bg-gray-100"
+                  role="menuitem">
+                  <div class="flex">
+                    <div class="mr-3">
+                      <p class="font-medium">Miko Basilio</p>
+                      <p class="text-sm text-black-500">
+                        Bugs and beats, coding and grooving
+                      </p>
+                      <p class="text-xs text-black-400">2 days ago</p>
                     </div>
-                  </a>
-                  <a
-                    href="#"
-                    class="block px-4 py-2 text-sm text-black-700 hover:bg-gray-100"
-                    role="menuitem"
-                  >
-                    <div class="flex">
-                      <div class="mr-3">
-                        <p class="font-medium">Daniel Digo</p>
-                        <p class="text-sm text-black-500">
-                          Catching up on sleep and relaxing.
-                        </p>
-                        <p class="text-xs text-black-400">2 days ago</p>
-                      </div>
+                  </div>
+                </a>
+                <a
+                  href="#"
+                  class="block px-4 py-2 text-sm text-black-700 hover:bg-gray-100"
+                  role="menuitem">
+                  <div class="flex">
+                    <div class="mr-3">
+                      <p class="font-medium">Daniel Digo</p>
+                      <p class="text-sm text-black-500">
+                        Catching up on sleep and relaxing.
+                      </p>
+                      <p class="text-xs text-black-400">2 days ago</p>
                     </div>
-                  </a>
-                </div>
+                  </div>
+                </a>
               </div>
-            </div>
+            <div>
+          </div>
 
           <!-- Avatarbar -->  
           <div class="relative dropdown">
@@ -339,7 +333,7 @@
                         <td class="py-2 px-4 whitespace-nowrap">
                             <span class="text-green-800 bg-green-100 border border-green-800 rounded-full bg-opacity-100 py-2 px-6 font-medium shadow-lg">Active</span>
                         </td>
-                        <td class="py-5 px-4 whitespace-nowrap">Daniel Quinzy Digo</td>
+                        <td class="py-5 px-4 whitespace-nowrap">Yul Grant Gatchalian</p> 
                         <td class="py-2 px-4 whitespace-nowrap">
                           <button class="flex flex-row gap-2 items-center border font-semibold border-black bg-amber-400 hover:bg-amber-600 text-black px-6 py-1.5 rounded-full shadow-lg">
                             Swap
