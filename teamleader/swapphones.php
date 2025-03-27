@@ -140,7 +140,7 @@
                   role="menuitem">
                   <div class="flex">
                     <div class="mr-3">
-                      <p class="font-medium">Daniel Digo</p>
+                      <p class="font-medium">Yul Grant Gatchalian</p>
                       <p class="text-sm text-black-500">
                         Catching up on sleep and relaxing.
                       </p>
