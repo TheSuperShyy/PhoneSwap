@@ -8,6 +8,7 @@ require __DIR__ . '/../../dbcon/session_get.php';
 
 
 <!DOCTYPE html>
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -45,14 +46,14 @@ require __DIR__ . '/../../dbcon/session_get.php';
       </li>
       <li class="mb-4">
         <a class="flex items-center hover:bg-opacity-30 hover:bg-white p-2 text-base font-medium rounded-lg"
-          href="swapphones.php">
+          href="../swapphones.php">
           <i class="fas fa-warehouse mr-3"></i>
           Swap Phones
         </a>
       </li>
       <li class="mb-4">
         <a class="flex items-center hover:bg-opacity-30 hover:bg-white p-2 text-base font-medium rounded-lg"
-          href="usermanagement.php">
+          href="../usermanagement.php">
           <i class="fas fa-tools mr-3"></i>
           User Management
         </a>
@@ -133,7 +134,7 @@ require __DIR__ . '/../../dbcon/session_get.php';
                 <a href="#" class="block px-4 py-2 text-sm text-black-700 hover:bg-gray-100" role="menuitem">
                   <div class="flex">
                     <div class="mr-3">
-                      <p class="font-medium">Daniel Digo</p>
+                      <p class="font-medium">Yul Grant Gatchalian</p>
                       <p class="text-sm text-black-500">
                         Lorem ipsum dolor sit amet.
                       </p>
@@ -160,8 +161,8 @@ require __DIR__ . '/../../dbcon/session_get.php';
           <div class="dropdown-menu absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-2 z-20 hidden">
             <a href="../accountsetting.php" class="block px-4 py-2 text-gray-800 hover:bg-gray-200">Account Settings</a>
             <a href="../../src/logout.php" id="logoutBtn" class="block px-4 py-2 text-gray-800 hover:bg-gray-200">
-                Logout
-              </a>
+              Logout
+            </a>
           </div>
         </div>
       </div>
@@ -380,157 +381,157 @@ require __DIR__ . '/../../dbcon/session_get.php';
   </div>
 
   <!-- Include SweetAlert2 -->
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-<script>
-  document.addEventListener("DOMContentLoaded", function () {
-    console.log("JS Loaded");
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      console.log("JS Loaded");
 
-    const assignModal = document.getElementById("assignModal");
-    const closeAssignModal = document.getElementById("closeAssignModal");
-    const assignForm = document.getElementById("assignForm");
+      const assignModal = document.getElementById("assignModal");
+      const closeAssignModal = document.getElementById("closeAssignModal");
+      const assignForm = document.getElementById("assignForm");
 
-    if (!assignModal) {
-      console.error("Error: assignModal element not found!");
-      return;
-    }
-
-    if (closeAssignModal) {
-      closeAssignModal.addEventListener("click", function () {
-        assignModal.classList.add("hidden");
-        console.log("Modal closed");
-      });
-    } else {
-      console.warn("Warning: closeAssignModal button not found.");
-    }
-
-    // ✅ Handle form submission
-    assignForm.addEventListener("submit", function (event) {
-      event.preventDefault(); // Prevent default form submission
-
-      const serialNumber = document.getElementById("serialNumber").value;
-      const deviceModel = document.getElementById("deviceModel").value;
-      const teamLeaderId = document.getElementById("teamLeaderSelect").value; // This is hfId
-
-      if (!serialNumber || !deviceModel || !teamLeaderId) {
-        Swal.fire({
-          icon: "warning",
-          title: "Incomplete Details",
-          text: "Please select all fields before assigning.",
-          confirmButtonColor: "#3085d6"
-        });
+      if (!assignModal) {
+        console.error("Error: assignModal element not found!");
         return;
       }
 
-      console.log("Assigning phone to Team Leader (hfId):", teamLeaderId);
+      if (closeAssignModal) {
+        closeAssignModal.addEventListener("click", function () {
+          assignModal.classList.add("hidden");
+          console.log("Modal closed");
+        });
+      } else {
+        console.warn("Warning: closeAssignModal button not found.");
+      }
 
-      // ✅ Send assignment request to backend
-      fetch("../manage_phones/assign_phone.php", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          serial_number: serialNumber,
-          device_model: deviceModel,
-          hfId: teamLeaderId,
-        }),
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          if (data.success) {
-            Swal.fire({
-              icon: "success",
-              title: "Phone Assigned!",
-              text: "The phone has been successfully assigned.",
-              confirmButtonColor: "#3085d6"
-            }).then(() => {
-              assignModal.classList.add("hidden");
-              location.reload(); // Reload the page to reflect changes
-            });
-          } else {
+      // ✅ Handle form submission
+      assignForm.addEventListener("submit", function (event) {
+        event.preventDefault(); // Prevent default form submission
+
+        const serialNumber = document.getElementById("serialNumber").value;
+        const deviceModel = document.getElementById("deviceModel").value;
+        const teamLeaderId = document.getElementById("teamLeaderSelect").value; // This is hfId
+
+        if (!serialNumber || !deviceModel || !teamLeaderId) {
+          Swal.fire({
+            icon: "warning",
+            title: "Incomplete Details",
+            text: "Please select all fields before assigning.",
+            confirmButtonColor: "#3085d6"
+          });
+          return;
+        }
+
+        console.log("Assigning phone to Team Leader (hfId):", teamLeaderId);
+
+        // ✅ Send assignment request to backend
+        fetch("../manage_phones/assign_phone.php", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            serial_number: serialNumber,
+            device_model: deviceModel,
+            hfId: teamLeaderId,
+          }),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.success) {
+              Swal.fire({
+                icon: "success",
+                title: "Phone Assigned!",
+                text: "The phone has been successfully assigned.",
+                confirmButtonColor: "#3085d6"
+              }).then(() => {
+                assignModal.classList.add("hidden");
+                location.reload(); // Reload the page to reflect changes
+              });
+            } else {
+              Swal.fire({
+                icon: "error",
+                title: "Error",
+                text: data.message,
+                confirmButtonColor: "#d33"
+              });
+            }
+          })
+          .catch((error) => {
+            console.error("Fetch Error:", error);
             Swal.fire({
               icon: "error",
-              title: "Error",
-              text: data.message,
+              title: "Failed to Assign Phone",
+              text: "An error occurred. Please try again.",
               confirmButtonColor: "#d33"
             });
+          });
+      });
+    });
+
+    // ✅ Open Assign Modal
+    function openAssignModal(serial, model) {
+      console.log("Opening modal for:", serial, model);
+
+      const assignModal = document.getElementById("assignModal");
+      const teamLeaderSelect = document.getElementById("teamLeaderSelect");
+
+      if (!assignModal || !teamLeaderSelect) {
+        console.error("Modal elements missing!");
+        return;
+      }
+
+      document.getElementById("serialNumber").value = serial;
+      document.getElementById("deviceModel").value = model;
+
+      // ✅ Fetch Team Leaders
+      fetch("../manage_phones/fetch_team_leaders.php")
+        .then((response) => response.json())
+        .then((data) => {
+          console.log("Fetched Data:", data);
+
+          if (!Array.isArray(data)) {
+            console.error("Unexpected response format.");
+            return;
           }
+
+          teamLeaderSelect.innerHTML = `
+          <option value="">Select Team Leader</option>
+          <option value="unassigned">Unassigned</option>
+        `;
+
+          // ✅ Filter TLs
+          const teamLeaders = data.filter(user => user.userType === "TL");
+
+          if (teamLeaders.length === 0) {
+            Swal.fire({
+              icon: "info",
+              title: "No Team Leaders Found",
+              text: "There are no available Team Leaders to assign phones.",
+              confirmButtonColor: "#3085d6"
+            });
+            teamLeaderSelect.innerHTML = '<option value="">No Team Leaders Found</option>';
+            teamLeaderSelect.disabled = true;
+          } else {
+            teamLeaderSelect.disabled = false;
+            teamLeaders.forEach((user) => {
+              let displayName = `(${user.hfId}) ${user.username}`;
+              teamLeaderSelect.innerHTML += `<option value="${user.hfId}">${displayName}</option>`;
+            });
+          }
+
+          assignModal.classList.remove("hidden");
         })
         .catch((error) => {
           console.error("Fetch Error:", error);
           Swal.fire({
             icon: "error",
-            title: "Failed to Assign Phone",
-            text: "An error occurred. Please try again.",
+            title: "Fetch Error",
+            text: "Failed to fetch team leaders. Please try again.",
             confirmButtonColor: "#d33"
           });
         });
-    });
-  });
-
-  // ✅ Open Assign Modal
-  function openAssignModal(serial, model) {
-    console.log("Opening modal for:", serial, model);
-
-    const assignModal = document.getElementById("assignModal");
-    const teamLeaderSelect = document.getElementById("teamLeaderSelect");
-
-    if (!assignModal || !teamLeaderSelect) {
-      console.error("Modal elements missing!");
-      return;
     }
-
-    document.getElementById("serialNumber").value = serial;
-    document.getElementById("deviceModel").value = model;
-
-    // ✅ Fetch Team Leaders
-    fetch("../manage_phones/fetch_team_leaders.php")
-      .then((response) => response.json())
-      .then((data) => {
-        console.log("Fetched Data:", data);
-
-        if (!Array.isArray(data)) {
-          console.error("Unexpected response format.");
-          return;
-        }
-
-        teamLeaderSelect.innerHTML = `
-          <option value="">Select Team Leader</option>
-          <option value="unassigned">Unassigned</option>
-        `;
-
-        // ✅ Filter TLs
-        const teamLeaders = data.filter(user => user.userType === "TL");
-
-        if (teamLeaders.length === 0) {
-          Swal.fire({
-            icon: "info",
-            title: "No Team Leaders Found",
-            text: "There are no available Team Leaders to assign phones.",
-            confirmButtonColor: "#3085d6"
-          });
-          teamLeaderSelect.innerHTML = '<option value="">No Team Leaders Found</option>';
-          teamLeaderSelect.disabled = true;
-        } else {
-          teamLeaderSelect.disabled = false;
-          teamLeaders.forEach((user) => {
-            let displayName = `(${user.hfId}) ${user.username}`;
-            teamLeaderSelect.innerHTML += `<option value="${user.hfId}">${displayName}</option>`;
-          });
-        }
-
-        assignModal.classList.remove("hidden");
-      })
-      .catch((error) => {
-        console.error("Fetch Error:", error);
-        Swal.fire({
-          icon: "error",
-          title: "Fetch Error",
-          text: "Failed to fetch team leaders. Please try again.",
-          confirmButtonColor: "#d33"
-        });
-      });
-  }
-</script>
+  </script>
 
 
   <!-- Script for notification bell dropdown-->
@@ -552,31 +553,31 @@ require __DIR__ . '/../../dbcon/session_get.php';
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
   <!-- logout script -->
-<script>
-  document.addEventListener("DOMContentLoaded", function () {
-    const logoutBtn = document.getElementById("logoutBtn");
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const logoutBtn = document.getElementById("logoutBtn");
 
-    if (logoutBtn) {
-      logoutBtn.addEventListener("click", function (event) {
-        event.preventDefault(); // ✅ Prevent default link behavior
+      if (logoutBtn) {
+        logoutBtn.addEventListener("click", function (event) {
+          event.preventDefault(); // ✅ Prevent default link behavior
 
-        Swal.fire({
-          title: "Are you sure?",
-          text: "You will be logged out of your session.",
-          icon: "warning",
-          showCancelButton: true,
-          confirmButtonColor: "#3085d6",
-          cancelButtonColor: "#d33",
-          confirmButtonText: "Yes, Logout!"
-        }).then((result) => {
-          if (result.isConfirmed) {
-            window.location.href = logoutBtn.href; // ✅ Redirect after confirmation
-          }
+          Swal.fire({
+            title: "Are you sure?",
+            text: "You will be logged out of your session.",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes, Logout!"
+          }).then((result) => {
+            if (result.isConfirmed) {
+              window.location.href = logoutBtn.href; // ✅ Redirect after confirmation
+            }
+          });
         });
-      });
-    }
-  });
-</script>
+      }
+    });
+  </script>
 
 
 
