@@ -596,9 +596,6 @@ $phones = iterator_to_array($db->phones->find([]));
     });
   </script>
 
-
-
-
 <!-- Script for add modal -->
 <script>
   const modal2 = document.getElementById('myModal2');

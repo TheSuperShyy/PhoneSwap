@@ -35,7 +35,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         }
 
         $adminEmail = $_SESSION['user'];
-        $admin = $db->users->findOne(["username" => $adminEmail]);
+        $admin = $db->users->findOne(["username" => $adminEmail['username']]);
 
         if (!$admin) {
             echo json_encode(["success" => false, "error" => "Admin not found."]);

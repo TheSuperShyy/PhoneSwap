@@ -5,14 +5,14 @@ if (!isset($_SESSION['user'])) {
 }
 
 $userdetails = $_SESSION["user"];
-$details = $db->users->findOne(["username" => $userdetails]);
+$details = $db->users->findOne(["username" => $userdetails['username']]);
 
 if (!$details) {
     echo json_encode(["success" => false, "error" => "Admin not found."]);
     exit;
 }
 
-// Extract admin details
+// Extract user details
 $userId = $details['hfId'] ?? 'Unknown ID';
 $userName = ($details['first_name'] ?? 'Unknown') . ' ' . ($details['last_name'] ?? '');
 $userRole = $details['userType'] ??'';
