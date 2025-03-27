@@ -163,7 +163,9 @@ $phones = iterator_to_array($db->phones->find([]));
             </button>
             <div class="dropdown-menu absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-2 z-20 hidden">
               <a href="accountsetting.php" class="block px-4 py-2 text-gray-800 hover:bg-gray-200">Account Settings</a>
-              <a href="../src/logout.php" class="block px-4 py-2 text-gray-800 hover:bg-gray-200">Logout</a>
+              <a href="../../src/logout.php" id="logoutBtn" class="block px-4 py-2 text-gray-800 hover:bg-gray-200">
+                Logout
+              </a>
             </div>
           </div>
         </div>
@@ -622,5 +624,33 @@ $phones = iterator_to_array($db->phones->find([]));
     notificationDropdown.classList.toggle("hidden");
   });
 </script>
+
+<!-- logout script -->
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const logoutBtn = document.getElementById("logoutBtn");
+
+    if (logoutBtn) {
+      logoutBtn.addEventListener("click", function (event) {
+        event.preventDefault(); // ✅ Prevent default link behavior
+
+        Swal.fire({
+          title: "Are you sure?",
+          text: "You will be logged out of your session.",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "#3085d6",
+          cancelButtonColor: "#d33",
+          confirmButtonText: "Yes, Logout!"
+        }).then((result) => {
+          if (result.isConfirmed) {
+            window.location.href = logoutBtn.href; // ✅ Redirect after confirmation
+          }
+        });
+      });
+    }
+  });
+</script>
+
 
 </html>
