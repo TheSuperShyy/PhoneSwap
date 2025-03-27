@@ -27,7 +27,7 @@
         <ul>
           <li class="mb-4">
             <a class="flex items-center hover:bg-opacity-30 hover:bg-white p-2 text-base font-medium rounded-lg"
-              href="dashboard.php">
+              href="dashboard/dashboard.php">
               <i class="fas fa-tachometer-alt mr-3"></i>
               Dashboard
             </a>
@@ -162,7 +162,7 @@
                   >
                     <div class="flex">
                       <div class="mr-3">
-                        <p class="font-medium">Daniel Digo</p>
+                        <p class="font-medium">Yul Grant Gatchalian</p>
                         <p class="text-sm text-black-500">
                           Lorem ipsum dolor sit amet. 
                         </p>
@@ -188,7 +188,7 @@
             </button>
             <div class="dropdown-menu absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-2 z-20 hidden">
               <a
-                href="accountsetting.html"
+                href="accountsetting.php"
                 class="block px-4 py-2 text-gray-800 hover:bg-gray-200"
                 >Acount Settings</a
               >

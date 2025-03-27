@@ -136,7 +136,7 @@ require __DIR__ . '/../../dbcon/session_get.php';
                   <a href="#" class="block px-4 py-2 text-sm text-black-700 hover:bg-gray-100" role="menuitem">
                     <div class="flex">
                       <div class="mr-3">
-                        <p class="font-medium">Daniel Digo</p>
+                        <p class="font-medium">Yul Grant Gatchalian</p>
                         <p class="text-sm text-black-500">
                           Lorem ipsum dolor sit amet.
                         </p>

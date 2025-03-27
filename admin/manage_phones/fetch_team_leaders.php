@@ -10,20 +10,22 @@ try {
 
     $collection = $db->users;
 
-    $teamLeaders = $collection->find(["userType" => "TL"]);
+    // Fetch Team Leaders from MongoDB
+    $cursor = $collection->find(["userType" => "TL"]); // Correctly defining $cursor
+    $teamLeaders = iterator_to_array($cursor); // Using $cursor instead of undefined variable
+
     $result = [];
 
     foreach ($teamLeaders as $user) {
         $result[] = [
             "hfId" => $user["hfId"] ?? "UNKNOWN",
-            "username" => ($user["first_name"] ?? "") . " " . ($user["last_name"] ?? ""),
+            "username" => trim(($user["first_name"] ?? "") . " " . ($user["last_name"] ?? "")), // Safely concatenate names
             "userType" => $user["userType"] ?? "UNKNOWN"
         ];
     }
 
-    echo json_encode($result);
+    echo json_encode(["success" => true, "data" => $result]); // Return valid JSON
 } catch (Exception $e) {
     echo json_encode(["success" => false, "message" => "Error: " . $e->getMessage()]);
 }
-
 ?>

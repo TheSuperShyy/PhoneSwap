@@ -1,3 +1,14 @@
+
+<?php
+require __DIR__ . '/../dbcon/dbcon.php';
+require __DIR__ . '/../queries/phone_query.php';
+require __DIR__ . '/../dbcon/authentication.php';
+require __DIR__ . '/../dbcon/session_get.php';
+?>
+
+
+
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -27,7 +38,8 @@
       <h1 class="text-4xl mb-6 mt-2 font-medium font-russo">PhoneSwap</h1>
       <ul>
         <li class="mb-4">
-          <a class="flex items-center hover:bg-blue-700 p-2 text-base font-medium rounded-lg" href="dashboard.php">
+          <a class="flex items-center hover:bg-blue-700 p-2 text-base font-medium rounded-lg"
+            href="dashboard/dashboard.php">
             <i class="fas fa-tachometer-alt mr-3"></i>
             Dashboard
           </a>
@@ -125,7 +137,7 @@
                   <a href="#" class="block px-4 py-2 text-sm text-black-700 hover:bg-gray-100" role="menuitem">
                     <div class="flex">
                       <div class="mr-3">
-                        <p class="font-medium">Daniel Digo</p>
+                        <p class="font-medium">Yul Grant Gatchalian</p>
                         <p class="text-sm text-black-500">
                           Lorem ipsum dolor sit amet.
                         </p>
@@ -144,16 +156,15 @@
               class="flex flex-row items-center gap-3 border border-black shadow-gray-700 shadow-sm bg-amber-400 text-black px-4 w-fit rounded-xl">
               <i class="fa-regular fa-user fa-xl"></i>
               <div class="flex flex-col items-start">
-                <h1 class="font-medium">Emily Dav</h1>
-                <h1 class="text-sm">Admin</h1>
+                <h1 class="font-medium"><?= htmlspecialchars($userName) ?></h1>
+                <h1 class="text-sm"><?= htmlspecialchars($userRole) ?></h1>
               </div>
               <i class="fa-solid fa-angle-down fa-sm pl-3"></i>
             </button>
             <div class="dropdown-menu absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-2 z-20 hidden">
-              <a href="accountsetting.php" class="block px-4 py-2 text-gray-800 hover:bg-gray-200">
-                Account Settings
-              </a>
-              <a href="#" class="block px-4 py-2 text-gray-800 hover:bg-gray-200">
+              <a href="../accountsetting.php" class="block px-4 py-2 text-gray-800 hover:bg-gray-200">Account
+                Settings</a>
+              <a href="../../src/logout.php" id="logoutBtn" class="block px-4 py-2 text-gray-800 hover:bg-gray-200">
                 Logout
               </a>
             </div>
