@@ -2,14 +2,13 @@
 require __DIR__ . '/../../dbcon/dbcon.php';
 require __DIR__ . '/../../dbcon/authentication.php';
 
-
 header("Content-Type: application/json");
 
 if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["serial_number"])) {
     $serialNumber = $_POST["serial_number"];
 
     try {
-        // Check if phone exists
+        // ✅ Check if the phone exists
         $phone = $db->phones->findOne(["serial_number" => $serialNumber]);
 
         if (!$phone) {
@@ -25,37 +24,29 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["serial_number"])) {
             exit;
         }
 
-        // Get admin details from session
+        // ✅ Validate user session
         if (!isset($_SESSION['user'])) {
             echo json_encode(["success" => false, "error" => "User not authenticated."]);
             exit;
         }
 
-        $adminEmail = $_SESSION['user'];
-        $admin = $db->users->findOne(["username" => $adminEmail]);
+        // ✅ Extract admin details from the session (NEW SESSION FORMAT)
+        $adminId = $_SESSION['user']['hfId'] ?? 'Unknown ID';
+        $adminName = ($_SESSION['user']['first_name'] ?? 'Unknown') . ' ' . ($_SESSION['user']['last_name'] ?? '');
 
-        if (!$admin) {
-            echo json_encode(["success" => false, "error" => "Admin not found."]);
-            exit;
-        }
-
-        // Extract admin details
-        $adminId = $admin['hfId'] ?? 'Unknown ID';
-        $adminName = ($admin['first_name'] ?? 'Unknown') . ' ' . ($admin['last_name'] ?? '');
-
-        // Delete the phone from the database
+        // ✅ Delete the phone from the database
         $deleteResult = $db->phones->deleteOne(["serial_number" => $serialNumber]);
 
         if ($deleteResult->getDeletedCount() > 0) {
             // ✅ Insert into audit log
             $auditData = [
-                "timestamp" => date("Y-m-d H:i:s"), // Current date and time
+                "timestamp" => date("Y-m-d H:i:s"), // Current timestamp
                 "user" => [
                     "hfId" => $adminId,
                     "name" => $adminName,
                 ],
                 "serial_number" => $serialNumber,
-                "model" => $phone["model"],
+                "model" => $phone["model"] ?? 'Unknown Model',
                 "action" => "Deleted Phone"
             ];
 
