@@ -4,7 +4,7 @@ require __DIR__ . '/../../dbcon/authentication.php';
 header("Content-Type: application/json"); // ✅ Ensure JSON response
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    // Check if required fields are present
+    // ✅ Check if required fields exist
     if (!isset($_POST["serial_number"]) || !isset($_POST["status"])) {
         echo json_encode(["success" => false, "error" => "Missing required fields."]);
         exit;
@@ -14,7 +14,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $newStatus = $_POST["status"];
 
     try {
-        // ✅ Fetch current status of the phone
+        // ✅ Fetch the phone record
         $phone = $db->phones->findOne(["serial_number" => $serialNumber]);
 
         if (!$phone) {
@@ -22,57 +22,61 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             exit;
         }
 
-        // ✅ Prevent update if the current status is "Missing"
+        // ✅ Prevent updates if phone is marked as "Missing"
         if ($phone["status"] === "Missing") {
             echo json_encode(["success" => false, "error" => "Cannot update. Phone is marked as Missing."]);
             exit;
         }
 
-        // ✅ Get admin details from session
+        // ✅ Validate user session
         if (!isset($_SESSION['user'])) {
             echo json_encode(["success" => false, "error" => "User not authenticated."]);
             exit;
         }
 
-        $adminEmail = $_SESSION['user'];
-        $admin = $db->users->findOne(["username" => $adminEmail['username']]);
+        // ✅ Fetch admin details
+        $adminDetails = $_SESSION['user'];
+        $admin = $db->users->findOne(["username" => $adminDetails['username']]);
 
         if (!$admin) {
             echo json_encode(["success" => false, "error" => "Admin not found."]);
             exit;
         }
 
-        // Extract admin details
+        // ✅ Extract admin details
         $adminId = $admin['hfId'] ?? 'Unknown ID';
         $adminName = ($admin['first_name'] ?? 'Unknown') . ' ' . ($admin['last_name'] ?? '');
 
-        // ✅ Update phone status in MongoDB
+        // ✅ Update phone status
         $updateResult = $db->phones->updateOne(
             ["serial_number" => $serialNumber],
             ['$set' => ["status" => $newStatus]]
         );
 
         if ($updateResult->getModifiedCount() > 0) {
-            // ✅ Insert into audit log for edits
+            // ✅ Insert into audit log
             $auditData = [
-                "timestamp" => date("Y-m-d H:i:s"), // Current date and time
+                "timestamp" => date("Y-m-d H:i:s"), // Current timestamp
                 "user" => [
                     "hfId" => $adminId,
                     "name" => $adminName,
                 ],
                 "serial_number" => $serialNumber,
-                "model" => $phone["model"],
+                "model" => $phone["model"] ?? 'Unknown Model',
                 "action" => "Edited Status to: " . $newStatus
             ];
 
-            $db->audit->insertOne($auditData);
+            $insertAudit = $db->audit->insertOne($auditData);
 
-            // ✅ Redirect with success message
-            header("Location: ../dashboard/dashboard.php?success=Status updated successfully!");
-            exit;
+            if ($insertAudit->getInsertedId()) {
+                echo json_encode(["success" => true, "message" => "Status updated successfully."]);
+                exit;
+            } else {
+                echo json_encode(["success" => false, "error" => "Audit log insert failed."]);
+                exit;
+            }
         } else {
-            // ✅ Redirect with error message
-            header("Location: ../dashboard/dashboard.php?error=No changes made.");
+            echo json_encode(["success" => false, "error" => "No changes made."]);
             exit;
         }
 

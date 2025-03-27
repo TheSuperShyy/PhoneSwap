@@ -1,9 +1,10 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [
-    "./src/**/*.{html,js}",
-    "./admin/**/*.{html,js,ts,jsx,tsx}",
-    "./templates/**/*.html",
+ "./src/**/*.{php,html,js}",     // ✅ Includes PHP files inside `src`
+    "./admin/**/*.{php,html,js,ts,jsx,tsx}", // ✅ Includes PHP files inside `admin`
+    "./templates/**/*.{php,html}",  // ✅ Includes PHP files inside `templates`
+    "./**/*.php" 
   ],
   theme: {
     extend: {
