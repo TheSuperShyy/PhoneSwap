@@ -3,6 +3,7 @@ require __DIR__ . '/../../dbcon/dbcon.php';
 require __DIR__ . '/../../queries/phone_query.php';
 require __DIR__ . '/../../dbcon/authentication.php';
 require __DIR__ . '/../../dbcon/session_get.php';
+
 ?>
 
 
