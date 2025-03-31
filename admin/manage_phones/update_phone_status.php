@@ -1,7 +1,8 @@
     <?php
     require __DIR__ . '/../../dbcon/dbcon.php';
     require __DIR__ . '/../../dbcon/authentication.php';
-    header("Content-Type: application/json"); // ✅ Ensure JSON response
+    header("Content-Type: application/json");
+    
 
     if ($_SERVER["REQUEST_METHOD"] === "POST") {
         // ✅ Check if required fields exist
@@ -43,18 +44,15 @@
                 exit;
             }
 
-            // ✅ Extract admin details
             $adminId = $admin['hfId'] ?? 'Unknown ID';
             $adminName = ($admin['first_name'] ?? 'Unknown') . ' ' . ($admin['last_name'] ?? '');
 
-            // ✅ Update phone status
             $updateResult = $db->phones->updateOne(
                 ["serial_number" => $serialNumber],
                 ['$set' => ["status" => $newStatus]]
             );
 
             if ($updateResult->getModifiedCount() > 0) {
-                // ✅ Insert into audit log
                 $auditData = [
                     "timestamp" => date("Y-m-d H:i:s"), // Current timestamp
                     "user" => [
@@ -66,7 +64,7 @@
                     "action" => "Edited Status to: " . $newStatus
                 ];
 
-                $insertAudit = $db->audit->insertOne($auditData);
+                $insertAudit = $db->phone_audit->insertOne($auditData);
 
                 if ($insertAudit->getInsertedId()) {
                     echo json_encode(["success" => true, "message" => "Status updated successfully."]);

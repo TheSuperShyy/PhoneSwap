@@ -18,26 +18,19 @@ $hfId = strval($data['hfId']);
 try {
     $phoneCollection = $db->phones;
     $userCollection = $db->users;
-
-    // ✅ Step 1: Check if the phone exists
     $phone = $phoneCollection->findOne(["serial_number" => $serialNumber]);
 
     if (!$phone) {
         echo json_encode(["success" => false, "message" => "Phone not found."]);
         exit;
     }
-
-    // ✅ Step 2: Prevent assigning if the phone is missing
     if ($phone['status'] === 'Missing') {
         echo json_encode(["success" => false, "message" => "Cannot assign a missing phone."]);
         exit;
     }
-
-    // ✅ Step 3: Find the previous TL who has this phone
     $previousOwner = $userCollection->findOne(["assigned_phone" => $serialNumber]);
 
     if ($previousOwner) {
-        // ✅ Remove phone from previous TL
         $removeResult = $userCollection->updateOne(
             ["hfId" => $previousOwner['hfId']],
             ['$pull' => ["assigned_phone" => $serialNumber]]
@@ -49,14 +42,10 @@ try {
             error_log("Failed to remove phone $serialNumber from previous owner.");
         }
     }
-
-    // ✅ Step 4: Handle "Unassigned" Case
     if ($hfId === "unassigned") {
         echo json_encode(["success" => true, "message" => "Phone successfully unassigned."]);
         exit;
     }
-
-    // ✅ Step 5: Assign the phone to the new TL
     $updateResult = $userCollection->updateOne(
         ["hfId" => $hfId],
         ['$addToSet' => ["assigned_phone" => $serialNumber]]

@@ -1,9 +1,9 @@
 
 <?php
-require __DIR__ . '/../dbcon/dbcon.php';
-require __DIR__ . '/../queries/phone_query.php';
-require __DIR__ . '/../dbcon/authentication.php';
-require __DIR__ . '/../dbcon/session_get.php';
+require __DIR__ . '/../../dbcon/dbcon.php';
+require __DIR__ . '/../../queries/phone_query.php';
+require __DIR__ . '/../../dbcon/authentication.php';
+require __DIR__ . '/../../dbcon/session_get.php';
 ?>
 
 
@@ -17,7 +17,7 @@ require __DIR__ . '/../dbcon/session_get.php';
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Account Settings</title>
   <link rel="icon" href="../src/assets/images/iconswap.svg" type="image/svg">
-  <link rel="stylesheet" href="../src/output.css" />
+  <link rel="stylesheet" href="../../src/output.css" />
   <script src="https://kit.fontawesome.com/10d593c5dc.js" crossorigin="anonymous"></script>
   <style>
     .dropdown-menu {
@@ -79,75 +79,7 @@ require __DIR__ . '/../dbcon/session_get.php';
 
         <div class="flex gap-4">
           <div class="flex flex-row items-center gap-4">
-            <!-- Notification Bell -->
-            <div class="relative inline-block text-left">
-              <button class="relative text-2xl" aria-label="Notifications" id="notificationButton">
-                <i class="fa-regular fa-bell"></i>
-              </button>
-
-              <!-- Dropdown Message Notification -->
-              <div
-                class="origin-top-right absolute right-0 mt-2 w-80 rounded-md shadow-lg bg-white border border-gray-400 ring-1 ring-black ring-opacity-5 focus:outline-none hidden"
-                role="menu" aria-orientation="vertical" aria-labelledby="notificationButton" id="notificationDropdown">
-                <div class="py-1" role="none">
-                  <a href="#" class="block px-4 py-2 text-sm text-black-700 hover:bg-gray-100" role="menuitem">
-                    <div class="flex">
-                      <div>
-                        <p class="font-medium">
-                          New message from Yul Gatchalian
-                        </p>
-                        <p class="text-sm text-black-500">Lorem ipsum dolor sit amet.</p>
-                        <p class="text-xs text-black-400">5 minutes ago</p>
-                      </div>
-                    </div>
-                  </a>
-                  <a href="#" class="block px-4 py-2 text-sm text-black-700 hover:bg-gray-100" role="menuitem">
-                    <div class="flex">
-                      <div class="mr-3">
-                        <p class="font-medium">Cylie Gonzales</p>
-                        <p class="text-sm text-black-500">
-                          Lorem ipsum dolor sit amet.
-                        </p>
-                        <p class="text-xs text-black-400">1 hour ago</p>
-                      </div>
-                    </div>
-                  </a>
-                  <a href="#" class="block px-4 py-2 text-sm text-black-700 hover:bg-gray-100" role="menuitem">
-                    <div class="flex">
-                      <div class="mr-3">
-                        <p class="font-medium">Kian David</p>
-                        <p class="text-sm text-black-500">
-                          Lorem ipsum dolor sit amet.
-                        </p>
-                        <p class="text-xs text-black-400">2 days ago</p>
-                      </div>
-                    </div>
-                  </a>
-                  <a href="#" class="block px-4 py-2 text-sm text-black-700 hover:bg-gray-100" role="menuitem">
-                    <div class="flex">
-                      <div class="mr-3">
-                        <p class="font-medium">Miko Basilio</p>
-                        <p class="text-sm text-black-500">
-                          Lorem ipsum dolor sit amet.
-                        </p>
-                        <p class="text-xs text-black-400">2 days ago</p>
-                      </div>
-                    </div>
-                  </a>
-                  <a href="#" class="block px-4 py-2 text-sm text-black-700 hover:bg-gray-100" role="menuitem">
-                    <div class="flex">
-                      <div class="mr-3">
-                        <p class="font-medium">Yul Grant Gatchalian</p>
-                        <p class="text-sm text-black-500">
-                          Lorem ipsum dolor sit amet.
-                        </p>
-                        <p class="text-xs text-black-400">2 days ago</p>
-                      </div>
-                    </div>
-                  </a>
-                </div>
-              </div>
-            </div>
+            
           </div>
 
           <!-- Avatarbar -->

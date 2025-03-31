@@ -47,7 +47,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 "action" => "Added New Phone"
             ];
 
-            $db->audit->insertOne($auditData);
+            $db->phone_audit->insertOne($auditData);
 
             echo json_encode(["success" => true, "message" => "Phone added and logged."]);
         } else {

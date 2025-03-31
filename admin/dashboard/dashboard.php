@@ -5,8 +5,6 @@ require __DIR__ . '/../../dbcon/authentication.php';
 require __DIR__ . '/../../dbcon/session_get.php';
 
 ?>
-
-
 <!DOCTYPE html>
 
 <head>
@@ -39,25 +37,32 @@ require __DIR__ . '/../../dbcon/session_get.php';
       </li>
       <li class="mb-4">
         <a class="flex items-center hover:bg-opacity-30 hover:bg-white p-2 text-base font-medium rounded-lg"
-          href="../audittrail.php">
+          href="../sidebar_pages/audittrail.php">
           <i class="fas fa-list-alt mr-3"></i>
           Audit Trail
         </a>
       </li>
       <li class="mb-4">
         <a class="flex items-center hover:bg-opacity-30 hover:bg-white p-2 text-base font-medium rounded-lg"
-          href="../swapphones.php">
+          href="../sidebar_pages/swapphones.php">
           <i class="fas fa-warehouse mr-3"></i>
           Swap Phones
         </a>
       </li>
       <li class="mb-4">
         <a class="flex items-center hover:bg-opacity-30 hover:bg-white p-2 text-base font-medium rounded-lg"
-          href="../usermanagement.php">
+          href="../sidebar_pages/usermanagement.php">
           <i class="fas fa-tools mr-3"></i>
           User Management
         </a>
       </li>
+      <li class="mb-4">
+        <a class="flex items-center hover:bg-opacity-30 hover:bg-white p-2 text-base font-medium rounded-lg"
+        href="../sidebar_pages/user_audit.php">
+            <i class="fas fa-list-alt mr-3"></i>
+            User Audit Log
+          </a>
+        </li>
     </ul>
   </div>
 
@@ -78,72 +83,7 @@ require __DIR__ . '/../../dbcon/session_get.php';
         <div class="flex flex-row items-center gap-4">
 
           <div class="relative inline-block text-left">
-            <button class="relative text-2xl" aria-label="Notifications" id="notificationButton">
-              <i class="fa-regular fa-bell"></i>
-            </button>
-
-            <!-- Dropdown Message Notification -->
-            <div
-              class="origin-top-right absolute right-0 mt-2 w-80 rounded-md shadow-lg bg-white border border-gray-400 ring-1 ring-black ring-opacity-5 focus:outline-none hidden"
-              role="menu" aria-orientation="vertical" aria-labelledby="notificationButton" id="notificationDropdown">
-              <div class="py-1" role="none">
-                <a href="#" class="block px-4 py-2 text-sm text-black-700 hover:bg-gray-100" role="menuitem">
-                  <div class="flex">
-                    <div>
-                      <p class="font-medium">
-                        New message from Yul Gatchalian
-                      </p>
-                      <p class="text-sm text-black-500">Lorem ipsum dolor sit amet.</p>
-                      <p class="text-xs text-black-400">5 minutes ago</p>
-                    </div>
-                  </div>
-                </a>
-                <a href="#" class="block px-4 py-2 text-sm text-black-700 hover:bg-gray-100" role="menuitem">
-                  <div class="flex">
-                    <div class="mr-3">
-                      <p class="font-medium">Cylie Gonzales</p>
-                      <p class="text-sm text-black-500">
-                        Lorem ipsum dolor sit amet.
-                      </p>
-                      <p class="text-xs text-black-400">1 hour ago</p>
-                    </div>
-                  </div>
-                </a>
-                <a href="#" class="block px-4 py-2 text-sm text-black-700 hover:bg-gray-100" role="menuitem">
-                  <div class="flex">
-                    <div class="mr-3">
-                      <p class="font-medium">Kian David</p>
-                      <p class="text-sm text-black-500">
-                        Lorem ipsum dolor sit amet.
-                      </p>
-                      <p class="text-xs text-black-400">2 days ago</p>
-                    </div>
-                  </div>
-                </a>
-                <a href="#" class="block px-4 py-2 text-sm text-black-700 hover:bg-gray-100" role="menuitem">
-                  <div class="flex">
-                    <div class="mr-3">
-                      <p class="font-medium">Miko Basilio</p>
-                      <p class="text-sm text-black-500">
-                        Lorem ipsum dolor sit amet.
-                      </p>
-                      <p class="text-xs text-black-400">2 days ago</p>
-                    </div>
-                  </div>
-                </a>
-                <a href="#" class="block px-4 py-2 text-sm text-black-700 hover:bg-gray-100" role="menuitem">
-                  <div class="flex">
-                    <div class="mr-3">
-                      <p class="font-medium">Yul Grant Gatchalian</p>
-                      <p class="text-sm text-black-500">
-                        Lorem ipsum dolor sit amet.
-                      </p>
-                      <p class="text-xs text-black-400">2 days ago</p>
-                    </div>
-                  </div>
-                </a>
-              </div>
-            </div>
+            
           </div>
         </div>
 
@@ -314,7 +254,7 @@ require __DIR__ . '/../../dbcon/session_get.php';
 
       <!-- Assign Phone Modal -->
       <div id="assignModal"
-        class="fixed inset-0 flex justify-center hidden bg-black bg-opacity-50 z-50 pt-24 pb-24 h-full laptop:px-80 laptop:w-full phone:w-full phone:px-4">
+        class="fixed inset-0 justify-center hidden bg-black bg-opacity-50 z-50 pt-24 pb-24 h-full laptop:px-80 laptop:w-full phone:w-full phone:px-4">
         <div class="bg-white border border-gray-600 rounded-lg px-6 py-6 shadow-lg relative h-fit w-full max-w-md">
           <h2 class="text-2xl font-bold mb-4">Assign Phone to Team Leader</h2>
 
@@ -489,18 +429,23 @@ require __DIR__ . '/../../dbcon/session_get.php';
         .then((data) => {
           console.log("Fetched Data:", data);
 
-          if (!Array.isArray(data)) {
+          if (!data.success || !Array.isArray(data.data)) { // Ensure correct response
             console.error("Unexpected response format.");
             return;
           }
 
-          teamLeaderSelect.innerHTML = `
-          <option value="">Select Team Leader</option>
-          <option value="unassigned">Unassigned</option>
-        `;
+          const teamLeaders = data.data; // ✅ Get the "data" array
 
-          // ✅ Filter TLs
-          const teamLeaders = data.filter(user => user.userType === "TL");
+          const teamLeaderSelect = document.getElementById("teamLeaderSelect");
+          if (!teamLeaderSelect) {
+            console.error("teamLeaderSelect element not found!");
+            return;
+          }
+
+          teamLeaderSelect.innerHTML = `
+      <option value="">Select Team Leader</option>
+      <option value="unassigned">Unassigned</option>
+    `;
 
           if (teamLeaders.length === 0) {
             Swal.fire({
