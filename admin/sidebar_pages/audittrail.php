@@ -1,6 +1,6 @@
 <?php
-require __DIR__ . '/../dbcon/dbcon.php';
-require __DIR__ . '/../dbcon/authentication.php';
+require __DIR__ . '/../../dbcon/dbcon.php';
+require __DIR__ . '/../../dbcon/authentication.php';
 ?>
 
 
@@ -11,7 +11,7 @@ require __DIR__ . '/../dbcon/authentication.php';
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Audit Trail</title>
-  <link rel="stylesheet" href="../src/output.css" />
+  <link rel="stylesheet" href="../../src/output.css" />
   <script src="https://kit.fontawesome.com/10d593c5dc.js" crossorigin="anonymous"></script>
   <style>
     .dropdown-menu {
@@ -33,7 +33,7 @@ require __DIR__ . '/../dbcon/authentication.php';
       <ul>
         <li class="mb-4">
           <a class="flex items-center hover:bg-blue-700 p-2 text-base font-medium rounded-lg"
-            href="../admin/dashboard/dashboard.php">
+            href="../dashboard/dashboard.php">
             <i class="fas fa-tachometer-alt mr-3"></i>
             Dashboard
           </a>
@@ -54,6 +54,13 @@ require __DIR__ . '/../dbcon/authentication.php';
           <a class="flex items-center hover:bg-blue-700 p-2 text-base font-medium rounded-lg" href="usermanagement.php">
             <i class="fas fa-users mr-3"></i>
             User Management
+          </a>
+        </li>
+        <li class="mb-4">
+        <a class="flex items-center hover:bg-opacity-30 hover:bg-white p-2 text-base font-medium rounded-lg"
+        href="user_audit.php">
+            <i class="fas fa-list-alt mr-3"></i>
+            User Audit Log
           </a>
         </li>
       </ul>
@@ -83,9 +90,9 @@ require __DIR__ . '/../dbcon/authentication.php';
             <i class="fa-solid fa-angle-down fa-sm pl-3"></i>
           </button>
           <div class="dropdown-menu absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-2 z-20 hidden">
-              <a href="accountsetting.php" class="block px-4 py-2 text-gray-800 hover:bg-gray-200">Account Settings</a>
-              <a href="../src/logout.php" class="block px-4 py-2 text-gray-800 hover:bg-gray-200">Logout</a>
-            </div>
+            <a href="../accountsetting.php" class="block px-4 py-2 text-gray-800 hover:bg-gray-200">Account Settings</a>
+            <a href="../../src/logout.php" class="block px-4 py-2 text-gray-800 hover:bg-gray-200">Logout</a>
+          </div>
         </div>
       </div>
 
@@ -127,7 +134,7 @@ require __DIR__ . '/../dbcon/authentication.php';
           <!-- audit table -->
           <script>
             document.addEventListener("DOMContentLoaded", function () {
-              fetch("fetch_audit.php")
+              fetch("../audit_log/fetch_audit.php")
                 .then(response => response.json())
                 .then(data => {
                   console.log("Raw Response:", data);
@@ -162,21 +169,6 @@ require __DIR__ . '/../dbcon/authentication.php';
                 });
             });
           </script>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

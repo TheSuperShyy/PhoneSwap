@@ -1,5 +1,6 @@
 <?php
 require __DIR__ . '/../vendor/autoload.php';
+date_default_timezone_set('Asia/Manila');
 
 
 use MongoDB\Client;
@@ -9,5 +10,6 @@ $client = new Client("mongodb://localhost:27017");
 $db = $client->selectDatabase('phoneSwap');
 $usersCollection = $db->selectCollection('users');
 $phonesCollection = $db->selectCollection('phones');
-$auditCollection = $db->selectCollection('audit');
+$phoneauditCollection = $db->selectCollection('phone_audit');
+
 ?>

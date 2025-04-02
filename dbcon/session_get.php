@@ -13,7 +13,7 @@ if (!$details) {
 }
 
 // Extract user details
-$userId = $details['hfId'] ?? 'Unknown ID';
+$userId = $details['_id'] ?? 'Unknown ID';
 $userName = ($details['first_name'] ?? 'Unknown') . ' ' . ($details['last_name'] ?? '');
 $userRole = $details['userType'] ??'';
 ?>

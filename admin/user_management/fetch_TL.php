@@ -1,5 +1,5 @@
 <?php
-require __DIR__ . '/../dbcon/dbcon.php'; // Ensure correct path
+require __DIR__ . '/../../dbcon/dbcon.php'; // Ensure correct path
 
 try {
     $collection = $db->users;
@@ -11,6 +11,7 @@ try {
     $teamLeaders = [];
     foreach ($teamLeadersCursor as $tl) {
         $teamLeaders[] = [
+            '_id' => (string) $tl['_id'],
             'hfId' => $tl['hfId'],
             'first_name' => $tl['first_name'],
             'last_name' => $tl['last_name'],
