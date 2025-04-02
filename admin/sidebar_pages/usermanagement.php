@@ -64,8 +64,8 @@ $teamLeaders = $teamLeaders ?? [];
           </a>
         </li>
         <li class="mb-4">
-        <a class="flex items-center hover:bg-opacity-30 hover:bg-white p-2 text-base font-medium rounded-lg"
-        href="user_audit.php">
+          <a class="flex items-center hover:bg-opacity-30 hover:bg-white p-2 text-base font-medium rounded-lg"
+            href="user_audit.php">
             <i class="fas fa-list-alt mr-3"></i>
             User Audit Log
           </a>
@@ -175,7 +175,7 @@ $teamLeaders = $teamLeaders ?? [];
                                 data-hfid="<?php echo $tl["hfId"] ?? ''; ?>"
                                 data-firstname="<?php echo $tl["first_name"] ?? ''; ?>"
                                 data-lastname="<?php echo $tl["last_name"] ?? ''; ?>"
-                                data-email="<?php echo $tl["email"] ?? ''; ?>">
+                                data-email="<?php echo $tl["email"] ?? ''; ?>" data-id="<?php echo $tl["_id"] ?? ''; ?>">
                                 <i class="fa-solid fa-pen"></i> Edit
                               </button>
                               <button
@@ -260,7 +260,7 @@ $teamLeaders = $teamLeaders ?? [];
 
             <!-- Modal for EDIT USER -->
             <div id="myModal1"
-              class="fixed inset-0  justify-center items-center hidden bg-black bg-opacity-50 z-50 pt-24 pb-24 h-full laptop:px-80 laptop:w-full phone:w-full phone:px-4">
+              class="fixed inset-0 justify-center items-center hidden bg-black bg-opacity-50 z-50 pt-24 pb-24 h-full laptop:px-80 laptop:w-full phone:w-full phone:px-4">
               <div class="bg-white border border-gray-600 rounded-lg px-6 py-6 shadow-lg relative h-fit w-full">
                 <div class="flex justify-center">
                   <div class="w-28 h-28 bg-gray-200 rounded-full flex items-center justify-center">
@@ -273,36 +273,38 @@ $teamLeaders = $teamLeaders ?? [];
                   <div class="flex laptop:flex-row phone:flex-col gap-4">
                     <div class="flex flex-col gap-2 w-full">
                       <label for="" class="text-sm font-medium">First Name</label>
-                      <input type="text" placeholder="Yul Grant"
+                      <input id="firstName" type="text" placeholder="Yul Grant"
                         class="border border-gray-700 p-2 rounded-lg text-black" />
                     </div>
                     <div class="flex flex-col gap-2 w-full">
                       <label for="" class="text-sm font-medium">Last Name</label>
-                      <input type="text" placeholder="Gatchalian" class="border border-gray-700 p-2 rounded-lg" />
+                      <input id="lastName" type="text" placeholder="Gatchalian"
+                        class="border border-gray-700 p-2 rounded-lg" />
                     </div>
                   </div>
                   <div class="flex laptop:flex-row phone:flex-col gap-4">
                     <div class="flex flex-col gap-2 w-full">
                       <label for="" class="text-sm font-medium">Email</label>
-                      <input type="email" placeholder="Yulgrant@gmail.com"
+                      <input id="email" type="email" placeholder="Yulgrant@gmail.com"
                         class="border border-gray-700 p-2 rounded-lg" />
                     </div>
                     <div class="flex flex-col gap-2 w-full">
                       <label for="" class="text-sm font-medium">HFID</label>
-                      <input type="text/number" placeholder="HFID" class="border border-gray-700 p-2 rounded-lg" />
+                      <input id="hfId" type="text" placeholder="HFID" class="border border-gray-700 p-2 rounded-lg" />
                     </div>
+                    <!-- 🔹 Hidden Input for _id -->
+                    <input id="userId" type="text" hidden />
                   </div>
                   <div class="flex laptop:flex-row phone:flex-col gap-4">
                     <div class="flex flex-col gap-2 w-full">
                       <label for="" class="text-sm font-medium">Role</label>
-                      <input type="text/number" placeholder="Team Leader" class="border border-gray-700 p-2 rounded-lg"
-                        readonly />
-                    </div </div>
+                      <input id="role" type="text" placeholder="Team Leader"
+                        class="border border-gray-700 p-2 rounded-lg" readonly />
+                    </div>
                   </div>
-
                   <!-- Buttons -->
                   <div class="flex justify-end space-x-2 mt-4">
-                    <button id="closeModalBtn1"
+                    <button id="deactivateBtn"
                       class="w-28 px-4 py-2 shadow-md shadow-gray-300 text-white bg-red-600 border border-white font-medium rounded-lg">
                       Deactivate
                     </button>
@@ -314,6 +316,7 @@ $teamLeaders = $teamLeaders ?? [];
                 </div>
               </div>
             </div>
+
 
             <!-- Pagination -->
             <div class="flex space-x-2">
@@ -474,12 +477,13 @@ $teamLeaders = $teamLeaders ?? [];
     const saveUserBtn = document.getElementById("saveUserBtn");
     const editButtons = document.querySelectorAll(".openEditModalBtn");
 
-    // Get modal input fields
-    const firstNameInput = modal.querySelector("input[placeholder='Yul Grant']");
-    const lastNameInput = modal.querySelector("input[placeholder='Gatchalian']");
-    const emailInput = modal.querySelector("input[placeholder='Yulgrant@gmail.com']");
-    const hfIdInput = modal.querySelector("input[placeholder='HFID']");
-    const roleInput = modal.querySelector("input[placeholder='Team Leader']");
+    // Get modal input fields by their IDs
+    const firstNameInput = modal.querySelector("#firstName");
+    const lastNameInput = modal.querySelector("#lastName");
+    const emailInput = modal.querySelector("#email");
+    const hfIdInput = modal.querySelector("#hfId");
+    const roleInput = modal.querySelector("#role");
+    const userIdInput = document.getElementById("userId");
 
     let currentRow = null;
 
@@ -492,6 +496,7 @@ $teamLeaders = $teamLeaders ?? [];
           return;
         }
 
+        const userId = this.getAttribute("data-id"); // Fetch _id from data-id
         const hfId = currentRow.cells[0].innerText.trim();
         const fullName = currentRow.cells[1].innerText.trim();
         const nameParts = fullName.split(" ");
@@ -501,7 +506,7 @@ $teamLeaders = $teamLeaders ?? [];
         const email = currentRow.cells[3].innerText.trim();
 
         // Debugging log
-        console.log("Editing User:", { hfId, firstName, lastName, role, email });
+        console.log("Editing User:", { hfId, firstName, lastName, role, email, userId });
 
         // Populate modal inputs
         hfIdInput.value = hfId;
@@ -509,6 +514,9 @@ $teamLeaders = $teamLeaders ?? [];
         lastNameInput.value = lastName;
         emailInput.value = email;
         roleInput.value = role;
+
+        // Set global variable userId (to be used in saveUserBtn event)
+        window.currentUserId = userId;
 
         // Show modal
         modal.classList.remove("hidden");
@@ -522,7 +530,7 @@ $teamLeaders = $teamLeaders ?? [];
         return;
       }
 
-      // Get updated values
+      // Get updated values from modal inputs
       const updatedHfId = hfIdInput.value.trim();
       const updatedFirstName = firstNameInput.value.trim();
       const updatedLastName = lastNameInput.value.trim();
@@ -539,7 +547,7 @@ $teamLeaders = $teamLeaders ?? [];
         return;
       }
 
-      // Update table data
+      // Update table data (optional: you can remove or modify the row update here)
       currentRow.cells[0].innerText = updatedHfId;
       currentRow.cells[1].innerText = `${updatedFirstName} ${updatedLastName}`;
       currentRow.cells[2].innerText = updatedRole;
@@ -550,11 +558,12 @@ $teamLeaders = $teamLeaders ?? [];
 
       // Prepare data for backend
       const userData = {
-        hfId: updatedHfId,
-        firstName: updatedFirstName,
-        lastName: updatedLastName,
-        username: updatedEmail,
-        role: updatedRole,
+        userId: window.currentUserId,  // Ensure userId is sent
+        hfId: updatedHfId, // Retrieve hfId value
+        firstName: updatedFirstName, // Retrieve firstName value
+        lastName: updatedLastName, // Retrieve lastName value
+        username: updatedEmail, // Retrieve email value
+        role: updatedRole, // Retrieve role value
       };
 
       // Debugging: Check the data before sending
@@ -610,6 +619,7 @@ $teamLeaders = $teamLeaders ?? [];
     });
   });
 </script>
+
 
 <!-- delete function -->
 <script>

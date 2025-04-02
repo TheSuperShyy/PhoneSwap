@@ -151,16 +151,18 @@ require __DIR__ . '/../../dbcon/authentication.php';
                                             tableBody.innerHTML = ""; // Clear previous content
 
                                             data.data.forEach(log => {
+                                            
                                                 const row = `
-                                                <tr class="border-b text-sm">
-                                                <td class="py-3 px-4 whitespace-nowrap">${log.date}</td>
-                                                <td class="py-3 px-4 whitespace-nowrap">${log.user}</td>
-                                                <td class="py-3 px-4 whitespace-nowrap">${log.action}</td>
-                                                <td class="py-3 px-4 whitespace-nowrap">${log.details}</td> 
-                                                </tr>
-                                            `;
+                                                    <tr class="border-b text-sm">
+                                                        <td class="py-3 px-4 whitespace-nowrap">${log.date}</td>
+                                                        <td class="py-3 px-4 whitespace-nowrap">${log.user}</td>
+                                                        <td class="py-3 px-4 whitespace-nowrap">${log.action}</td>
+                                                        <td class="py-3 px-4 whitespace-nowrap">${log.details}</td> 
+                                                    </tr>
+                                                `;
                                                 tableBody.innerHTML += row;
                                             });
+
                                         } else {
                                             console.error("Failed to fetch audit logs:", data.message);
                                         }

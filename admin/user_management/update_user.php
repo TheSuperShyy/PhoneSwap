@@ -22,35 +22,43 @@ if (!isset($_SESSION['user'])) {
 }
 
 // ✅ Extract admin details from session
-$adminId = $_SESSION['user']['hfId'] ?? 'Unknown ID';
-$adminName = ($_SESSION['user']['first_name'] ?? 'Unknown') . ' ' . ($_SESSION['user']['last_name'] ?? '');
+$userdetails = $_SESSION["user"];
+$details = $db->users->findOne(["username" => $userdetails['username']]);
 
+if (!$details) {
+    echo json_encode(["success" => false, "error" => "Admin not found."]);
+    exit;
+}
+
+// Extract user details from session
+$adminId = $details['hfId'] ?? 'Unknown ID';
+$adminName = ($details['first_name'] ?? 'Unknown') . ' ' . ($details['last_name'] ?? '');
+$adminRole = $details['userType'] ?? '';
+
+// Ensure all required fields are present and valid
 $hfId = trim($data['hfId']);
 $firstName = trim($data['firstName']);
 $lastName = trim($data['lastName']);
 $email = trim($data['username']);
 $role = trim($data['role']); // Ensure role is passed
 
-if (!$usersCollection) {
-    echo json_encode(["success" => false, "message" => "MongoDB connection failed"]);
+// Check if required fields are empty
+if (empty($hfId) || empty($firstName) || empty($lastName) || empty($email)) {
+    echo json_encode(["success" => false, "message" => "Missing required fields"]);
     exit;
 }
 
-// ✅ Step 1: Find the _id using the old hfId
-$user = $usersCollection->findOne(["hfId" => $hfId]);
+// Ensure that no extra output is sent before the JSON response
+if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+    echo json_encode(["success" => false, "message" => "Invalid email format"]);
+    exit;
+}
+
+// ✅ Step 1: Find the user by userId (_id), not hfId
+$user = $usersCollection->findOne(["_id" => new MongoDB\BSON\ObjectId($data['userId'])]);
 
 if (!$user) {
-    error_log("User with HFID '$hfId' not found.");
     echo json_encode(["success" => false, "message" => "User not found."]);
-    exit;
-}
-
-// ✅ Ensure we extract a valid MongoDB ObjectId
-try {
-    $userId = new ($user['_id']);
-} catch (Exception $e) {
-    error_log("Invalid ObjectId conversion: " . $e->getMessage());
-    echo json_encode(["success" => false, "message" => "Invalid user ID format."]);
     exit;
 }
 
@@ -59,19 +67,15 @@ $updateFields = [
     "first_name" => $firstName,
     "last_name" => $lastName,
     "username" => $email,
-    "userType" => "TL",
-    "hfId" => $hfId
+    "userType" => 'TL', // Assuming role needs to be updated as well
+    "hfId" => $hfId // Keep hfId as part of the update
 ];
 
-error_log("Updating user with _id: " . $userId);
-
-// ✅ Step 3: Perform update using _id
+// ✅ Step 3: Perform update using _id directly
 $result = $usersCollection->updateOne(
-    ["_id" => $userId], // Update using _id
+    ["_id" => new MongoDB\BSON\ObjectId($data['userId'])], // Use _id from the found user
     ['$set' => $updateFields]
 );
-
-error_log("Modified Count: " . $result->getModifiedCount());
 
 if ($result->getModifiedCount() > 0) {
     // ✅ Log audit entry
@@ -86,8 +90,10 @@ if ($result->getModifiedCount() > 0) {
     ];
     $db->user_audit->insertOne($auditData);
 
+    // Send success response after update
     echo json_encode(["success" => true, "message" => "User updated successfully!"]);
 } else {
+    // If no changes were made, send the corresponding response
     echo json_encode(["success" => false, "message" => "No changes made."]);
 }
 ?>
