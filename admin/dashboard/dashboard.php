@@ -254,9 +254,9 @@ require __DIR__ . '/../../dbcon/session_get.php';
 
       <!-- Assign Phone Modal -->
       <div id="assignModal"
-        class="fixed inset-0 justify-center hidden bg-black bg-opacity-50 z-50 pt-24 pb-24 h-full laptop:px-80 laptop:w-full phone:w-full phone:px-4">
-        <div class="bg-white border border-gray-600 rounded-lg px-6 py-6 shadow-lg relative h-fit w-full max-w-md">
-          <h2 class="text-2xl font-bold mb-4">Assign Phone to Team Leader</h2>
+        class="fixed inset-0 justify-center hidden bg-black bg-opacity-50 z-50 pt-24 pb-24 h-full w-full laptop:px-80 laptop:w-full phone:w-full phone:px-4">
+        <div class="bg-white border border-gray-600 rounded-lg px-6 py-6 shadow-lg relative h-fit">
+          <h2 class="text-2xl font-bold mb-4">Assigns Phone to Team Leader</h2>
 
           <form id="assignForm">
             <!-- Device Model (Read-Only) -->
@@ -476,19 +476,6 @@ require __DIR__ . '/../../dbcon/session_get.php';
           });
         });
     }
-  </script>
-
-
-  <!-- Script for notification bell dropdown-->
-  <script>
-    const notificationButton = document.getElementById("notificationButton");
-    const notificationDropdown = document.getElementById(
-      "notificationDropdown"
-    );
-
-    notificationButton.addEventListener("click", () => {
-      notificationDropdown.classList.toggle("hidden");
-    });
   </script>
 
 

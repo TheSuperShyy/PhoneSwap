@@ -84,7 +84,7 @@ $teamLeaders = $teamLeaders ?? [];
           </button>
           <div class="dropdown-menu absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-2 z-20 hidden">
             <a href="accountsetting.php" class="block px-4 py-2 text-gray-800 hover:bg-gray-200">Account Settings</a>
-            <a href="#" class="block px-4 py-2 text-gray-800 hover:bg-gray-200">Logout</a>
+            <a href="../../src/logout.php" class="block px-4 py-2 text-gray-800 hover:bg-gray-200">Logout</a>
           </div>
           <h2 class="text-xl font-semibold mr-4">User Management</h2>
         </div>
@@ -168,6 +168,10 @@ $teamLeaders = $teamLeaders ?? [];
                           </td>
                           <td class="py-2 px-4 whitespace-nowrap">Team Leader</td>
                           <td class="py-2 px-4 whitespace-nowrap"><?php echo $tl["email"] ?? "No Email"; ?></td>
+                          <!-- Hidden status column -->
+                          <td class="text-center space-x-2 status-cell" style="display: none;">
+                            <?php echo $tl["status"] ?? "Unknown"; ?>
+                          </td>
                           <td class="text-center space-x-2">
                             <div class="flex flex-row py-2 px-4 gap-1">
                               <button
@@ -175,7 +179,8 @@ $teamLeaders = $teamLeaders ?? [];
                                 data-hfid="<?php echo $tl["hfId"] ?? ''; ?>"
                                 data-firstname="<?php echo $tl["first_name"] ?? ''; ?>"
                                 data-lastname="<?php echo $tl["last_name"] ?? ''; ?>"
-                                data-email="<?php echo $tl["email"] ?? ''; ?>" data-id="<?php echo $tl["_id"] ?? ''; ?>">
+                                data-email="<?php echo $tl["email"] ?? ''; ?>"
+                                data-status="<?php echo $tl["status"] ?? ''; ?>" data-id="<?php echo $tl["_id"] ?? ''; ?>">
                                 <i class="fa-solid fa-pen"></i> Edit
                               </button>
                               <button
@@ -192,6 +197,7 @@ $teamLeaders = $teamLeaders ?? [];
                       </tr>
                     <?php endif; ?>
                   </tbody>
+
 
                 </table>
               </div>
@@ -260,8 +266,8 @@ $teamLeaders = $teamLeaders ?? [];
 
             <!-- Modal for EDIT USER -->
             <div id="myModal1"
-              class="fixed inset-0 justify-center items-center hidden bg-black bg-opacity-50 z-50 pt-24 pb-24 h-full laptop:px-80 laptop:w-full phone:w-full phone:px-4">
-              <div class="bg-white border border-gray-600 rounded-lg px-6 py-6 shadow-lg relative h-fit w-full">
+              class="fixed inset-0 hidden flex justify-center items-center  bg-black bg-opacity-50 z-50 h-full w-full laptop:w-full phone:w-full phone:px-4">
+              <div class="bg-white border border-gray-600 rounded-lg px-6 py-6 shadow-lg mt-[5%] w-fit relative">
                 <div class="flex justify-center">
                   <div class="w-28 h-28 bg-gray-200 rounded-full flex items-center justify-center">
                     <span class="text-gray-500 text-3xl">&#128100;</span>
@@ -294,6 +300,7 @@ $teamLeaders = $teamLeaders ?? [];
                     </div>
                     <!-- 🔹 Hidden Input for _id -->
                     <input id="userId" type="text" hidden />
+
                   </div>
                   <div class="flex laptop:flex-row phone:flex-col gap-4">
                     <div class="flex flex-col gap-2 w-full">
@@ -302,12 +309,18 @@ $teamLeaders = $teamLeaders ?? [];
                         class="border border-gray-700 p-2 rounded-lg" readonly />
                     </div>
                   </div>
+                  <div class="flex laptop:flex-row phone:flex-col gap-4">
+                    <div class="flex flex-col gap-2 w-full">
+                      <label for="" class="text-sm font-medium">Status</label>
+                      <select id="status" class="border border-gray-700 p-2 rounded-lg">
+                        <option value="active">active</option>
+                        <option value="deactivated">deactivated</option>
+                      </select>
+                    </div>
+                  </div>
+
                   <!-- Buttons -->
                   <div class="flex justify-end space-x-2 mt-4">
-                    <button id="deactivateBtn"
-                      class="w-28 px-4 py-2 shadow-md shadow-gray-300 text-white bg-red-600 border border-white font-medium rounded-lg">
-                      Deactivate
-                    </button>
                     <button id="saveUserBtn"
                       class="px-4 py-2 w-24 shadow-md shadow-gray-300 bg-amber-400 font-medium text-white border border-white rounded-lg">
                       Save
@@ -412,54 +425,64 @@ $teamLeaders = $teamLeaders ?? [];
 
         // Send data to PHP backend
         fetch("../user_management/add_user.php", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            first_name: firstName,
-            last_name: lastName,
-            username: email,
-            hfId: hfId,
-            userType: role,
-            team_members: role === "TL" ? [] : undefined,
-            assigned_phone: []
-          }),
-        })
-          .then(response => response.text())
-          .then(data => {
-            console.log("Raw Response:", data);
-            return JSON.parse(data);
-          })
-          .then(parsedData => {
-            console.log("Parsed JSON:", parsedData);
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({
+    first_name: firstName,
+    last_name: lastName,
+    username: email,
+    hfId: hfId,
+    userType: role,
+    team_members: role === "TL" ? [] : undefined,
+    assigned_phone: []
+  }),
+})
+  .then(response => response.text())
+  .then(data => {
+    console.log("Raw Response:", data);
+    // Attempt to parse the response if it's valid JSON
+    try {
+      const parsedData = JSON.parse(data);
+      console.log("Parsed JSON:", parsedData);
 
-            if (parsedData.success) {
-              Swal.fire({
-                icon: "success",
-                title: "User Added!",
-                text: "The user has been successfully added.",
-                confirmButtonColor: "#3085d6"
-              }).then(() => {
-                console.log("Page will refresh now...");
-                location.reload();
-              });
-            } else {
-              Swal.fire({
-                icon: "error",
-                title: "Error",
-                text: parsedData.message,
-                confirmButtonColor: "#d33"
-              });
-            }
-          })
-          .catch(error => {
-            console.error("Fetch Error:", error);
-            Swal.fire({
-              icon: "error",
-              title: "Failed to Add User",
-              text: "An error occurred. Please try again.",
-              confirmButtonColor: "#d33"
-            });
-          });
+      if (parsedData.success) {
+        Swal.fire({
+          icon: "success",
+          title: "User Added!",
+          text: "The user has been successfully added.",
+          confirmButtonColor: "#3085d6"
+        }).then(() => {
+          console.log("Page will refresh now...");
+          location.reload();
+        });
+      } else {
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: parsedData.message,
+          confirmButtonColor: "#d33"
+        });
+      }
+    } catch (error) {
+      console.error("Failed to parse JSON:", error);
+      Swal.fire({
+        icon: "error",
+        title: "Failed to Add User",
+        text: "The server response is invalid. Please try again.",
+        confirmButtonColor: "#d33"
+      });
+    }
+  })
+  .catch(error => {
+    console.error("Fetch Error:", error);
+    Swal.fire({
+      icon: "error",
+      title: "Failed to Add User",
+      text: "An error occurred. Please try again.",
+      confirmButtonColor: "#d33"
+    });
+  });
+
       });
     } else {
       console.error("Add User button not found!");
@@ -471,122 +494,154 @@ $teamLeaders = $teamLeaders ?? [];
 
 <!-- Script for edit modal -->
 <script>
-  document.addEventListener("DOMContentLoaded", function () {
-    const modal = document.getElementById("myModal1");
-    const closeModalBtn = document.getElementById("closeModalBtn1");
-    const saveUserBtn = document.getElementById("saveUserBtn");
-    const editButtons = document.querySelectorAll(".openEditModalBtn");
+ document.addEventListener("DOMContentLoaded", function () {
+  const modal = document.getElementById("myModal1");
+  const statusSelect = document.getElementById("status");
+  const closeModalBtn = document.getElementById("closeModalBtn1");
+  const saveUserBtn = document.getElementById("saveUserBtn");
+  const editButtons = document.querySelectorAll(".openEditModalBtn");
 
-    // Get modal input fields by their IDs
-    const firstNameInput = modal.querySelector("#firstName");
-    const lastNameInput = modal.querySelector("#lastName");
-    const emailInput = modal.querySelector("#email");
-    const hfIdInput = modal.querySelector("#hfId");
-    const roleInput = modal.querySelector("#role");
-    const userIdInput = document.getElementById("userId");
+  // Get modal input fields by their IDs
+  const firstNameInput = modal.querySelector("#firstName");
+  const lastNameInput = modal.querySelector("#lastName");
+  const emailInput = modal.querySelector("#email");
+  const hfIdInput = modal.querySelector("#hfId");
+  const roleInput = modal.querySelector("#role");
+  const statusInput = modal.querySelector("#status");
+  const userIdInput = document.getElementById("userId");
 
-    let currentRow = null;
+  let currentRow = null;
+  let currentStatus = ""; // Store the initial status
 
-    // Open modal and populate data
-    editButtons.forEach((button) => {
-      button.addEventListener("click", function () {
-        currentRow = this.closest("tr");
-        if (!currentRow) {
-          console.error("No row found!");
-          return;
-        }
-
-        const userId = this.getAttribute("data-id"); // Fetch _id from data-id
-        const hfId = currentRow.cells[0].innerText.trim();
-        const fullName = currentRow.cells[1].innerText.trim();
-        const nameParts = fullName.split(" ");
-        const firstName = nameParts.length > 1 ? nameParts.slice(0, -1).join(" ") : nameParts[0];
-        const lastName = nameParts.length > 1 ? nameParts[nameParts.length - 1] : "";
-        const role = currentRow.cells[2].innerText.trim();
-        const email = currentRow.cells[3].innerText.trim();
-
-        // Debugging log
-        console.log("Editing User:", { hfId, firstName, lastName, role, email, userId });
-
-        // Populate modal inputs
-        hfIdInput.value = hfId;
-        firstNameInput.value = firstName;
-        lastNameInput.value = lastName;
-        emailInput.value = email;
-        roleInput.value = role;
-
-        // Set global variable userId (to be used in saveUserBtn event)
-        window.currentUserId = userId;
-
-        // Show modal
-        modal.classList.remove("hidden");
-      });
-    });
-
-    // Save button event listener
-    saveUserBtn.addEventListener("click", function () {
+  // Open modal and populate data
+  editButtons.forEach((button) => {
+    button.addEventListener("click", function () {
+      currentRow = this.closest("tr");
       if (!currentRow) {
-        console.error("No row selected for update!");
+        console.error("No row found!");
         return;
       }
 
-      // Get updated values from modal inputs
-      const updatedHfId = hfIdInput.value.trim();
-      const updatedFirstName = firstNameInput.value.trim();
-      const updatedLastName = lastNameInput.value.trim();
-      const updatedRole = roleInput.value.trim();
-      const updatedEmail = emailInput.value.trim();
+      const userId = this.getAttribute("data-id"); // Fetch _id from data-id
+      const hfId = currentRow.cells[0].innerText.trim();
+      const fullName = currentRow.cells[1].innerText.trim();
+      const nameParts = fullName.split(" ");
+      const firstName = nameParts.length > 1 ? nameParts.slice(0, -1).join(" ") : nameParts[0];
+      const lastName = nameParts.length > 1 ? nameParts[nameParts.length - 1] : "";
+      const role = currentRow.cells[2].innerText.trim();
+      const email = currentRow.cells[3].innerText.trim();
+      const status = this.getAttribute("data-status"); // Use data-status from the button
 
-      // Validate inputs
-      if (!updatedHfId || !updatedFirstName || !updatedLastName || !updatedEmail || !updatedRole) {
-        Swal.fire({
-          icon: "warning",
-          title: "Missing Data!",
-          text: "Please fill in all fields before saving.",
-        });
-        return;
-      }
+      currentStatus = status; // ✅ Store initial status
 
-      // Update table data (optional: you can remove or modify the row update here)
-      currentRow.cells[0].innerText = updatedHfId;
-      currentRow.cells[1].innerText = `${updatedFirstName} ${updatedLastName}`;
-      currentRow.cells[2].innerText = updatedRole;
-      currentRow.cells[3].innerText = updatedEmail;
+      // Debugging log
+      console.log("Editing User:", { hfId, firstName, lastName, role, email, status, userId });
 
-      // Hide modal
-      modal.classList.add("hidden");
+      // Populate modal inputs
+      hfIdInput.value = hfId;
+      firstNameInput.value = firstName;
+      lastNameInput.value = lastName;
+      emailInput.value = email;
+      roleInput.value = role;
 
-      // Prepare data for backend
-      const userData = {
-        userId: window.currentUserId,  // Ensure userId is sent
-        hfId: updatedHfId, // Retrieve hfId value
-        firstName: updatedFirstName, // Retrieve firstName value
-        lastName: updatedLastName, // Retrieve lastName value
-        username: updatedEmail, // Retrieve email value
-        role: updatedRole, // Retrieve role value
-      };
+      // Set the status dropdown to the correct value
+      statusInput.value = status === "active" ? "active" : "deactivated"; // Make sure to set the correct value
 
-      // Debugging: Check the data before sending
-      console.log("Sending Data:", userData);
+      window.currentUserId = userId;
 
-      fetch("../user_management/update_user.php", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(userData),
-      })
-        .then(response => response.text())
-        .then(text => {
-          console.log("Raw Response:", text);
-          try {
-            const data = JSON.parse(text);
-            console.log("Server Response:", data);
+      // Show modal
+      modal.classList.remove("hidden");
+    });
+  });
 
-            if (data.success) {
+  // Save button event listener
+  saveUserBtn.addEventListener("click", function () {
+    if (!currentRow) {
+      console.error("No row selected for update!");
+      return;
+    }
+
+    // Get updated values from modal inputs
+    const updatedHfId = hfIdInput.value.trim();
+    const updatedFirstName = firstNameInput.value.trim();
+    const updatedLastName = lastNameInput.value.trim();
+    const updatedRole = roleInput.value.trim();
+    const updatedEmail = emailInput.value.trim();
+    const updatedStatus = statusInput.value.trim();
+
+    // Validate inputs
+    if (!updatedHfId || !updatedFirstName || !updatedLastName || !updatedEmail || !updatedRole) {
+      Swal.fire({
+        icon: "warning",
+        title: "Missing Data!",
+        text: "Please fill in all fields before saving.",
+      });
+      return;
+    }
+
+    // Check if status is the same as before
+    if (updatedStatus === currentStatus) {
+      Swal.fire({
+        icon: "info",
+        title: "No Changes",
+        text: "The status is the same as before, no changes have been made.",
+      }).then(() => {
+        window.location.reload(); // Reload the page after popup
+      });
+      return;
+    }
+
+    // Update table row (optional visual update)
+    currentRow.cells[0].innerText = updatedHfId;
+    currentRow.cells[1].innerText = `${updatedFirstName} ${updatedLastName}`;
+    currentRow.cells[2].innerText = updatedRole;
+    currentRow.cells[3].innerText = updatedEmail;
+    const statusCell = currentRow.cells[4];
+    const statusText = statusCell.querySelector(".status-text");
+
+    if (statusText) {
+      statusText.innerText = updatedStatus; // ✅ Update text only
+    }
+
+    modal.classList.add("hidden");
+
+    const userData = {
+      userId: window.currentUserId,
+      hfId: updatedHfId,
+      firstName: updatedFirstName,
+      lastName: updatedLastName,
+      username: updatedEmail,
+      role: updatedRole,
+      status: updatedStatus,
+    };
+
+    console.log("Sending Data:", userData);
+
+    fetch("../user_management/update_user.php", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(userData),
+    })
+      .then(response => response.text())
+      .then(text => {
+        console.log("Raw Response:", text);
+        try {
+          const data = JSON.parse(text);
+          console.log("Server Response:", data);
+
+          if (data.success) {
+            Swal.fire({
+              icon: "success",
+              title: "Success",
+              text: data.message,
+            }).then(() => location.reload());
+          } else {
+            if (data.message === 'No changes made') {
               Swal.fire({
-                icon: "success",
-                title: "Success",
-                text: data.message,
-              }).then(() => location.reload());
+                icon: "info",
+                title: "No Changes Were Made",
+                text: "The status remains the same as before.",
+              });
             } else {
               Swal.fire({
                 icon: "error",
@@ -594,31 +649,34 @@ $teamLeaders = $teamLeaders ?? [];
                 text: data.message,
               });
             }
-          } catch (error) {
-            console.error("JSON Parse Error:", error);
-            Swal.fire({
-              icon: "error",
-              title: "Parse Error",
-              text: "Server response is not valid JSON!",
-            });
           }
-        })
-        .catch(error => {
-          console.error("Fetch Error:", error);
+        } catch (error) {
+          console.error("JSON Parse Error:", error);
           Swal.fire({
             icon: "error",
-            title: "Fetch Error",
-            text: "Something went wrong! Check console for details.",
+            title: "Parse Error",
+            text: "Server response is not valid JSON!",
           });
+        }
+      })
+      .catch(error => {
+        console.error("Fetch Error:", error);
+        Swal.fire({
+          icon: "error",
+          title: "Fetch Error",
+          text: "Something went wrong! Check console for details.",
         });
-    });
-
-    // Close modal
-    closeModalBtn.addEventListener("click", function () {
-      modal.classList.add("hidden");
-    });
+      });
   });
+
+  // Close modal
+  closeModalBtn.addEventListener("click", function () {
+    modal.classList.add("hidden");
+  });
+});
+
 </script>
+
 
 
 <!-- delete function -->

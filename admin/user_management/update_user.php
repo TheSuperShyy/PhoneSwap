@@ -30,7 +30,7 @@ if (!$details) {
     exit;
 }
 
-// Extract user details from session
+// Extract admin details from session
 $adminId = $details['hfId'] ?? 'Unknown ID';
 $adminName = ($details['first_name'] ?? 'Unknown') . ' ' . ($details['last_name'] ?? '');
 $adminRole = $details['userType'] ?? '';
@@ -40,10 +40,11 @@ $hfId = trim($data['hfId']);
 $firstName = trim($data['firstName']);
 $lastName = trim($data['lastName']);
 $email = trim($data['username']);
-$role = trim($data['role']); // Ensure role is passed
+$role = trim($data['role']);
+$status = trim($data['status']); // Get the status field from the input
 
 // Check if required fields are empty
-if (empty($hfId) || empty($firstName) || empty($lastName) || empty($email)) {
+if (empty($hfId) || empty($firstName) || empty($lastName) || empty($email) || empty($status)) {
     echo json_encode(["success" => false, "message" => "Missing required fields"]);
     exit;
 }
@@ -67,8 +68,9 @@ $updateFields = [
     "first_name" => $firstName,
     "last_name" => $lastName,
     "username" => $email,
-    "userType" => 'TL', // Assuming role needs to be updated as well
-    "hfId" => $hfId // Keep hfId as part of the update
+    "userType" => 'TL', // Ensure role is updated as well
+    "hfId" => $hfId, // Keep hfId as part of the update
+    "status" => $status // Update the user's status
 ];
 
 // ✅ Step 3: Perform update using _id directly
@@ -88,7 +90,14 @@ if ($result->getModifiedCount() > 0) {
         "action" => "Updated User",
         "details" => $updateFields
     ];
-    $db->user_audit->insertOne($auditData);
+
+    // Debugging: Log audit insert result
+    try {
+        $insertResult = $db->user_audit->insertOne($auditData);
+        error_log("Audit Log Insert Result: " . json_encode($insertResult));
+    } catch (Exception $e) {
+        error_log("Audit Insert Error: " . $e->getMessage());
+    }
 
     // Send success response after update
     echo json_encode(["success" => true, "message" => "User updated successfully!"]);

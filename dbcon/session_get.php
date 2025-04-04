@@ -16,4 +16,5 @@ if (!$details) {
 $userId = $details['_id'] ?? 'Unknown ID';
 $userName = ($details['first_name'] ?? 'Unknown') . ' ' . ($details['last_name'] ?? '');
 $userRole = $details['userType'] ??'';
+$userStatus = $details['status'] ?? 'Unknown Status';
 ?>
