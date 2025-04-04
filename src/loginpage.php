@@ -44,48 +44,63 @@
     </div>
 
     <!-- ✅ JavaScript for handling login with SweetAlert -->
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            document.getElementById("loginForm").addEventListener("submit", function (e) {
-                e.preventDefault(); // ✅ Prevent default form submission
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        document.getElementById("loginForm").addEventListener("submit", function (e) {
+            e.preventDefault(); // ✅ Prevent default form submission
 
-                const formData = new FormData(this);
+            const formData = new FormData(this);
 
-                fetch("../src/auth/login.php", { // ✅ Ensure correct path
-                    method: "POST",
-                    body: formData
-                })
-                .then(response => response.json()) // ✅ Expect JSON response
-                .then(data => {
-                    if (data.success) {
-                        Swal.fire({
-                            icon: "success",
-                            title: "Login Successful!",
-                            text: data.message,
-                            confirmButtonColor: "#3085d6",
-                        }).then(() => {
-                            window.location.href = "../admin/dashboard/dashboard.php"; // ✅ Redirect after success
-                        });
-                    } else {
-                        Swal.fire({
-                            icon: "error",
-                            title: "Login Failed!",
-                            text: data.error,
-                            confirmButtonColor: "#d33",
-                        });
+            fetch("../src/auth/login.php", { // ✅ Ensure correct path
+                method: "POST",
+                body: formData
+            })
+            .then(response => response.json()) // ✅ Expect JSON response
+            .then(data => {
+                console.log(data); // Log the response for debugging
+                if (data.success) {
+                    // Redirect based on userType
+                    let redirectUrl = "";
+                    if (data.userType === 'admin') {
+                        redirectUrl = "../admin/dashboard/dashboard.php"; // Admin dashboard
+                    } else if (data.userType === 'TL') {
+                        redirectUrl = "../teamleader/dashboard.php"; // Team Leader dashboard
                     }
-                })
-                .catch(error => {
-                    console.error("Error:", error);
+
+                    // Check if the redirectUrl is correctly set
+                    console.log("Redirecting to:", redirectUrl);
+
+                    Swal.fire({
+                        icon: "success",
+                        title: "Login Successful!",
+                        text: data.message,
+                        confirmButtonColor: "#3085d6",
+                    }).then(() => {
+                        // Trigger the redirection
+                        window.location.href = redirectUrl; // ✅ Redirect based on userType
+                    });
+                } else {
                     Swal.fire({
                         icon: "error",
-                        title: "Oops!",
-                        text: "Something went wrong. Please try again.",
+                        title: "Login Failed!",
+                        text: data.error,
                         confirmButtonColor: "#d33",
                     });
+                }
+            })
+            .catch(error => {
+                console.error("Error:", error);
+                Swal.fire({
+                    icon: "error",
+                    title: "Oops!",
+                    text: "Something went wrong. Please try again.",
+                    confirmButtonColor: "#d33",
                 });
             });
         });
-    </script>
+    });
+</script>
+
+
 </body>
 </html>

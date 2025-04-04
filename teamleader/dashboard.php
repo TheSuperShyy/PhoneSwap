@@ -1,12 +1,8 @@
 <?php
 require __DIR__ . '/../dbcon/dbcon.php';
 require __DIR__ . '/../queries/phone_query.php';
-
-// Check if user session is set
-if (!isset($_SESSION['user'])) {
-  header("Location: ../src/loginpage.php"); // Redirect to login page if not logged in
-  exit();
-}
+require __DIR__ . '/../dbcon/authentication.php';
+require __DIR__ . '/../dbcon/session_get.php';
 ?>
 
 <!DOCTYPE html>
@@ -208,7 +204,6 @@ if (!isset($_SESSION['user'])) {
                     <option value="">Select Filter</option>
                     <option value="">Device Model</option>
                     <option value="">Serial Number</option>
-                    <option value="">Table Number</option>
                     <option value="">Status</option>
                     <option value="">Assigned</option>
                     <option value="">Report</option>
@@ -244,7 +239,6 @@ if (!isset($_SESSION['user'])) {
                   </th>
                   <th class="py-3 px-4 border-b">Device Model</th>
                   <th class="py-3 px-4 border-b">Serial Number</th>
-                  <th class="py-3 px-4 border-b">Table Number</th>
                   <th class="py-3 px-4 border-b">Status</th>
                   <th class="py-3 px-4 border-b">Team Member</th>
                   <th class="py-3 px-4 border-b">Action</th>
@@ -266,11 +260,6 @@ if (!isset($_SESSION['user'])) {
                     <!-- Serial Number -->
                     <td class="py-2 px-4 whitespace-nowrap">
                       <?php echo htmlspecialchars($phone['serial_number']); ?>
-                    </td>
-
-                    <!-- Table Assignment (Dropdown) -->
-                    <td class="py-2 px-4 whitespace-nowrap">
-                      <?php echo htmlspecialchars($phone['table']); ?>
                     </td>
 
                     <!-- Status -->
