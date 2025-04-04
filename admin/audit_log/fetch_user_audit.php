@@ -21,10 +21,19 @@ try {
         // Format the action (if available)
         $action = $log['action'] ?? "Unknown";
 
-        // Format the details field
-        $details = isset($log['details'])
-            ? "(" . $log['details']['hfId'] . ") " . $log['details']['first_name'] . " " . $log['details']['last_name'] . " - " . $log['details']['userType']
-            : "No details";
+        // ✅ Ensure 'details' exists and contains required fields
+        // ✅ Ensure 'details' exists and is an array or object
+if (isset($log['details']) && (is_array($log['details']) || is_object($log['details']))) {
+    $hfId = $log['details']['hfId'] ?? "Unknown HFID";
+    $firstName = $log['details']['first_name'] ?? "Unknown First Name";
+    $lastName = $log['details']['last_name'] ?? "Unknown Last Name";
+    $userType = $log['details']['userType'] ?? "Unknown User Type";
+
+    $details = "($hfId) $firstName $lastName - $userType";
+} else {
+    $details = "No details available";
+}
+
 
         // Append the formatted log
         $logs[] = [
@@ -40,5 +49,4 @@ try {
 catch (Exception $e) {
     echo json_encode(["success" => false, "message" => $e->getMessage()]);
 }
-
 ?>

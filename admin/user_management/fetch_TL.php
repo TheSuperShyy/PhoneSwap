@@ -16,6 +16,7 @@ try {
             'first_name' => $tl['first_name'],
             'last_name' => $tl['last_name'],
             'email' => $tl['username'] ?? 'No Email',
+            'status' => $tl['status'] ?? 'No status',
         ];
     }
 } catch (Exception $e) {

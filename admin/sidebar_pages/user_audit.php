@@ -1,6 +1,7 @@
 <?php
 require __DIR__ . '/../../dbcon/dbcon.php';
 require __DIR__ . '/../../dbcon/authentication.php';
+require __DIR__ . '/../../dbcon/session_get.php';
 ?>
 
 
@@ -87,17 +88,20 @@ require __DIR__ . '/../../dbcon/authentication.php';
                         class="flex flex-row items-center gap-3 border border-black shadow-gray-700 shadow-sm bg-amber-400 text-black px-4 w-fit rounded-xl">
                         <i class="fa-regular fa-user fa-xl"></i>
                         <div class="flex flex-col items-start">
-                            <h1 class="font-medium">Emily Dav</h1>
-                            <h1 class="text-sm">Admin</h1>
+                            <h1 class="font-medium"><?= htmlspecialchars($userName) ?></h1>
+                            <h1 class="text-sm"><?= htmlspecialchars($userRole) ?></h1>
                         </div>
                         <i class="fa-solid fa-angle-down fa-sm pl-3"></i>
                     </button>
                     <div
                         class="dropdown-menu absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-2 z-20 hidden">
-                        <a href="../accountsetting.php" class="block px-4 py-2 text-gray-800 hover:bg-gray-200">Account
+                        <a href="accountsetting.php" class="block px-4 py-2 text-gray-800 hover:bg-gray-200">Account
                             Settings</a>
-                        <a href="../../src/logout.php"
-                            class="block px-4 py-2 text-gray-800 hover:bg-gray-200">Logout</a>
+                        <a href="../../src/logout.php" id="logoutBtn"
+                            class="block px-4 py-2 text-gray-800 hover:bg-gray-200">
+                            Logout
+                        </a>
+
                     </div>
                 </div>
             </div>
@@ -133,47 +137,6 @@ require __DIR__ . '/../../dbcon/authentication.php';
                         </div>
 
 
-                        <!-- audit table -->
-                        <script>
-                            document.addEventListener("DOMContentLoaded", function () {
-                                fetch("../audit_log/fetch_user_audit.php")
-                                    .then(response => response.json())
-                                    .then(data => {
-                                        console.log("Raw Response:", data);
-
-                                        if (data.success) {
-                                            const tableBody = document.querySelector("#auditTableBody");
-                                            if (!tableBody) {
-                                                console.error("Error: Table body with ID 'auditTableBody' not found.");
-                                                return;
-                                            }
-
-                                            tableBody.innerHTML = ""; // Clear previous content
-
-                                            data.data.forEach(log => {
-                                            
-                                                const row = `
-                                                    <tr class="border-b text-sm">
-                                                        <td class="py-3 px-4 whitespace-nowrap">${log.date}</td>
-                                                        <td class="py-3 px-4 whitespace-nowrap">${log.user}</td>
-                                                        <td class="py-3 px-4 whitespace-nowrap">${log.action}</td>
-                                                        <td class="py-3 px-4 whitespace-nowrap">${log.details}</td> 
-                                                    </tr>
-                                                `;
-                                                tableBody.innerHTML += row;
-                                            });
-
-                                        } else {
-                                            console.error("Failed to fetch audit logs:", data.message);
-                                        }
-                                    })
-                                    .catch(error => {
-                                        console.error("Fetch Error:", error);
-                                    });
-                            });
-
-                        </script>
-
 
                         <!-- Pagination -->
                         <div class="flex space-x-2">
@@ -203,5 +166,68 @@ require __DIR__ . '/../../dbcon/authentication.php';
                     </div>
                 </div>
 </body>
+<!-- audit table -->
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        fetch("../audit_log/fetch_user_audit.php")
+            .then(response => {
+                if (!response.ok) {
+                    console.error("Error fetching audit logs. HTTP Status:", response.status);
+                    return Promise.reject('Failed to fetch data.');
+                }
+
+                return response.text().then(text => {
+                    try {
+                        // Try parsing the response text as JSON
+                        const data = JSON.parse(text);
+                        return data;
+                    } catch (error) {
+                        console.error("Failed to parse JSON:", error, text);
+                        return Promise.reject('Invalid JSON response.');
+                    }
+                });
+            })
+            .then(data => {
+                console.log("Parsed Data:", data);
+
+                if (data.success) {
+                    const tableBody = document.querySelector("#auditTableBody");
+                    if (!tableBody) {
+                        console.error("Error: Table body with ID 'auditTableBody' not found.");
+                        return;
+                    }
+
+                    tableBody.innerHTML = ""; // Clear previous content
+
+                    // Populate the table with the fetched data
+                    data.data.forEach(log => {
+                        // Ensure required data exists before appending
+                        const date = log.date || "N/A";
+                        const user = log.user || "Unknown User";
+                        const action = log.action || "Unknown Action";
+                        const details = log.details || "No details available";
+
+                        const row = `
+                            <tr class="border-b text-sm">
+                                <td class="py-3 px-4 whitespace-nowrap">${log.date}</td>
+                                <td class="py-3 px-4 whitespace-nowrap">${log.user}</td>
+                                <td class="py-3 px-4 whitespace-nowrap">${log.action}</td>
+                                <td class="py-3 px-4 whitespace-nowrap">${log.details}</td> 
+                            </tr>
+                        `;
+                        tableBody.innerHTML += row;
+                    });
+                } else {
+                    console.error("Failed to fetch audit logs:", data.message);
+                    alert("Error fetching data: " + data.message);
+                }
+            })
+            .catch(error => {
+                console.error("Fetch Error:", error);
+                alert("An error occurred while fetching the data.");
+            });
+    });
+</script>
+
 
 </html>
