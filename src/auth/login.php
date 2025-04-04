@@ -19,7 +19,12 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             "last_name" => $user['last_name'] ?? '',
         ];
 
-        echo json_encode(["success" => true, "message" => "Login successful!"]);
+        // Send userType in the response to handle redirection on the frontend
+        echo json_encode([
+            "success" => true,
+            "message" => "Login successful!",
+            "userType" => $user['userType']
+        ]);
         exit();
     } else {
         echo json_encode(["success" => false, "error" => "Invalid email or password."]);
