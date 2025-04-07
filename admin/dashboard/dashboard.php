@@ -13,6 +13,7 @@ require __DIR__ . '/../../dbcon/session_get.php';
   <title>Dashboard</title>
   <link rel="stylesheet" href="../../src/output.css" />
   <script src="https://kit.fontawesome.com/10d593c5dc.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <style>
     .dropdown-menu {
       display: none;
@@ -320,8 +321,7 @@ require __DIR__ . '/../../dbcon/session_get.php';
     </div>
   </div>
 
-  <!-- Include SweetAlert2 -->
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 
   <script>
     document.addEventListener("DOMContentLoaded", function () {
@@ -443,9 +443,9 @@ require __DIR__ . '/../../dbcon/session_get.php';
           }
 
           teamLeaderSelect.innerHTML = `
-      <option value="">Select Team Leader</option>
-      <option value="unassigned">Unassigned</option>
-    `;
+          <option value="">Select Team Leader</option>
+          <option value="unassigned">Unassigned</option>
+        `;
 
           if (teamLeaders.length === 0) {
             Swal.fire({
@@ -477,7 +477,6 @@ require __DIR__ . '/../../dbcon/session_get.php';
         });
     }
   </script>
-
 
 
   </body>
