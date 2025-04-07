@@ -64,7 +64,7 @@
                     if (data.userType === 'admin') {
                         redirectUrl = "../admin/dashboard/dashboard.php"; // Admin dashboard
                     } else if (data.userType === 'TL') {
-                        redirectUrl = "../teamleader/dashboard.php"; // Team Leader dashboard
+                        redirectUrl = "../teamleader/dashboard/dashboard.php"; // Team Leader dashboard
                     }
 
                     // Check if the redirectUrl is correctly set

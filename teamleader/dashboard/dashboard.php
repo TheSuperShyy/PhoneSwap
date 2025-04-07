@@ -1,8 +1,8 @@
 <?php
-require __DIR__ . '/../dbcon/dbcon.php';
-require __DIR__ . '/../queries/phone_query.php';
-require __DIR__ . '/../dbcon/authentication.php';
-require __DIR__ . '/../dbcon/session_get.php';
+require __DIR__ . '/../../dbcon/dbcon.php';
+require __DIR__ . '/../../queries/phone_query.php';
+require __DIR__ . '/../../dbcon/authentication.php';
+require __DIR__ . '/../../dbcon/session_get.php';
 ?>
 
 <!DOCTYPE html>
@@ -12,8 +12,9 @@ require __DIR__ . '/../dbcon/session_get.php';
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Dashboard</title>
-  <link rel="stylesheet" href="../src/output.css" />
+  <link rel="stylesheet" href="../../src/output.css" />
   <script src="https://kit.fontawesome.com/10d593c5dc.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <style>
     .dropdown-menu {
       display: none;
@@ -71,90 +72,26 @@ require __DIR__ . '/../dbcon/session_get.php';
           <div class="flex flex-row items-center gap-4">
             <!-- Notification Bell -->
             <div class="relative inline-block text-left">
-              <button class="relative text-2xl" aria-label="Notifications" id="notificationButton">
-                <i class="fa-regular fa-bell"></i>
-              </button>
 
-              <!-- Dropdown Message Notification -->
-              <div
-                class="origin-top-right absolute right-0 mt-2 w-80 rounded-md shadow-lg bg-white border border-gray-400 ring-1 ring-black ring-opacity-5 focus:outline-none hidden"
-                role="menu" aria-orientation="vertical" aria-labelledby="notificationButton" id="notificationDropdown">
-                <div class="py-1" role="none">
-                  <a href="#" class="block px-4 py-2 text-sm text-black-700 hover:bg-gray-100" role="menuitem">
-                    <div class="flex">
-                      <div>
-                        <p class="font-medium">
-                          New message from Yul Gatchalian
-                        </p>
-                        <p class="text-sm text-black-500">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                        <p class="text-xs text-black-400">5 minutes ago</p>
-                      </div>
-                    </div>
-                  </a>
-                  <a href="#" class="block px-4 py-2 text-sm text-black-700 hover:bg-gray-100" role="menuitem">
-                    <div class="flex">
-                      <div class="mr-3">
-                        <p class="font-medium">Cylie Gonzales</p>
-                        <p class="text-sm text-black-500">
-                          Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                        </p>
-                        <p class="text-xs text-black-400">1 hour ago</p>
-                      </div>
-                    </div>
-                  </a>
-                  <a href="#" class="block px-4 py-2 text-sm text-black-700 hover:bg-gray-100" role="menuitem">
-                    <div class="flex">
-                      <div class="mr-3">
-                        <p class="font-medium">Kian David</p>
-                        <p class="text-sm text-black-500">
-                          Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                        </p>
-                        <p class="text-xs text-black-400">2 days ago</p>
-                      </div>
-                    </div>
-                  </a>
-                  <a href="#" class="block px-4 py-2 text-sm text-black-700 hover:bg-gray-100" role="menuitem">
-                    <div class="flex">
-                      <div class="mr-3">
-                        <p class="font-medium">Miko Basilio</p>
-                        <p class="text-sm text-black-500">
-                          Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                        </p>
-                        <p class="text-xs text-black-400">2 days ago</p>
-                      </div>
-                    </div>
-                  </a>
-                  <a href="#" class="block px-4 py-2 text-sm text-black-700 hover:bg-gray-100" role="menuitem">
-                    <div class="flex">
-                      <div class="mr-3">
-                        <p class="font-medium">Yul Grant Gatchalian</p>
-                        <p class="text-sm text-black-500">
-                          Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                        </p>
-                        <p class="text-xs text-black-400">2 days ago</p>
-                      </div>
-                    </div>
+              <!-- Avatarbar -->
+              <div class="relative dropdown">
+                <button
+                  class="flex flex-row items-center gap-3 border border-black shadow-gray-700 shadow-sm bg-amber-400 text-black px-4 w-fit rounded-xl">
+                  <i class="fa-regular fa-user fa-xl"></i>
+                  <div class="flex flex-col items-start">
+                    <h1 class="font-medium"><?= htmlspecialchars($userName) ?></h1>
+                    <h1 class="text-sm"><?= htmlspecialchars($userRole) ?></h1>
+                  </div>
+                  <i class="fa-solid fa-angle-down fa-sm pl-3"></i>
+                </button>
+                <div class="dropdown-menu absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-2 z-20 hidden">
+                  <a href="../accountsetting.php" class="block px-4 py-2 text-gray-800 hover:bg-gray-200">Account
+                    Settings</a>
+                  <a href="../../src/logout.php" id="logoutBtn" class="block px-4 py-2 text-gray-800 hover:bg-gray-200">
+                    Logout
                   </a>
                 </div>
               </div>
-            </div>
-          </div>
-
-
-          <!-- Avatarbar -->
-          <div class="relative dropdown">
-            <button
-              class="flex flex-row items-center gap-3 border border-black shadow-gray-700 shadow-sm bg-amber-400 text-black px-4 w-fit rounded-xl">
-              <i class="fa-regular fa-user fa-xl"></i>
-              <div class="flex flex-col items-start">
-                <h1 class="font-medium">Emily Dav</h1>
-                <h1 class="text-sm">Team Leader 1</h1>
-              </div>
-              <i class="fa-solid fa-angle-down fa-sm pl-3"></i>
-            </button>
-            <div class="dropdown-menu absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-2 z-20 hidden">
-              <a href="accountsetting.html" class="block px-4 py-2 text-gray-800 hover:bg-gray-200">Account Settings</a>
-              <a href="../src/logout.php" class="block px-4 py-2 text-gray-800 hover:bg-gray-200">Logout</a>
             </div>
           </div>
         </div>
@@ -289,12 +226,7 @@ require __DIR__ . '/../dbcon/session_get.php';
                     <!-- Action Buttons -->
                     <td class="py-2 px-4 whitespace-nowrap space-x-2">
                       <div class="flex flex-row gap-2">
-                        <button
-                          onclick="openAssignModal('<?php echo $phone['serial_number']; ?>', '<?php echo $phone['model']; ?>')"
-                          class="flex flex-row gap-2 items-center font-semibold border border-white bg-blue-500 hover:bg-blue-700 text-white px-6 py-1.5 rounded-full shadow-lg">
-                          Assign
-                        </button>
-
+                      
                         <button onclick="openMissingModal('<?php echo $phone['serial_number']; ?>')"
                           class="flex flex-row gap-2 items-center border font-semibold border-white bg-red-700 hover:bg-red-900 text-white px-6 py-1.5 rounded-full shadow-lg">
                           Missing
@@ -383,35 +315,7 @@ require __DIR__ . '/../dbcon/session_get.php';
 
 </body>
 
-<!-- Selection for total assets -->
-<script>
-  const selectButton = document.getElementById('selectButton');
-  const selectDropdown = document.getElementById('selectDropdown');
-  const selectedValue = document.getElementById('selectedValue');
 
-  selectButton.addEventListener('click', () => {
-    selectDropdown.classList.toggle('hidden');
-  });
-
-  selectDropdown.addEventListener('click', (event) => {
-    if (event.target.tagName === 'A') {
-      event.preventDefault(); // Prevent link behavior
-      const value = event.target.dataset.value;
-      const text = event.target.textContent;
-
-      selectButton.textContent = text; // Update button text
-      selectedValue.value = value;      // Update hidden input value
-      selectDropdown.classList.add('hidden'); // Close dropdown
-    }
-  });
-
-  // Close dropdown if clicked outside
-  window.addEventListener('click', (event) => {
-    if (!selectButton.contains(event.target) && !selectDropdown.contains(event.target)) {
-      selectDropdown.classList.add('hidden');
-    }
-  });
-</script>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
@@ -430,9 +334,6 @@ require __DIR__ . '/../dbcon/session_get.php';
     modal.classList.add('hidden');
   });
 
-  modalCancelButton1.addEventListener('click', () => {
-    modal.classList.add('hidden');
-  });
 </script>
 
 <!-- Checkbox script -->
@@ -445,17 +346,60 @@ require __DIR__ . '/../dbcon/session_get.php';
   }
 </script>
 
-
-<!-- Script for notification bell dropdown-->
 <script>
-  const notificationButton = document.getElementById("notificationButton");
-  const notificationDropdown = document.getElementById(
-    "notificationDropdown"
-  );
-
-  notificationButton.addEventListener("click", () => {
-    notificationDropdown.classList.toggle("hidden");
-  });
+function openMissingModal(serialNumber) {
+    Swal.fire({
+        title: 'Mark as Missing?',
+        text: `Are you sure you want to mark phone ${serialNumber} as missing?`,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'Yes, mark as missing'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // Send request to backend to mark as missing
+            fetch('../phone_management/mark_missing.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ serial_number: serialNumber })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Marked as Missing!',
+                        text: data.message,
+                        confirmButtonColor: '#3085d6'
+                    }).then(() => {
+                        location.reload(); // Reload to reflect changes
+                    });
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Failed!',
+                        text: data.error,
+                        confirmButtonColor: '#d33'
+                    });
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops!',
+                    text: 'Something went wrong.',
+                    confirmButtonColor: '#d33'
+                });
+            });
+        }
+    });
+}
 </script>
+
+
 
 </html>
