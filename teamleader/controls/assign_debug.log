@@ -1,0 +1,10 @@
+Array
+(
+    [raw] => {"serial_number":"sg-202512313213","TM":"Unassigned"}
+    [decoded] => Array
+        (
+            [serial_number] => sg-202512313213
+            [TM] => Unassigned
+        )
+
+)
