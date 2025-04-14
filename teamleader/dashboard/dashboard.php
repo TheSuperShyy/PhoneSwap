@@ -34,21 +34,21 @@ require __DIR__ . '/../../dbcon/session_get.php';
       <ul>
         <li class="mb-4">
           <a class="flex items-center bg-opacity-30 bg-white p-2 text-base font-medium rounded-lg"
-            href="dashboard.html">
+            href="dashboard.php">
             <i class="fas fa-tachometer-alt mr-3"></i>
             Dashboard
           </a>
         </li>
         <li class="mb-4">
           <a class="flex items-center hover:bg-opacity-30 hover:bg-white p-2 text-base font-medium rounded-lg"
-            href="swapphones.html">
+            href="../sidepanels/swapphones.php">
             <i class="fa-solid fa-arrows-rotate mr-3"></i>
             Swap Phones
           </a>
         </li>
         <li class="mb-4">
           <a class="flex items-center hover:bg-opacity-30 hover:bg-white p-2 text-base font-medium rounded-lg"
-            href="usermanagement.html">
+            href="../sidepanels/usermanagement.php">
             <i class="fa-solid fa-user-group mr-3"></i>
             User Management
           </a>
@@ -149,12 +149,23 @@ require __DIR__ . '/../../dbcon/session_get.php';
                     class="w-2/3 h-10 p-2 border border-gray-700 shadow-sm sm:text-sm outline-none rounded-r-lg" />
                 </form>
               </div>
+              <!-- assign and return buttons -->
               <div class="flex flex-row ml-auto gap-2">
-                <button onclick="openAssignModal()"
-                  class="flex items-center gap-2 border border-white bg-amber-400 hover:bg-amber-600 hover:bg-opacity-95 text-white px-4 py-2 rounded-lg shadow-md">
+
+                <button id="returnBtn" onclick="openReturnModal()"
+                  class="flex items-center gap-2 border border-white bg-blue-400 hover:bg-blue-600 hover:bg-opacity-95 text-white px-4 py-2 rounded-lg shadow-md"
+                  disabled>
+                  <i class="fa-solid fa-rotate-right"></i>
+                  <span>Return</span>
+                </button>
+
+                <button id="assignBtn" onclick="openAssignModal()"
+                  class="flex items-center gap-2 border border-white bg-amber-400 hover:bg-amber-600 hover:bg-opacity-95 text-white px-4 py-2 rounded-lg shadow-md"
+                  disabled>
                   <i class="fa-solid fa-right-to-bracket"></i>
                   <span>Assign</span>
                 </button>
+
 
                 <a href="">
                   <button
@@ -188,9 +199,20 @@ require __DIR__ . '/../../dbcon/session_get.php';
                   <tr class="border-b text-left">
                     <!-- Checkbox -->
                     <td class="py-2 px-4 whitespace-nowrap">
+                      <?php
+                      // Check if this phone is assigned to any Team Member
+                      $assignedUser = $db->users->findOne([
+                        "assigned_phone" => $phone['serial_number'],  // Phone must be assigned to this TM
+                        "userType" => "TM",  // The user must be a Team Member (TM)
+                        "hfId" => ['$in' => $teamMembers]  // The TM's hfId must be in the TL's team_members array
+                      ]);
+                      ?>
                       <input type="checkbox" name="phoneCheckbox" value="<?php echo $phone['serial_number']; ?>"
-                        data-model="<?php echo htmlspecialchars($phone['model']); ?>" />
+                        data-model="<?php echo htmlspecialchars($phone['model']); ?>"
+                        data-assigned="<?php echo $assignedUser ? 'true' : 'false'; ?>"
+                        onchange="handleCheckboxChange()" />
                     </td>
+
 
                     <!-- Phone Model -->
                     <td class="py-2 px-4 flex items-center space-x-2">
@@ -223,24 +245,16 @@ require __DIR__ . '/../../dbcon/session_get.php';
 
                     <!-- Assignment Status -->
                     <td class="py-2 px-4 whitespace-nowrap">
-                      <?php
-                      // Check if this phone is assigned to any Team Member
-                      $assignedUser = $db->users->findOne([
-                        "assigned_phone" => $phone['serial_number'],  // Phone must be assigned to this TM
-                        "userType" => "TM",  // The user must be a Team Member (TM)
-                        "hfId" => ['$in' => $teamMembers]  // The TM's hfId must be in the TL's team_members array
-                      ]);
-
-                      if ($assignedUser) {
-                        // Display the Team Member's hfId and Full Name (first_name + last_name)
+                      <?php if ($assignedUser): ?>
+                        <?php
                         $fullName = htmlspecialchars($assignedUser['first_name'] . ' ' . $assignedUser['last_name']);
                         echo '[' . htmlspecialchars($assignedUser['hfId']) . '] ' . $fullName;
-                      } else {
-                        // If no Team Member is assigned, show "Unassigned"
-                        echo "Unassigned";
-                      }
-                      ?>
+                        ?>
+                      <?php else: ?>
+                        <span>Unassigned</span>
+                      <?php endif; ?>
                     </td>
+
                     <!-- Action Buttons -->
                     <td class="py-2 px-4 whitespace-nowrap space-x-2">
                       <div class="flex flex-row gap-2">
@@ -253,6 +267,7 @@ require __DIR__ . '/../../dbcon/session_get.php';
                   </tr>
                 <?php endforeach; ?>
               </tbody>
+
 
 
             </table>
@@ -383,214 +398,325 @@ require __DIR__ . '/../../dbcon/session_get.php';
 </script>
 
 
-<!-- open model -->
 <script>
   let allowOutsideClickClose = false;
 
-  function toggleSelectAll(source) {
-    const checkboxes = document.querySelectorAll('input[name="phoneCheckbox"]');
-    checkboxes.forEach(checkbox => {
-      checkbox.checked = source.checked;
-    });
+// Function to toggle "Select All" checkbox
+function toggleSelectAll(source) {
+  const checkboxes = document.querySelectorAll('input[name="phoneCheckbox"]');
+  checkboxes.forEach(checkbox => {
+    checkbox.checked = source.checked;
+  });
+  handleCheckboxChange(); // Update button state when Select All is clicked
+}
+
+function handleCheckboxChange() {
+  const checkboxes = document.querySelectorAll('input[name="phoneCheckbox"]');
+  const assignButton = document.getElementById("assignBtn");
+  const returnButton = document.getElementById("returnBtn");
+
+  if (!assignButton || !returnButton) {
+    console.error('Assign or Return button not found.');
+    return;
   }
 
-  function openAssignModal() {
-    const selected = document.querySelectorAll('input[name="phoneCheckbox"]:checked');
-    const container = document.getElementById("selectedPhonesContainer");
-    const select = document.getElementById("selectUser");
+  let checkedBoxes = [];
+  let assignable = true;
+  let returnable = true;
 
-    console.log("Total selected checkboxes:", selected.length);
-
-    container.innerHTML = "";
-    select.innerHTML = '<option value="">Select Team Leader</option>'; // reset dropdown
-
-    if (selected.length === 0) {
-      Swal.fire("No Phones Selected", "Please select at least one phone to assign.", "warning");
-      return;
+  // Gather all checked checkboxes
+  checkboxes.forEach(checkbox => {
+    if (checkbox.checked) {
+      checkedBoxes.push(checkbox);
     }
+  });
 
-    fetch("../controls/fetch_team_Members.php")
+  // If nothing is selected, enable both buttons and show all checkboxes
+  if (checkedBoxes.length === 0) {
+    assignButton.disabled = true;
+    returnButton.disabled = true;
+    checkboxes.forEach(cb => cb.style.display = '');
+    return;
+  }
+
+  const firstAssignedStatus = checkedBoxes[0].getAttribute('data-assigned');
+
+  // Ensure all checked checkboxes have the same assigned status
+  const sameStatus = checkedBoxes.every(cb => cb.getAttribute('data-assigned') === firstAssignedStatus);
+
+  // Hide checkboxes that don't match the selected status
+  checkboxes.forEach(cb => {
+    if (!cb.checked && cb.getAttribute('data-assigned') !== firstAssignedStatus) {
+      cb.style.display = 'none';
+    } else {
+      cb.style.display = '';
+    }
+  });
+
+  if (!sameStatus) {
+    assignButton.disabled = true;
+    returnButton.disabled = true;
+    return;
+  }
+
+  if (firstAssignedStatus === 'true') {
+    assignButton.disabled = true;
+    returnButton.disabled = false;
+  } else {
+    assignButton.disabled = false;
+    returnButton.disabled = true;
+  }
+}
+
+function openReturnModal() {
+  const selectedPhones = document.querySelectorAll('input[name="phoneCheckbox"]:checked');
+
+  if (selectedPhones.length === 0) {
+    Swal.fire("No Phones Selected", "Please select at least one phone to return.", "warning");
+    return;
+  }
+
+  Swal.fire({
+    title: "Confirm Return",
+    html: `
+      <p>Please type <strong>RETURN</strong> to confirm.</p>
+      <input type="text" id="confirmInput" class="swal2-input" placeholder="Type RETURN here">
+    `,
+    showCancelButton: true,
+    confirmButtonText: "Confirm",
+    preConfirm: () => {
+      const input = Swal.getPopup().querySelector("#confirmInput").value;
+      if (input !== "RETURN") {
+        Swal.showValidationMessage("You must type RETURN to proceed.");
+      }
+      return input;
+    }
+  }).then(result => {
+    if (result.isConfirmed) {
+      // Proceed to return phones
+      const serialNumbers = Array.from(selectedPhones).map(cb => cb.value);
+
+      fetch("../controls/return_phones.php", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ phones: serialNumbers })
+      })
       .then(res => res.json())
       .then(data => {
         if (data.success) {
-          data.data.forEach(tm => {
-            const opt = document.createElement("option");
-            opt.value = tm.hfId;
-            opt.textContent = `[${tm.hfId}] ${tm.first_name} ${tm.last_name}`;
-            select.appendChild(opt);
+          Swal.fire("Returned!", "Selected phones have been returned.", "success").then(() => {
+            location.reload();
           });
-
-          // Add "Unassign" option
-          const unassignOpt = document.createElement("option");
-          unassignOpt.value = "Unassigned";
-          unassignOpt.textContent = "Unassign from Team Member";
-          select.appendChild(unassignOpt);
         } else {
-          console.error("Failed to fetch team members:", data.message); // Log the error message
+          Swal.fire("Error", data.message || "Something went wrong while returning phones.", "error");
         }
       })
       .catch(err => {
-        console.error("Error fetching team members:", err);
+        Swal.fire("Error", err.message || "Request failed.", "error");
       });
+    }
+  });
+}
 
 
+// Open assign modal and fetch team members
+function openAssignModal() {
+  const selected = document.querySelectorAll('input[name="phoneCheckbox"]:checked');
+  const container = document.getElementById("selectedPhonesContainer");
+  const select = document.getElementById("selectUser");
 
-    // Fill phone cards in modal
-    selected.forEach(checkbox => {
-      const serial = checkbox.value;
-      const model = checkbox.getAttribute("data-model");
+  console.log("Total selected checkboxes:", selected.length);
 
-      console.log("Selected Phone -> Serial:", serial, "Model:", model);
+  container.innerHTML = "";
+  select.innerHTML = '<option value="">Select Team Leader</option>'; // reset dropdown
 
-      const phoneCard = document.createElement("div");
-      phoneCard.className = "flex flex-col justify-between items-start bg-gray-300 gap-2 pl-4 py-2 rounded-md";
-      phoneCard.innerHTML = `
+  if (selected.length === 0) {
+    Swal.fire("No Phones Selected", "Please select at least one phone to assign.", "warning");
+    return;
+  }
+
+  fetch("../controls/fetch_team_Members.php")
+    .then(res => res.json())
+    .then(data => {
+      if (data.success) {
+        data.data.forEach(tm => {
+          const opt = document.createElement("option");
+          opt.value = tm.hfId;
+          opt.textContent = `[${tm.hfId}] ${tm.first_name} ${tm.last_name}`;
+          select.appendChild(opt);
+        });
+
+        // Add "Unassign" option
+        const unassignOpt = document.createElement("option");
+        unassignOpt.value = "Unassigned";
+        unassignOpt.textContent = "Unassign from Team Member";
+        select.appendChild(unassignOpt);
+      } else {
+        console.error("Failed to fetch team members:", data.message);
+      }
+    })
+    .catch(err => {
+      console.error("Error fetching team members:", err);
+    });
+
+  // Fill phone cards in modal
+  selected.forEach(checkbox => {
+    const serial = checkbox.value;
+    const model = checkbox.getAttribute("data-model");
+
+    console.log("Selected Phone -> Serial:", serial, "Model:", model);
+
+    const phoneCard = document.createElement("div");
+    phoneCard.className = "flex flex-col justify-between items-start bg-gray-300 gap-2 pl-4 py-2 rounded-md";
+    phoneCard.innerHTML = `
       <p class="pl-2"><strong>Serial:</strong> ${serial}</p>
       <p class="pl-2"><strong>Model:</strong> ${model}</p>
     `;
 
-      container.appendChild(phoneCard);
-    });
+    container.appendChild(phoneCard);
+  });
 
-    const modal = document.getElementById("myModal");
-    modal.classList.remove("hidden");
+  const modal = document.getElementById("myModal");
+  modal.classList.remove("hidden");
 
-    setTimeout(() => {
-      allowOutsideClickClose = true;
-    }, 100);
-  }
+  setTimeout(() => {
+    allowOutsideClickClose = true;
+  }, 100);
+}
 
-  document.getElementById("closeModalBtn1").addEventListener("click", function () {
-    document.getElementById("myModal").classList.add("hidden");
+// Close modal event listener
+document.getElementById("closeModalBtn1").addEventListener("click", function () {
+  document.getElementById("myModal").classList.add("hidden");
+  allowOutsideClickClose = false;
+});
+
+// Close modal when clicking outside
+window.addEventListener("click", function (e) {
+  const modal = document.getElementById("myModal");
+  const modalContent = modal.querySelector(".bg-white");
+
+  if (
+    allowOutsideClickClose &&
+    !modal.classList.contains("hidden") &&
+    !modalContent.contains(e.target)
+  ) {
+    modal.classList.add("hidden");
     allowOutsideClickClose = false;
-  });
+  }
+});
 
-  window.addEventListener("click", function (e) {
-    const modal = document.getElementById("myModal");
-    const modalContent = modal.querySelector(".bg-white");
+// Assign or Unassign phones to a Team Member
+function assignPhonesToUser() {
+  const selectedTL = document.getElementById("selectUser").value;
+  const selectedPhones = document.querySelectorAll('input[name="phoneCheckbox"]:checked');
 
-    if (
-      allowOutsideClickClose &&
-      !modal.classList.contains("hidden") &&
-      !modalContent.contains(e.target)
-    ) {
-      modal.classList.add("hidden");
-      allowOutsideClickClose = false;
-    }
-  });
-
-  function assignPhonesToUser() {
-    const selectedTL = document.getElementById("selectUser").value;
-    const selectedPhones = document.querySelectorAll('input[name="phoneCheckbox"]:checked');
-
-    if (selectedTL === "") {
-      Swal.fire("No Team Member Selected", "Please select a Team Member.", "warning");
-      return;
-    }
-
-    if (selectedPhones.length === 0) {
-      Swal.fire("No Phones Selected", "Please select at least one phone.", "warning");
-      return;
-    }
-
-    let completed = 0;
-    let errors = [];
-
-    selectedPhones.forEach((checkbox, index) => {
-      const serial = checkbox.value;
-
-      // 🟡 If unassigning, we need to find the TM who owns this phone
-      if (selectedTL === "unassigned") {
-        // Make a request to fetch all team members and their assigned phones
-        fetch("../controls/fetch_team_members.php")
-          .then(res => res.json())
-          .then(tmData => {
-            if (!tmData.success) {
-              errors.push(`Serial ${serial}: Failed to fetch team members.`);
-              throw new Error(tmData.message);
-            }
-
-            // 🔍 Find who has this phone assigned
-            const teamMembers = tmData.data;
-            const owner = teamMembers.find(tm =>
-              tm.assigned_phone && tm.assigned_phone.includes(serial)
-            );
-
-            if (!owner) {
-              errors.push(`Serial ${serial}: No TM found with this phone.`);
-              return;
-            }
-
-            // Proceed to unassign it
-            return fetch("../controls/assign_phone.php", {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json"
-              },
-              body: JSON.stringify({
-                serial_number: "unassigned",
-                TM: owner.hfId
-              })
-            });
-          })
-          .then(res => res?.json())
-          .then(result => {
-            if (result?.success) {
-              console.log(`✅ Phone ${serial} unassigned`);
-            } else if (result) {
-              errors.push(`Serial ${serial}: ${result.error}`);
-            }
-          })
-          .catch(err => {
-            errors.push(`Serial ${serial}: ${err.message}`);
-          })
-          .finally(() => {
-            completed++;
-            if (completed === selectedPhones.length) handleAssignFinish(errors);
-          });
-
-      } else {
-        // 🟢 Assign normally
-        fetch("../controls/assign_phone.php", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({
-            serial_number: serial,
-            TM: selectedTL
-          })
-        })
-          .then(res => res.json())
-          .then(data => {
-            if (data.success) {
-              console.log(`✅ Phone ${serial} assigned`);
-            } else {
-              errors.push(`Serial ${serial}: ${data.error}`);
-            }
-          })
-          .catch(err => {
-            errors.push(`Serial ${serial}: ${err.message}`);
-          })
-          .finally(() => {
-            completed++;
-            if (completed === selectedPhones.length) handleAssignFinish(errors);
-          });
-      }
-    });
-
-    // Helper function to finish up and alert
-    function handleAssignFinish(errors) {
-      if (errors.length > 0) {
-        Swal.fire("Some Assignments Failed", errors.join("<br>"), "error");
-      } else {
-        Swal.fire("Success", "All phone updates completed!", "success").then(() => {
-          location.reload();
-        });
-      }
-    }
+  if (selectedTL === "") {
+    Swal.fire("No Team Member Selected", "Please select a Team Member.", "warning");
+    return;
   }
 
+  if (selectedPhones.length === 0) {
+    Swal.fire("No Phones Selected", "Please select at least one phone.", "warning");
+    return;
+  }
+
+  let completed = 0;
+  let errors = [];
+
+  selectedPhones.forEach((checkbox, index) => {
+    const serial = checkbox.value;
+
+    // UNASSIGN CASE
+    if (selectedTL === "Unassigned") {
+      fetch("../controls/fetch_team_members.php")
+        .then(res => res.json())
+        .then(tmData => {
+          if (!tmData.success) {
+            errors.push(`Serial ${serial}: Failed to fetch team members.`);
+            throw new Error(tmData.message);
+          }
+
+          const teamMembers = tmData.data;
+          const owner = teamMembers.find(tm =>
+            tm.assigned_phone && tm.assigned_phone.includes(serial)
+          );
+
+          if (!owner) {
+            errors.push(`Serial ${serial}: No TM found with this phone.`);
+            return;
+          }
+
+          return fetch("../controls/assign_phone.php", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+              serial_number: "unassigned",
+              TM: owner.hfId
+            })
+          });
+        })
+        .then(res => res?.json())
+        .then(result => {
+          if (result?.success) {
+            console.log(`✅ Phone ${serial} unassigned`);
+          } else if (result) {
+            errors.push(`Serial ${serial}: ${result.error}`);
+          }
+        })
+        .catch(err => {
+          errors.push(`Serial ${serial}: ${err.message}`);
+        })
+        .finally(() => {
+          completed++;
+          if (completed === selectedPhones.length) handleAssignFinish(errors);
+        });
+
+    } else {
+      // ASSIGN CASE
+      fetch("../controls/assign_phone.php", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          serial_number: serial,
+          TM: selectedTL
+        })
+      })
+        .then(res => res.json())
+        .then(data => {
+          if (data.success) {
+            console.log(`✅ Phone ${serial} assigned to TL ${selectedTL}`);
+          } else {
+            errors.push(`Serial ${serial}: ${data.error}`);
+          }
+        })
+        .catch(err => {
+          errors.push(`Serial ${serial}: ${err.message}`);
+        })
+        .finally(() => {
+          completed++;
+          if (completed === selectedPhones.length) handleAssignFinish(errors);
+        });
+    }
+  });
+
+  function handleAssignFinish(errors) {
+    if (errors.length > 0) {
+      console.log("Assignment Errors:", errors);
+      Swal.fire("Some Assignments Failed", errors.join("<br>"), "error");
+    } else {
+      console.log("All phones assigned/unassigned successfully.");
+      Swal.fire("Success", "All phone updates completed!", "success").then(() => {
+        location.reload();
+      });
+    }
+  }
+}
 
 </script>
 

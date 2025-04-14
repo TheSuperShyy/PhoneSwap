@@ -59,11 +59,11 @@ require __DIR__ . '/../../dbcon/session_get.php';
       </li>
       <li class="mb-4">
         <a class="flex items-center hover:bg-opacity-30 hover:bg-white p-2 text-base font-medium rounded-lg"
-        href="../sidebar_pages/user_audit.php">
-            <i class="fas fa-list-alt mr-3"></i>
-            User Audit Log
-          </a>
-        </li>
+          href="../sidebar_pages/user_audit.php">
+          <i class="fas fa-list-alt mr-3"></i>
+          User Audit Log
+        </a>
+      </li>
     </ul>
   </div>
 
@@ -84,7 +84,7 @@ require __DIR__ . '/../../dbcon/session_get.php';
         <div class="flex flex-row items-center gap-4">
 
           <div class="relative inline-block text-left">
-            
+
           </div>
         </div>
 
@@ -227,11 +227,17 @@ require __DIR__ . '/../../dbcon/session_get.php';
                   </td>
                   <td class="py-2 px-4 whitespace-nowrap">
                     <?php
-                    // Fetch TL who has this phone assigned
-                    $assignedTL = $db->users->findOne(['assigned_phone' => $phone['serial_number']]);
-                    echo $assignedTL ? htmlspecialchars('( ' . '' . $assignedTL['hfId'] . ') ' . $assignedTL['first_name'] . ' ' . $assignedTL['last_name']) : 'Unassigned';
+                    $assignedTL = $db->users->findOne([
+                      'assigned_phone' => $phone['serial_number'],
+                      'userType' => 'TL'
+                    ]);
+
+                    echo $assignedTL
+                      ? htmlspecialchars('( ' . $assignedTL['hfId'] . ') ' . $assignedTL['first_name'] . ' ' . $assignedTL['last_name'])
+                      : 'Unassigned';
                     ?>
                   </td>
+
                   <td class="text-center space-x-2">
                     <div class="flex flex-row py-2 px-4 gap-2">
                       <button

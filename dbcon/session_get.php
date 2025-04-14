@@ -24,11 +24,14 @@ $assignedPhones = [];
 $teamMembers = []; // To store hfId values of the Team Members
 if ($userRole === 'TL') {
     $assignedPhones = $details['assigned_phone'] ?? [];
-    $teamMembers = $details['team_members'] ?? []; // Fetch team members (TMs under TL)
+    $teamMembers = $details['team_members'] ?? [];
+    $phones = $db->phones->find(["serial_number" => ['$in' => $assignedPhones]]);
+} elseif ($userRole === 'admin') {
+    $phones = $db->phones->find(); // Admin sees all phones
 }
 
-// Fetch the phones from the database
-$phones = $db->phones->find(["serial_number" => ['$in' => $assignedPhones]]);
+
+
 
 
 ?>
