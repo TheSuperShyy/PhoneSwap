@@ -1,6 +1,8 @@
 <?php
 require __DIR__ . '/../../dbcon/dbcon.php';
 require __DIR__ . '/../../queries/phone_query.php';
+require __DIR__ . '/../../dbcon/authentication.php';
+require __DIR__ . '/../../dbcon/session_get.php';
 ?>
 
 <!DOCTYPE html>
@@ -12,6 +14,7 @@ require __DIR__ . '/../../queries/phone_query.php';
   <title>Missing Phones</title>
   <link rel="stylesheet" href="../../src/output.css" />
   <script src="https://kit.fontawesome.com/10d593c5dc.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <style>
     .dropdown-menu {
       display: none;
@@ -30,22 +33,21 @@ require __DIR__ . '/../../queries/phone_query.php';
       <h1 class="text-4xl mb-6 mt-2 font-medium font-russo">PhoneSwap</h1>
       <ul>
         <li class="mb-4">
-          <a class="flex items-center bg-opacity-30 bg-white p-2 text-base font-medium rounded-lg"
-            href="dashboard.php">
+          <a class="flex items-center bg-opacity-30 bg-white p-2 text-base font-medium rounded-lg" href="dashboard.php">
             <i class="fas fa-tachometer-alt mr-3"></i>
             Dashboard
           </a>
         </li>
         <li class="mb-4">
           <a class="flex items-center hover:bg-opacity-30 hover:bg-white p-2 text-base font-medium rounded-lg"
-            href="swapphones.php">
+            href="../sidepanels/swapphones.php">
             <i class="fa-solid fa-arrows-rotate mr-3"></i>
             Swap Phones
           </a>
         </li>
         <li class="mb-4">
           <a class="flex items-center hover:bg-opacity-30 hover:bg-white p-2 text-base font-medium rounded-lg"
-            href="usermanagement.php">
+            href="../sidepanels/usermanagement.php">
             <i class="fa-solid fa-user-group mr-3"></i>
             User Management
           </a>
@@ -71,8 +73,8 @@ require __DIR__ . '/../../queries/phone_query.php';
             class="flex flex-row items-center gap-3 border border-black shadow-gray-700 shadow-sm bg-amber-400 text-black px-4 w-fit rounded-xl">
             <i class="fa-regular fa-user fa-xl"></i>
             <div class="flex flex-col items-start">
-              <h1 class="font-medium">Emily Dav</h1>
-              <h1 class="text-sm">Team Leader 1</h1>
+              <h1 class="font-medium"><?= htmlspecialchars($userName) ?></h1>
+              <h1 class="text-sm"><?= htmlspecialchars($userRole) ?></h1>
             </div>
             <i class="fa-solid fa-angle-down fa-sm pl-3"></i>
           </button>
@@ -138,10 +140,14 @@ require __DIR__ . '/../../queries/phone_query.php';
                 </form>
               </div>
               <div class="flex flex-row ml-auto gap-2">
-                <button
-                  class="flex items-center gap-2 border border-white bg-amber-400 hover:bg-amber-600 hover:bg-opacity-95 text-white px-4 py-2 rounded-lg shadow-md">
-                  <i class="fa-solid fa-circle-check"></i><span>Found</span>
+                <button id="foundBtn" onclick="handleFoundClick()"
+                  class="flex items-center gap-2 border border-white bg-amber-400 hover:bg-amber-600 hover:bg-opacity-95 text-white px-4 py-2 rounded-lg shadow-md"
+                  disabled>
+                  <i class="fa-solid fa-circle-check"></i>
+                  <span>Found</span>
                 </button>
+
+
                 <a href="">
                   <button
                     class="flex items-center gap-2 border border-white bg-blue-950 hover:bg-blue-800 hover:bg-opacity-95 text-white px-4 py-2 rounded-lg shadow-md">
@@ -164,7 +170,6 @@ require __DIR__ . '/../../queries/phone_query.php';
                   </th>
                   <th class="py-3 px-4 border-b">Device Model</th>
                   <th class="py-3 px-4 border-b">Serial Number</th>
-                  <th class="py-3 px-4 border-b">Table Number</th>
                   <th class="py-3 px-4 border-b">Status</th>
                   <th class="py-3 px-4 border-b">Team Member</th>
                 </tr>
@@ -172,31 +177,44 @@ require __DIR__ . '/../../queries/phone_query.php';
               <tbody>
                 <?php foreach ($phones as $phone): ?>
                   <?php if ($phone['status'] === 'Missing'): ?>
-                  <tr class="border-b text-left">
-                    <td class="py-2 px-4 whitespace-nowrap">
-                      <input type="checkbox" />
-                    </td>
-                    <td class="py-2 px-4 flex items-center space-x-2">
-                      <?php echo htmlspecialchars($phone['model']); ?>
-                    </td>
-                    <td class="py-2 px-4 whitespace-nowrap">
-                      <?php echo htmlspecialchars($phone['serial_number']); ?>
-                    </td>
-                    <td class="py-2 px-4 whitespace-nowrap">
-                      <?php echo $tableNumber == 0 ? 'Unassigned' : htmlspecialchars($tableNumber); ?>
-                    </td>
-                    <td class="py-2 px-4 whitespace-nowrap">
-                      <?php if ($phone['status'] === 'Missing'): ?>
-                        <span
-                          class="text-red-800 bg-red-50 border border-red-800 rounded-full py-2 px-6 font-medium shadow-lg">
-                          Missing
-                        </span>
+                    <?php
+                    // Check if this phone is assigned to any Team Member
+                    $assignedUser = $db->users->findOne([
+                      "assigned_phone" => $phone['serial_number'],  // Phone must be assigned to this TM
+                      "userType" => "TM",  // The user must be a Team Member (TM)
+                      "hfId" => ['$in' => $teamMembers]  // The TM's hfId must be in the TL's team_members array
+                    ]);
+                    ?>
+                    <tr class="border-b text-left">
+                      <td class="py-2 px-4 whitespace-nowrap">
+                        <input type="checkbox" name="foundCheckbox" value="<?php echo $phone['serial_number']; ?>">
+
+                      </td>
+                      <td class="py-2 px-4 flex items-center space-x-2">
+                        <?php echo htmlspecialchars($phone['model']); ?>
+                      </td>
+                      <td class="py-2 px-4 whitespace-nowrap">
+                        <?php echo htmlspecialchars($phone['serial_number']); ?>
+                      </td>
+                      <td class="py-3 px-4 whitespace-nowrap">
+                        <?php if ($phone['status'] === 'Missing'): ?>
+                          <span
+                            class="text-red-800 bg-red-50 border border-red-800 rounded-full py-2 px-6 font-medium shadow-lg">
+                            Missing
+                          </span>
                         <?php endif; ?>
-                    </td>
-                    <td class="py-2 px-4 whitespace-nowrap">
-                      <?php echo !empty($phone['assigned_to']) ? htmlspecialchars($phone['assigned_to']) : 'Unassigned'; ?>
-                    </td>
-                  </tr>
+                      </td>
+                      <td class="py-2 px-4 whitespace-nowrap">
+                        <?php if ($assignedUser): ?>
+                          <?php
+                          $fullName = htmlspecialchars($assignedUser['first_name'] . ' ' . $assignedUser['last_name']);
+                          echo '[' . htmlspecialchars($assignedUser['hfId']) . '] ' . $fullName;
+                          ?>
+                        <?php else: ?>
+                          <span>Unassigned</span>
+                        <?php endif; ?>
+                      </td>
+                    </tr>
                   <?php endif; ?>
                 <?php endforeach; ?>
               </tbody>
@@ -227,48 +245,98 @@ require __DIR__ . '/../../queries/phone_query.php';
         </div>
       </div>
     </div>
-  </body>
+</body>
 
-  <!-- Selection for total assets -->
-  <script>
-    const selectButton = document.getElementById('selectButton');
-    const selectDropdown = document.getElementById('selectDropdown');
-    const selectedValue = document.getElementById('selectedValue');
 
-    selectButton.addEventListener('click', () => {
-      selectDropdown.classList.toggle('hidden');
-    });
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-    selectDropdown.addEventListener('click', (event) => {
-      if (event.target.tagName === 'A') {
-        event.preventDefault(); // Prevent link behavior
-        const value = event.target.dataset.value;
-        const text = event.target.textContent;
 
-        selectButton.textContent = text; // Update button text
-        selectedValue.value = value;      // Update hidden input value
-        selectDropdown.classList.add('hidden'); // Close dropdown
+
+<script>
+  const checkboxes = document.querySelectorAll('input[name="foundCheckbox"]');
+  const foundBtn = document.getElementById('foundBtn');
+  const selectAllCheckbox = document.querySelector('input[onclick="toggleSelectAll(this)"]');
+
+  // Enable button if any checkbox is selected
+  function updateFoundBtnState() {
+    const anyChecked = [...checkboxes].some(c => c.checked);
+    foundBtn.disabled = !anyChecked;
+  }
+
+  checkboxes.forEach(cb => {
+    cb.addEventListener('change', () => {
+      updateFoundBtnState();
+
+      // Automatically update selectAllCheckbox state
+      if (!cb.checked && selectAllCheckbox.checked) {
+        selectAllCheckbox.checked = false;
+      } else if ([...checkboxes].every(c => c.checked)) {
+        selectAllCheckbox.checked = true;
       }
     });
+  });
 
-   // Close dropdown if clicked outside
-    window.addEventListener('click', (event) => {
-      if (!selectButton.contains(event.target) && !selectDropdown.contains(event.target)) {
-        selectDropdown.classList.add('hidden');
+  // Select All Toggle
+  function toggleSelectAll(source) {
+    checkboxes.forEach(cb => {
+      cb.checked = source.checked;
+    });
+    updateFoundBtnState();
+  }
+
+  function handleFoundClick() {
+    const selected = [...document.querySelectorAll('input[name="foundCheckbox"]:checked')];
+    if (selected.length === 0) return;
+
+    // Show SweetAlert confirmation
+    Swal.fire({
+      title: 'Confirm Phone Recovery',
+      text: "Are you sure you want to mark the selected phone(s) as found?",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, mark as found',
+      cancelButtonText: 'Cancel'
+    }).then(result => {
+      if (result.isConfirmed) {
+        // Create form to submit data to the PHP handler
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = '../controls/found_multiple.php'; // Your backend handler
+
+        selected.forEach(cb => {
+          const input = document.createElement('input');
+          input.type = 'hidden';
+          input.name = 'serials[]';
+          input.value = cb.value; // Value of the selected checkbox
+          form.appendChild(input);
+        });
+
+        // Use fetch to submit the form data via AJAX
+        fetch(form.action, {
+          method: form.method,
+          body: new FormData(form)
+        })
+          .then(response => response.json()) // Parse the JSON response from PHP
+          .then(data => {
+            if (data.success) {
+              // Success! Show SweetAlert success message
+              Swal.fire('Success', `Marked ${data.updatedCount} phone(s) as Found.`, 'success')
+                .then(() => {
+                  // Redirect to missingphones.php after success
+                  window.location.href = 'missingphones.php'; // This will redirect to the page
+                });
+            } else {
+              // Error case (e.g. no phones selected)
+              Swal.fire('Error', data.message || 'Something went wrong.', 'error');
+            }
+          })
+          .catch(error => {
+            // Handle any errors with the fetch request
+            Swal.fire('Error', 'Something went wrong. Please try again later.', 'error');
+          });
       }
     });
-  </script>
-
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-  <!-- Checkbox script -->
-  <script>
-    function toggleSelectAll(source) {
-      checkboxes = document.querySelectorAll('input[type="checkbox"]');
-      for (var i = 0; i < checkboxes.length; i++) {
-        if (checkboxes[i] != source) checkboxes[i].checked = source.checked;
-      }
-    }
-  </script>
+  }
+</script>
 
 </html>

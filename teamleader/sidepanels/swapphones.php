@@ -1,10 +1,17 @@
+<?php
+require __DIR__ . '/../../dbcon/dbcon.php';
+require __DIR__ . '/../../queries/phone_query.php';
+require __DIR__ . '/../../dbcon/authentication.php';
+require __DIR__ . '/../../dbcon/session_get.php';
+?>
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Swap Phones</title>
-    <link rel="stylesheet" href="/src/output.css" />
+    <link rel="stylesheet" href="../../src/output.css" />
     <script
       src="https://kit.fontawesome.com/10d593c5dc.js"
       crossorigin="anonymous"
@@ -19,172 +26,75 @@
     </style>
   </head>
   <body>
-    <div class="flex">
-      <!-- Sidebar -->
-      <div class="w-1/5 bg-blue-950 text-white h-screen p-4 fixed">
-        <h1 class="text-4xl mb-6 mt-2 font-medium font-russo">PhoneSwap</h1>
-        <ul>
-          <li class="mb-4">
-            <a class="flex items-center hover:bg-opacity-30 hover:bg-white p-2 text-base font-medium rounded-lg"
-              href="dashboard.html">
-              <i class="fas fa-tachometer-alt mr-3"></i>
-              Dashboard
-            </a>
-          </li>
-          <li class="mb-4">
-            <a class="flex items-center bg-opacity-30 bg-white p-2 text-base font-medium rounded-lg"
-              href="swapphones.html">
-              <i class="fa-solid fa-arrows-rotate mr-3"></i>
-              Swap Phones
-            </a>
-          </li>
-          <li class="mb-4">
-            <a class="flex items-center hover:bg-opacity-30 hover:bg-white p-2 text-base font-medium rounded-lg"
-              href="usermanagement.html">
-              <i class="fa-solid fa-user-group mr-3"></i>
-              User Management
-            </a>
-          </li>
-        </ul>
-      </div>
+  <div class="flex">
+    <!-- Sidebar -->
+    <div class="w-1/5 bg-blue-950 text-white h-screen p-4 fixed">
+      <h1 class="text-4xl mb-6 mt-2 font-medium font-russo">PhoneSwap</h1>
+      <ul>
+        <li class="mb-4">
+          <a class="flex items-center hover:bg-opacity-30 hover:bg-white p-2 text-base font-medium rounded-lg"
+            href="../dashboard/dashboard.php">
+            <i class="fas fa-tachometer-alt mr-3"></i>
+            Dashboard
+          </a>
+        </li>
+        <li class="mb-4">
+          <a class="flex items-center bg-opacity-30 bg-white p-2 text-base font-medium rounded-lg"
+            href="swapphones.php">
+            <i class="fa-solid fa-arrows-rotate mr-3"></i>
+            Swap Phones
+          </a>
+        </li>
+        <li class="mb-4">
+          <a class="flex items-center hover:bg-opacity-30 hover:bg-white p-2 text-base font-medium rounded-lg"
+            href="../sidepanels/usermanagement.php">
+            <i class="fa-solid fa-user-group mr-3"></i>
+            User Management
+          </a>
+        </li>
+      </ul>
+    </div>
 
-      <!-- Main Content -->
-      <div class="w-4/5 ml-auto">
-        <!-- Navbar section -->
-        <div class="fixed w-4/5 bg-white z-10 px-6 py-3 flex justify-between items-center shadow-md">
-          <!-- Menubar -->
-          <div class="flex flex-row items-center gap-4">
-            <button class="text-black focus:outline-none">
-              <i class="fas fa-bars"></i>
-            </button>
-            <h2 class="text-xl font-semibold mr-4">Swap Phones</h2>
-          </div>
+    <!-- Main Content -->
+    <div class="w-4/5 ml-auto">
+      <!-- Navbar section -->
+      <div class="fixed w-4/5 bg-gray-200 z-10 px-6 py-3 flex justify-between items-center">
+        <!-- Menubar -->
         <div class="flex flex-row items-center gap-4">
-          
-          <!-- Notification Bell -->
-          <div class="relative inline-block text-left">
-            <button
-              class="relative text-2xl"
-              aria-label="Notifications"
-              id="notificationButton">
-              <i class="fa-regular fa-bell"></i>
-            </button>
+          <button class="text-black focus:outline-none">
+            <i class="fas fa-bars"></i>
+          </button>
+          <h2 class="text-xl font-semibold mr-4">Dashboard</h2>
+        </div>
 
-            <!-- Dropdown Message Notification -->
-            <div
-              class="origin-top-right absolute right-0 mt-2 w-80 rounded-md shadow-lg bg-white border border-gray-400 ring-1 ring-black ring-opacity-5 focus:outline-none hidden"
-              role="menu"
-              aria-orientation="vertical"
-              aria-labelledby="notificationButton"
-              id="notificationDropdown" >
-              <div class="py-1" role="none">
-                <a
-                  href="#"
-                  class="block px-4 py-2 text-sm text-black-700 hover:bg-gray-100"
-                  role="menuitem">
-                  <div class="flex">
-                    <div>
-                      <p class="font-medium">
-                        New message from Yul Gatchalian
-                      </p>
-                      <p class="text-sm text-black-500">Stress to the max.</p>
-                      <p class="text-xs text-black-400">5 minutes ago</p>
-                    </div>
-                  </div>
-                </a>
-                <a
-                  href="#"
-                  class="block px-4 py-2 text-sm text-black-700 hover:bg-gray-100"
-                  role="menuitem">
-                  <div class="flex">
-                    <div class="mr-3">
-                      <p class="font-medium">Cylie Gonzales</p>
-                      <p class="text-sm text-black-500">
-                        Brain says code, stomach says feed me.
-                      </p>
-                      <p class="text-xs text-black-400">1 hour ago</p>
-                    </div>
-                  </div>
-                </a>
-                <a
-                  href="#"
-                  class="block px-4 py-2 text-sm text-black-700 hover:bg-gray-100"
-                  role="menuitem">
-                  <div class="flex">
-                    <div class="mr-3">
-                      <p class="font-medium">Kian David</p>
-                      <p class="text-sm text-black-500">
-                        Coding with good vibes = ultimate chill.
-                      </p>
-                      <p class="text-xs text-black-400">2 days ago</p>
-                    </div>
-                  </div>
-                </a>
-                <a
-                  href="#"
-                  class="block px-4 py-2 text-sm text-black-700 hover:bg-gray-100"
-                  role="menuitem">
-                  <div class="flex">
-                    <div class="mr-3">
-                      <p class="font-medium">Miko Basilio</p>
-                      <p class="text-sm text-black-500">
-                        Bugs and beats, coding and grooving
-                      </p>
-                      <p class="text-xs text-black-400">2 days ago</p>
-                    </div>
-                  </div>
-                </a>
-                <a
-                  href="#"
-                  class="block px-4 py-2 text-sm text-black-700 hover:bg-gray-100"
-                  role="menuitem">
-                  <div class="flex">
-                    <div class="mr-3">
-                      <p class="font-medium">Yul Grant Gatchalian</p>
-                      <p class="text-sm text-black-500">
-                        Catching up on sleep and relaxing.
-                      </p>
-                      <p class="text-xs text-black-400">2 days ago</p>
-                    </div>
-                  </div>
-                </a>
-              </div>
-            <div>
-          </div>
+        <div class="flex gap-4">
+          <div class="flex flex-row items-center gap-4">
+            <!-- Notification Bell -->
+            <div class="relative inline-block text-left">
 
-          <!-- Avatarbar -->  
-          <div class="relative dropdown">
-            <button
-              class="flex flex-row items-center gap-3 border border-black shadow-gray-700 shadow-sm bg-amber-400 text-black px-4 w-fit rounded-xl"
-            >
-              <i class="fa-regular fa-user fa-xl"></i>
-              <div class="flex flex-col items-start">
-                <h1 class="font-medium">Emily Dav</h1>
-                <h1 class="text-sm">Admin</h1>
+              <!-- Avatarbar -->
+              <div class="relative dropdown">
+                <button
+                  class="flex flex-row items-center gap-3 border border-black shadow-gray-700 shadow-sm bg-amber-400 text-black px-4 w-fit rounded-xl">
+                  <i class="fa-regular fa-user fa-xl"></i>
+                  <div class="flex flex-col items-start">
+                    <h1 class="font-medium"><?= htmlspecialchars($userName) ?></h1>
+                    <h1 class="text-sm"><?= htmlspecialchars($userRole) ?></h1>
+                  </div>
+                  <i class="fa-solid fa-angle-down fa-sm pl-3"></i>
+                </button>
+                <div class="dropdown-menu absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-2 z-20 hidden">
+                  <a href="../accountsetting.php" class="block px-4 py-2 text-gray-800 hover:bg-gray-200">Account
+                    Settings</a>
+                  <a href="../../src/logout.php" id="logoutBtn" class="block px-4 py-2 text-gray-800 hover:bg-gray-200">
+                    Logout
+                  </a>
+                </div>
               </div>
-              <i class="fa-solid fa-angle-down fa-sm pl-3"></i>
-            </button>
-            <div class="dropdown-menu absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-2 z-20 hidden">
-              <a
-                href="#"
-                class="block px-4 py-2 text-gray-800 hover:bg-gray-200"
-                >Profile</a
-              >
-              <a
-                href="#"
-                class="block px-4 py-2 text-gray-800 hover:bg-gray-200"
-                >Settings</a
-              >
-              <a
-                href="#"
-                class="block px-4 py-2 text-gray-800 hover:bg-gray-200"
-                >Logout</a
-              >
             </div>
           </div>
         </div>
       </div>
-
 
       <div class="pt-22 py-6 laptop:px-10 phone:px-6">
         <!-- contents -->
@@ -206,7 +116,6 @@
                               <option value="">Select Filter</option>
                               <option value="">Device Model</option>
                               <option value="">Serial Number</option>
-                              <option value="">Table Number</option>
                               <option value="">Status</option>
                               <option value="">Assigned</option>
                               <option value="">Report</option>
@@ -237,7 +146,6 @@
                         </th>
                         <th class="py-3 px-4 whitespace-nowrap">Device Model</th>
                         <th class="py-3 px-4 whitespace-nowrap">Serial Number</th>
-                        <th class="py-3 px-4 whitespace-nowrap">Table Number</th>
                         <th class="py-3 px-4 whitespace-nowrap">Status</th>
                         <th class="py-3 px-4 whitespace-nowrap">Team Member</th>
                         <th class="py-3 px-4 whitespace-nowrap"></th>
