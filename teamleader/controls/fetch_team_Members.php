@@ -38,15 +38,24 @@ if (empty($teamMemberHfIds)) {
 }
 
 // Fetch details of all team members using their hfIds
-$teamMembers = $db->users->find([
+$teamMembersCursor = $db->users->find([
     'hfId' => ['$in' => $teamMemberHfIds],
     'userType' => 'TM'  // Ensure these are only Team Members (TM)
 ]);
 
-// Check if we have team members
+// Check if we have team members and return relevant data
+$teamMembers = iterator_to_array($teamMembersCursor);
+
 if ($teamMembers) {
-    $data = iterator_to_array($teamMembers); // Convert MongoDB result to an array
-    echo json_encode(["success" => true, "data" => $data]); // Return success and the team members
+    // Format the data to return relevant fields (e.g., hfId, assigned_phone)
+    $data = array_map(function($tm) {
+        return [
+            'hfId' => $tm['hfId'],
+            'assigned_phone' => $tm['assigned_phone'] ?? [] // Only include assigned_phone if it exists
+        ];
+    }, $teamMembers);
+
+    echo json_encode(["success" => true, "data" => $data]); // Return success and the formatted team members
 } else {
     echo json_encode(["success" => false, "message" => "No team members found."]);
 }
