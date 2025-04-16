@@ -1,6 +1,12 @@
 <?php
-require __DIR__ . '/../dbcon/dbcon.php';
-require __DIR__ . '/../queries/phone_query.php';
+require __DIR__ . '/../../dbcon/dbcon.php';
+require __DIR__ . '/../../queries/phone_query.php';
+require __DIR__ . '/../../dbcon/authentication.php';
+require __DIR__ . '/../../dbcon/session_get.php';
+
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 ?>
 
 <!DOCTYPE html>
@@ -10,7 +16,7 @@ require __DIR__ . '/../queries/phone_query.php';
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>User Management</title>
-  <link rel="stylesheet" href="../src/output.css" />
+  <link rel="stylesheet" href="../../src/output.css" />
   <script src="https://kit.fontawesome.com/10d593c5dc.js" crossorigin="anonymous"></script>
   <style>
     .dropdown-menu {
@@ -31,21 +37,21 @@ require __DIR__ . '/../queries/phone_query.php';
       <ul>
         <li class="mb-4">
           <a class="flex items-center hover:bg-opacity-30 hover:bg-white p-2 text-base font-medium rounded-lg"
-            href="dashboard.php">
+            href="../dashboard/dashboard.php">
             <i class="fas fa-tachometer-alt mr-3"></i>
             Dashboard
           </a>
         </li>
         <li class="mb-4">
           <a class="flex items-center hover:bg-opacity-30 hover:bg-white p-2 text-base font-medium rounded-lg"
-            href="swapphones.html">
+            href="swapphones.php">
             <i class="fa-solid fa-arrows-rotate mr-3"></i>
             Swap Phones
           </a>
         </li>
         <li class="mb-4">
           <a class="flex items-center bg-opacity-30 bg-white p-2 text-base font-medium rounded-lg"
-            href="usermanagement.html">
+            href="usermanagement.php">
             <i class="fa-solid fa-user-group mr-3"></i>
             User Management
           </a>
@@ -73,72 +79,7 @@ require __DIR__ . '/../queries/phone_query.php';
         <div class="flex flex-row items-center gap-4">
           <!-- Notification Bell -->
           <div class="relative inline-block text-left">
-            <button class="relative text-2xl" aria-label="Notifications" id="notificationButton">
-              <i class="fa-regular fa-bell"></i>
-            </button>
-
-            <!-- Notification Bell -->
-            <div
-              class="origin-top-right absolute right-0 mt-2 w-80 rounded-md shadow-lg bg-white border border-gray-400 ring-1 ring-black ring-opacity-5 focus:outline-none hidden"
-              role="menu" aria-orientation="vertical" aria-labelledby="notificationButton" id="notificationDropdown">
-              <div class="py-1" role="none">
-                <a href="#" class="block px-4 py-2 text-sm text-black-700 hover:bg-gray-100" role="menuitem">
-                  <div class="flex">
-                    <div>
-                      <p class="font-medium">
-                        New message from Yul Gatchalian
-                      </p>
-                      <p class="text-sm text-black-500">Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-                      <p class="text-xs text-black-400">5 minutes ago</p>
-                    </div>
-                  </div>
-                </a>
-                <a href="#" class="block px-4 py-2 text-sm text-black-700 hover:bg-gray-100" role="menuitem">
-                  <div class="flex">
-                    <div class="mr-3">
-                      <p class="font-medium">Cylie Gonzales</p>
-                      <p class="text-sm text-black-500">
-                        Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                      </p>
-                      <p class="text-xs text-black-400">1 hour ago</p>
-                    </div>
-                  </div>
-                </a>
-                <a href="#" class="block px-4 py-2 text-sm text-black-700 hover:bg-gray-100" role="menuitem">
-                  <div class="flex">
-                    <div class="mr-3">
-                      <p class="font-medium">Kian David</p>
-                      <p class="text-sm text-black-500">
-                        Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                      </p>
-                      <p class="text-xs text-black-400">2 days ago</p>
-                    </div>
-                  </div>
-                </a>
-                <a href="#" class="block px-4 py-2 text-sm text-black-700 hover:bg-gray-100" role="menuitem">
-                  <div class="flex">
-                    <div class="mr-3">
-                      <p class="font-medium">Miko Basilio</p>
-                      <p class="text-sm text-black-500">
-                        Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                      </p>
-                      <p class="text-xs text-black-400">2 days ago</p>
-                    </div>
-                  </div>
-                </a>
-                <a href="#" class="block px-4 py-2 text-sm text-black-700 hover:bg-gray-100" role="menuitem">
-                  <div class="flex">
-                    <div class="mr-3">
-                      <p class="font-medium">Yul Grant Gatchalian</p>
-                      <p class="text-sm text-black-500">
-                        Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                      </p>
-                      <p class="text-xs text-black-400">2 days ago</p>
-                    </div>
-                  </div>
-                </a>
-              </div>
-            </div>
+            
           </div>
 
           <!-- profile -->
@@ -147,8 +88,8 @@ require __DIR__ . '/../queries/phone_query.php';
               class="flex flex-row items-center gap-3 border border-black shadow-gray-700 shadow-sm bg-amber-400 text-black px-4 w-fit rounded-xl">
               <i class="fa-regular fa-user fa-xl"></i>
               <div class="flex flex-col items-start">
-                <h1 class="font-medium">Emily Dav</h1>
-                <h1 class="text-sm">Admin</h1>
+                <h1 class="font-medium"><?= htmlspecialchars($userName) ?></h1>
+                <h1 class="text-sm"><?= htmlspecialchars($userRole) ?></h1>
               </div>
               <i class="fa-solid fa-angle-down fa-sm pl-3"></i>
             </button>
@@ -195,8 +136,7 @@ require __DIR__ . '/../queries/phone_query.php';
                       <th class="py-3 px-4 border-b whitespace-nowrap">Complete Name</th>
                       <th class="py-3 px-4 border-b whitespace-nowrap">Position</th>
                       <th class="py-3 px-4 border-b whitespace-nowrap">Email</th>
-                      <th class="py-3 px-4 border-b whitespace-nowrap">Assigned Table</th>
-                      <th class="py-3 px-4 border-b"></th>
+                      <th class="py-3 px-4 border-b">Actions</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -210,9 +150,6 @@ require __DIR__ . '/../queries/phone_query.php';
                           <?php echo htmlspecialchars($user['userType'] == 'TM' ? 'Team Member' : $user['userType']); ?>
                         </td>
                         <td class="py-2 px-4 whitespace-nowrap"><?php echo $user['username']; ?></td>
-                        <td class="py-2 px-4 whitespace-nowrap">
-                          <?php echo htmlspecialchars('table' . ' ' . $user['table']); ?>
-                        </td>
                         <td class="text-center space-x-2">
                           <div class="flex flex-row py-2 px-4 gap-1">
                             <button
@@ -221,7 +158,6 @@ require __DIR__ . '/../queries/phone_query.php';
                               data-firstname="<?php echo htmlspecialchars($user['first_name'] ?? ''); ?>"
                               data-lastname="<?php echo htmlspecialchars($user['last_name'] ?? ''); ?>"
                               data-email="<?php echo htmlspecialchars($user['username'] ?? ''); ?>"
-                              data-table="<?php echo htmlspecialchars($user['table'] ?? ''); ?>"
                               data-role="<?php echo htmlspecialchars($user['userType'] ?? ''); ?>">
                               <i class="fa-solid fa-pen"></i> Edit
                             </button>
@@ -274,11 +210,6 @@ require __DIR__ . '/../queries/phone_query.php';
                       <label for="email" class="text-sm font-medium">Email</label>
                       <input type="email" name="email" class="border border-gray-700 p-2 rounded-lg"
                         placeholder="<?php echo htmlspecialchars($user['username'] ?? ''); ?>" />
-                    </div>
-                    <div class="flex flex-col gap-2 w-full">
-                      <label for="table" class="text-sm font-medium">Table Number</label>
-                      <input type="text" name="table" class="border border-gray-700 p-2 rounded-lg"
-                        placeholder="<?php echo htmlspecialchars($user['table'] ?? ''); ?>" />
                     </div>
                   </div>
 
@@ -338,118 +269,6 @@ require __DIR__ . '/../queries/phone_query.php';
     </div>
 </body>
 
-<!-- Modal - ADD USER -->
-<script>
-  const modal = document.getElementById("myModal");
-  const openModalBtn = document.getElementById("openModalBtn");
-  const closeModalBtn = document.getElementById("closeModalBtn");
-  const modalCancelButton = document.getElementById("modalCancelButton");
 
-  openModalBtn.addEventListener("click", () => {
-    modal.classList.remove("hidden");
-  });
-
-  closeModalBtn.addEventListener("click", () => {
-    modal.classList.add("hidden");
-  });
-
-  modalCancelButton.addEventListener("click", () => {
-    modal.classList.add("hidden");
-  });
-</script>
-
-<!-- Modal1 - EDIT USER -->
-<script>
-  document.addEventListener("DOMContentLoaded", function () {
-    const modal1 = document.getElementById("myModal1");
-    const openModalBtn1 = document.getElementById("openModalBtn1");
-    const closeModalBtn1 = document.getElementById("closeModalBtn1");
-    const modalCancelButton1 = document.getElementById("modalCancelButton1");
-
-    if (!modal1) {
-      console.error("Error: Modal not found!");
-      return;
-    }
-
-    if (openModalBtn1) {
-      openModalBtn1.addEventListener("click", () => {
-        modal1.classList.remove("hidden");
-      });
-    } else {
-      console.error("Error: Open modal button not found!");
-    }
-
-    if (closeModalBtn1) {
-      closeModalBtn1.addEventListener("click", () => {
-        modal1.classList.add("hidden");
-      });
-    } else {
-      console.error("Error: Close modal button not found!");
-    }
-
-    if (modalCancelButton1) {
-      modalCancelButton1.addEventListener("click", () => {
-        modal1.classList.add("hidden");
-      });
-    } else {
-      console.error("Error: Modal cancel button not found!");
-    }
-  });
-
-</script>
-
-
-<script>
-  // Ensure script runs after the DOM is fully loaded
-  document.addEventListener("DOMContentLoaded", function () {
-    const editButtons = document.querySelectorAll(".editUserBtn");
-    const modal = document.getElementById("myModal1");
-    const closeModalBtn = document.getElementById("closeModalBtn1");
-
-    // Ensure modal exists before proceeding
-    if (!modal) {
-      console.error("Error: Modal not found!");
-      return;
-    }
-
-    editButtons.forEach(button => {
-      button.addEventListener("click", function () {
-        // Get hfId to ensure only 1 user is edited
-        const hfId = button.getAttribute("data-hfid");
-        if (!hfId) {
-          console.error("Error: No hfId found!");
-          return;
-        }
-
-        // Select input fields safely
-        const firstNameInput = modal.querySelector("[name='first_name']");
-        const lastNameInput = modal.querySelector("[name='last_name']");
-        const emailInput = modal.querySelector("[name='email']");
-        const tableInput = modal.querySelector("[name='table']");
-        const roleDropdown = modal.querySelector("[name='role']");
-
-        // Set values safely
-        if (firstNameInput) firstNameInput.value = button.getAttribute("data-firstname") || "";
-        if (lastNameInput) lastNameInput.value = button.getAttribute("data-lastname") || "";
-        if (emailInput) emailInput.value = button.getAttribute("data-email") || "";
-        if (tableInput) tableInput.value = button.getAttribute("data-table") || "";
-        if (roleDropdown) roleDropdown.value = button.getAttribute("data-role") || "";
-
-        // Show modal
-        modal.classList.remove("hidden");
-      });
-    });
-
-    // Close modal event (check if button exists)
-    if (closeModalBtn) {
-      closeModalBtn.addEventListener("click", function () {
-        modal.classList.add("hidden");
-      });
-    } else {
-      console.error("Error: Close button not found!");
-    }
-  });
-
-</script>
 
 </html>
