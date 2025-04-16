@@ -3,6 +3,10 @@ require __DIR__ . '/../../dbcon/dbcon.php';
 require __DIR__ . '/../../queries/phone_query.php';
 require __DIR__ . '/../../dbcon/authentication.php';
 require __DIR__ . '/../../dbcon/session_get.php';
+
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 ?>
 
 <!DOCTYPE html>
@@ -14,6 +18,7 @@ require __DIR__ . '/../../dbcon/session_get.php';
   <title>Swap Phones</title>
   <link rel="stylesheet" href="../../src/output.css" />
   <script src="https://kit.fontawesome.com/10d593c5dc.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <style>
     .dropdown-menu {
       display: none;
@@ -103,9 +108,9 @@ require __DIR__ . '/../../dbcon/session_get.php';
             <!-- navig section, filter, search and export button -->
             <div class="flex laptop:flex-row phone:flex-col gap-3 justify-between">
               <div class="flex flex-row gap-5 border-b border-black">
-                <a href="swapphones.html"
+                <a href="swapphones.php"
                   class="font-semibold laptop:text-lg phone:text-sm border-b-2 border-black">Swap Phones</a>
-                <a href="swappedphones.html"
+                <a href="swappedphones.php"
                   class="font-semibold laptop:text-lg phone:text-sm hover:border-b-2 hover:border-black">Swapped
                   Phones</a>
               </div>
@@ -142,9 +147,7 @@ require __DIR__ . '/../../dbcon/session_get.php';
               <table class="w-full bg-white pl-7">
                 <thead>
                   <tr class="bg-gray-200 border-b border-gray-400 text-sm text-left px-4">
-                    <th class="py-3 px-4 border-b">
-                      <input type="checkbox" onclick="toggleSelectAll(this)" />
-                    </th>
+
                     <th class="py-3 px-4 whitespace-nowrap">Device Model</th>
                     <th class="py-3 px-4 whitespace-nowrap">Serial Number</th>
                     <th class="py-3 px-4 whitespace-nowrap">Status</th>
@@ -154,15 +157,22 @@ require __DIR__ . '/../../dbcon/session_get.php';
                 </thead>
                 <tbody>
                   <?php
-                  $teamMembers = $db->users->find(['userType' => 'TM']); // get all TMs
+                  // Fetch all Team Members (TM)
+                  $teamMembers = $db->users->find(['userType' => 'TM']);
+
                   foreach ($teamMembers as $tm) {
+                    // Ensure 'assigned_phone' exists and is an array
                     $tmPhones = $tm['assigned_phone'] ?? [];
+
                     foreach ($tmPhones as $serial) {
                       // Get the phone details by serial number
                       $phone = $db->phones->findOne(['serial_number' => $serial]);
-                      if (!$phone)
-                        continue;
 
+                      if (!$phone) {
+                        continue; // If no phone found, skip this iteration
+                      }
+
+                      // Determine the status class for styling
                       $status = $phone['status'];
                       $statusClass = match ($status) {
                         'Active' => 'text-green-800 bg-green-100 border-green-800',
@@ -170,33 +180,47 @@ require __DIR__ . '/../../dbcon/session_get.php';
                         default => 'text-gray-800 bg-gray-100 border-gray-800',
                       };
                       ?>
+
+                      <!-- Table Row for Phone Details -->
                       <tr class="border-b">
-                        <td class="py-2 px-4 whitespace-nowrap">
-                          <input type="checkbox" />
-                        </td>
+                        <!-- Phone Model Column -->
                         <td class="py-5 px-4 whitespace-nowrap"><?= htmlspecialchars($phone['model']) ?></td>
+
+                        <!-- Serial Number Column -->
                         <td class="py-5 px-4 whitespace-nowrap"><?= htmlspecialchars($phone['serial_number']) ?></td>
+
+                        <!-- Status Column -->
                         <td class="py-2 px-4 whitespace-nowrap">
                           <span class="<?= $statusClass ?> rounded-full py-2 px-6 font-medium shadow-lg">
                             <?= htmlspecialchars($status) ?>
                           </span>
                         </td>
+
+                        <!-- Assigned To Column -->
                         <td class="py-5 px-4 whitespace-nowrap">
                           <?= htmlspecialchars('[' . $tm['hfId'] . '] ' . $tm['first_name'] . ' ' . $tm['last_name']) ?>
                         </td>
+
+                        <!-- Swap Button Column -->
                         <td class="py-2 px-4 whitespace-nowrap">
                           <button
-                            class="swap-button flex flex-row gap-2 items-center border font-semibold border-black bg-amber-400 hover:bg-amber-600 text-black px-6 py-1.5 rounded-full shadow-lg">
+                            class="swap-button flex flex-row gap-2 items-center border font-semibold border-black bg-amber-400 hover:bg-amber-600 text-black px-6 py-1.5 rounded-full shadow-lg"
+                            onclick='openSwapModal([{
+              "model": "<?= htmlspecialchars($phone['model']) ?>", 
+              "serial_number": "<?= htmlspecialchars($phone['serial_number']) ?>", 
+              "assigned_to": "<?= htmlspecialchars($tm['first_name'] . ' ' . $tm['last_name']) ?>"
+            }])'>
                             Swap
                           </button>
-
                         </td>
                       </tr>
+
                       <?php
                     }
                   }
                   ?>
                 </tbody>
+
               </table>
             </div>
           </div>
@@ -209,15 +233,15 @@ require __DIR__ . '/../../dbcon/session_get.php';
                 <h2 class="text-2xl font-russo mb-2">Swap Phone</h2>
 
                 <!-- 📦 Selected Phones Container -->
-              <div id="selectedPhonesContainer" class="flex flex-col gap-3 max-h-52 overflow-y-auto">
-                <!-- dynamically inserted phone cards -->
-              </div>
+                <div id="selectedPhonesContainer" class="flex flex-col gap-3 max-h-52 overflow-y-auto">
+                  <!-- dynamically inserted phone cards -->
+                </div>
 
                 <!-- 🔄 Available Phones Dropdown -->
                 <div class="flex flex-col gap-2 w-full">
                   <label for="availablePhones" class="text-sm font-medium">Available Phones</label>
                   <select id="availablePhones"
-                    class="p-2 h-10 w-full text-sm border border-gray-700 rounded-lg outline-none">
+                    class="p-2 h-10 w-full text-md border border-gray-700 rounded-lg outline-none">
                     <option disabled selected>Loading...</option>
                   </select>
                 </div>
@@ -228,9 +252,11 @@ require __DIR__ . '/../../dbcon/session_get.php';
                     Cancel
                   </button>
                   <button id="confirmSwapBtn"
-                    class="w-24 px-4 py-2 shadow-md shadow-gray-300 bg-amber-400 text-black border border-black font-medium rounded-lg hover:bg-amber-500">
+                    class="w-24 px-4 py-2 shadow-md shadow-gray-300 bg-amber-400 text-black border border-black font-medium rounded-lg hover:bg-amber-500"
+                    onclick="confirmSwap()">
                     Swap
                   </button>
+
                 </div>
               </div>
             </div>
@@ -265,105 +291,131 @@ require __DIR__ . '/../../dbcon/session_get.php';
       </div>
 </body>
 
-<!-- Checkbox script -->
+
 <script>
-  function toggleSelectAll(source) {
-    checkboxes = document.querySelectorAll('input[type="checkbox"]');
-    for (var i = 0; i < checkboxes.length; i++) {
-      if (checkboxes[i] != source) checkboxes[i].checked = source.checked;
+  let currentSwapPhone = null; // 📌 global variable to store selected phone
+
+  function openSwapModal(selectedPhones = []) {
+    document.getElementById('swapModal').classList.remove('hidden');
+
+    const container = document.getElementById('selectedPhonesContainer');
+    container.innerHTML = '';
+
+    // We'll only use the first phone in this context
+    const phone = selectedPhones[0];
+    currentSwapPhone = phone; // ⬅️ Save for later swap
+
+    const phoneCard = document.createElement('div');
+    phoneCard.className = 'border border-gray-400 p-2 rounded-md shadow-sm';
+    phoneCard.innerHTML = `
+      <div class="text-lg font-semibold">📱 ${phone.model}</div>
+      <div class="text-md text-gray-700">SN: ${phone.serial_number}</div>
+      <div class="text-md text-gray-600">👤 Holder: ${phone.assigned_to}</div>
+    `;
+    container.appendChild(phoneCard);
+
+    fetchUnassignedPhones();
+  }
+
+  function closeModal() {
+    document.getElementById('swapModal').classList.add('hidden');
+    currentSwapPhone = null; // clear after use
+  }
+
+  function fetchUnassignedPhones() {
+    fetch("../controls/fetch_team_Members.php")
+      .then(res => res.json())
+      .then(tmData => {
+        if (!tmData.success) return;
+
+        const teamMembers = tmData.data;
+
+        fetch('../controls/get_phones.php')
+          .then(res => res.json())
+          .then(phoneData => {
+            if (!phoneData.success) return;
+
+            const unassignedPhones = phoneData.data.filter(phone => {
+              return !teamMembers.some(tm =>
+                tm.assigned_phone?.includes(phone.serial_number)
+              );
+            });
+
+            updatePhoneDropdown(unassignedPhones);
+          });
+      });
+  }
+
+  function updatePhoneDropdown(phones) {
+    const dropdown = document.getElementById('availablePhones');
+    dropdown.innerHTML = '';
+
+    if (phones.length === 0) {
+      dropdown.innerHTML = '<option disabled>No available phones</option>';
+    } else {
+      phones.forEach(phone => {
+        const option = document.createElement('option');
+        option.value = phone.serial_number;
+        option.textContent = `${phone.model} (${phone.serial_number})`;
+        dropdown.appendChild(option);
+      });
     }
   }
-</script>
 
-<script>
-// Open modal
-function openSwapModal() {
-  // Open modal
-  document.getElementById('swapModal').classList.remove('hidden');
-  
-  // Fetch unassigned phones
-  fetchUnassignedPhones();
-}
+  // ✅ Confirm swap handler
+  function confirmSwap() {
+    const newSerial = document.getElementById('availablePhones').value;
+    const oldSerial = currentSwapPhone.serial_number;
+    const assignedTo = currentSwapPhone.assigned_to;
 
-// Close modal
-function closeModal() {
-  document.getElementById('swapModal').classList.add('hidden');
-}
+    if (!newSerial || !assignedTo) {
+      alert("Missing swap details.");
+      return;
+    }
 
-// Fetch unassigned phones (phones that are not assigned to any Team Member)
-function fetchUnassignedPhones() {
-  fetch("../controls/fetch_team_members.php")
-    .then(res => res.json())
-    .then(tmData => {
-      if (!tmData.success) {
-        console.error('Failed to fetch team members:', tmData.message);
-        return;
-      }
-
-      const teamMembers = tmData.data;
-      console.log('Fetched Team Members:', teamMembers);
-
-      // Fetch the list of all phones
-      fetch('../controls/get_phones.php')
-        .then(res => res.json())
-        .then(phoneData => {
-          if (!phoneData.success) {
-            console.error('Failed to fetch phones:', phoneData.message);
-            return;
-          }
-
-          // Filter out the unassigned phones
-          const unassignedPhones = phoneData.data.filter(phone => {
-            const isAssigned = teamMembers.some(tm => tm.assigned_phone && tm.assigned_phone.includes(phone.serial_number));
-            return !isAssigned; // If no TM has the phone assigned, it's unassigned
-          });
-
-          console.log('Unassigned Phones:', unassignedPhones);
-
-          // Process the unassigned phones (for dropdown or other UI elements)
-          updatePhoneDropdown(unassignedPhones);
-        })
-        .catch(err => {
-          console.error('Error fetching phones:', err);
-        });
+    // Send the swap request to the server
+    fetch('../controls/swap_phone.php', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        old_serial: currentSwapPhone.serial_number,
+        new_serial: document.getElementById('availablePhones').value,
+        assigned_to: currentSwapPhone.assigned_to
+      })
     })
-    .catch(err => {
-      console.error('Error fetching team members:', err);
-    });
-}
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          Swal.fire({
+            icon: 'success',
+            title: 'Swap Successful',
+            text: data.message,
+            confirmButtonColor: '#3085d6'
+          }).then(() => {
+            // Optional: reload or close modal
+            closeModal();
+            location.reload(); // Or any custom logic
+          });
+        } else {
+          Swal.fire({
+            icon: 'error',
+            title: 'Swap Failed',
+            text: data.message
+          });
+        }
+      })
+      .catch(error => {
+        console.error("Swap error:", error);
+        Swal.fire({
+          icon: 'error',
+          title: 'Something went wrong',
+          text: 'Please try again later.'
+        });
+      });
 
-// Update the phone dropdown with unassigned phones
-function updatePhoneDropdown(phones) {
-  const dropdown = document.getElementById('availablePhones');
-  dropdown.innerHTML = ''; // Clear existing options
-
-  if (phones.length === 0) {
-    dropdown.innerHTML = '<option disabled>No available phones</option>';
-  } else {
-    phones.forEach(phone => {
-      const option = document.createElement('option');
-      option.value = phone.serial_number;
-      option.textContent = `${phone.model} (${phone.serial_number})`;
-      dropdown.appendChild(option);
-    });
   }
-}
-
-// Add event listener to the "Swap" button
-document.getElementById('confirmSwapBtn').addEventListener('click', () => {
-  const selectedPhone = document.getElementById('availablePhones').value;
-  if (selectedPhone) {
-    // Handle the swap process (you can implement this part as needed)
-    console.log('Swapping phone with serial number:', selectedPhone);
-  } else {
-    console.error('No phone selected.');
-  }
-});
-
-// Add event listener to all swap buttons (if you have multiple buttons to trigger the modal)
-document.querySelectorAll('.swap-button').forEach(button => {
-  button.addEventListener('click', openSwapModal);
-});
 
 </script>
 
