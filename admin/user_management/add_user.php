@@ -105,7 +105,7 @@ try {
                 <h2 style='color:#333;'>Welcome, $firstName!</h2>
                 <p>You have been added as a <strong>$role</strong> in our system.</p>
                 <p>Click the button below to set your password:</p>
-                <a href='http://localhost/phoneswap/src/set-password.php?token=$token' 
+                <a href='http://localhost/phoneswap/PhoneSwap/src/set-password.php?token=$token' 
                     style='display:inline-block;padding:10px 20px;background-color:#007bff;color:#fff;text-decoration:none;border-radius:5px;'>
                     Set Password
                 </a>
