@@ -108,7 +108,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             const formData = new FormData(this);
             
-            fetch('set-password.php', {
+            fetch('/phoneswap/PhoneSwap/src/set-password.php', {
                 method: 'POST',
                 body: formData
             })
