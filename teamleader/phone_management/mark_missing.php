@@ -6,65 +6,75 @@ use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
 session_start();
+header('Content-Type: application/json');
 
-if (!empty($_POST['serials'])) {
-  $serials = $_POST['serials'];
-  $currentUser = $_SESSION['hfId'] ?? 'Unknown';
+try {
+    // Read raw JSON from body
+    $rawData = file_get_contents("php://input");
+    $data = json_decode($rawData, true);
 
-  $missingPhones = $db->phone->find([
-    'serial_number' => ['$in' => $serials]
-  ]);
+    if (!isset($data['serial_number'])) {
+        echo json_encode(['success' => false, 'error' => 'Serial number is missing.']);
+        exit;
+    }
 
-  $db->phone->updateMany(
-    ['serial_number' => ['$in' => $serials]],
-    ['$set' => ['status' => 'Missing']]
-  );
+    $serial = $data['serial_number'];
+    $currentUser = $_SESSION['hfId'] ?? 'Unknown';
 
-  foreach ($serials as $serial) {
+    // Find the phone
+    $phone = $db->phones->findOne(['serial_number' => $serial]);
+
+    if (!$phone) {
+        echo json_encode(['success' => false, 'error' => 'Phone not found.']);
+        exit;
+    }
+
+    // Update status
+    $db->phones->updateOne(
+        ['serial_number' => $serial],
+        ['$set' => ['status' => 'Missing']]
+    );
+
+    // Add to audit trail
     $db->audit->insertOne([
-      'action' => 'Marked as Missing',
-      'serial_number' => $serial,
-      'performed_by' => $currentUser,
-      'timestamp' => new MongoDB\BSON\UTCDateTime()
+        'action' => 'Marked as Missing',
+        'serial_number' => $serial,
+        'performed_by' => $currentUser,
+        'timestamp' => new MongoDB\BSON\UTCDateTime()
     ]);
-  }
 
-  // Compose the email message
-  $message = "<strong>🚨 A phone has been marked as MISSING!</strong><br><br>";
-  foreach ($missingPhones as $phone) {
+    // Compose the email
+    $message = "<strong>🚨 A phone has been marked as MISSING!</strong><br><br>";
     $message .= "📱 <strong>Serial:</strong> {$phone['serial_number']}<br>";
     $message .= "📱 <strong>Model:</strong> {$phone['model']}<br>";
     $message .= "🧑 <strong>Handler:</strong> {$currentUser}<br><br>";
-  }
 
-  // Send email via SMTP
-  $mail = new PHPMailer(true);
-  try {
-    $mail->isSMTP();
-    $mail->Host = SMTP_HOST;
-    $mail->SMTPAuth = true;
-    $mail->Username = SMTP_USER;
-    $mail->Password = SMTP_PASS;
-    $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-    $mail->Port = SMTP_PORT;
+    // Send email
+    $mail = new PHPMailer(true);
+    try {
+        $mail->isSMTP();
+        $mail->Host = SMTP_HOST;
+        $mail->SMTPAuth = true;
+        $mail->Username = SMTP_USER;
+        $mail->Password = SMTP_PASS;
+        $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+        $mail->Port = SMTP_PORT;
 
-    $mail->setFrom(SMTP_FROM, 'Missing Phone Notifier');
+        $mail->setFrom(SMTP_FROM, 'Missing Phone Notifier');
+        $mail->addAddress('2021307932@dhvsu.edu.ph', 'Admin');
 
-    // You can send to multiple recipients
-    $mail->addAddress('admin@example.com', 'Admin');
+        $mail->isHTML(true);
+        $mail->Subject = '📢 Phone Marked as Missing';
+        $mail->Body = $message;
 
-    $mail->isHTML(true);
-    $mail->Subject = '📢 Phone(s) Marked as Missing';
-    $mail->Body = $message;
+        $mail->send();
+    } catch (Exception $e) {
+        error_log("Email Error: " . $mail->ErrorInfo);
+        // Don't fail the whole process if email fails — just log it
+    }
 
-    $mail->send();
-  } catch (Exception $e) {
-    error_log('Email Error: ' . $mail->ErrorInfo);
-  }
-
-  echo json_encode(['success' => true, 'updatedCount' => count($serials)]);
-  exit;
-} else {
-  echo json_encode(['success' => false, 'message' => 'No phones selected.']);
-  exit;
+    echo json_encode(['success' => true, 'message' => 'Phone marked as missing.']);
+} catch (Exception $e) {
+    http_response_code(500);
+    echo json_encode(['success' => false, 'error' => 'Server error: ' . $e->getMessage()]);
 }
