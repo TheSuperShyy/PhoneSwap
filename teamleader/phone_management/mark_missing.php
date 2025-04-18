@@ -1,41 +1,50 @@
 <?php
+ob_start(); // Start output buffering
+session_start();
+header('Content-Type: application/json');
+
 require_once '../../dbcon/dbcon.php';
+require_once '../../dbcon/mail_config.php';
 require '../../vendor/autoload.php';
+require __DIR__ . '/../../dbcon/session_get.php';
+
+// OPTIONAL: Include your SMTP config file if constants are not defined in autoload
+// require_once '../../config/smtp_config.php';
 
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
-session_start();
-header('Content-Type: application/json');
-
 try {
-    // Read raw JSON from body
+    // Read and parse JSON input
     $rawData = file_get_contents("php://input");
     $data = json_decode($rawData, true);
 
     if (!isset($data['serial_number'])) {
+        ob_end_clean();
         echo json_encode(['success' => false, 'error' => 'Serial number is missing.']);
         exit;
     }
 
     $serial = $data['serial_number'];
-    $currentUser = $_SESSION['hfId'] ?? 'Unknown';
+    $currentUser = isset($hfId, $userName) ? "{$hfId} - {$userName}" : 'Unknown';
 
-    // Find the phone
+
+    // Fetch phone from database
     $phone = $db->phones->findOne(['serial_number' => $serial]);
 
     if (!$phone) {
+        ob_end_clean();
         echo json_encode(['success' => false, 'error' => 'Phone not found.']);
         exit;
     }
 
-    // Update status
+    // Update phone status
     $db->phones->updateOne(
         ['serial_number' => $serial],
         ['$set' => ['status' => 'Missing']]
     );
 
-    // Add to audit trail
+    // Add to audit log
     $db->audit->insertOne([
         'action' => 'Marked as Missing',
         'serial_number' => $serial,
@@ -43,8 +52,13 @@ try {
         'timestamp' => new MongoDB\BSON\UTCDateTime()
     ]);
 
-    // Compose the email
-    $message = "<strong>🚨 A phone has been marked as MISSING!</strong><br><br>";
+    // Ensure SMTP constants are defined
+    if (!defined('SMTP_HOST') || !defined('SMTP_USER') || !defined('SMTP_PASS') || !defined('SMTP_PORT') || !defined('SMTP_FROM')) {
+        throw new Exception("SMTP configuration is missing.");
+    }
+
+    // Email content
+    $message = "<strong>A phone has been marked as MISSING!</strong><br><br>";
     $message .= "📱 <strong>Serial:</strong> {$phone['serial_number']}<br>";
     $message .= "📱 <strong>Model:</strong> {$phone['model']}<br>";
     $message .= "🧑 <strong>Handler:</strong> {$currentUser}<br><br>";
@@ -69,12 +83,15 @@ try {
 
         $mail->send();
     } catch (Exception $e) {
-        error_log("Email Error: " . $mail->ErrorInfo);
-        // Don't fail the whole process if email fails — just log it
+        error_log("PHPMailer Error: " . $mail->ErrorInfo);
+        // Optional: file_put_contents('mail_debug.log', $mail->ErrorInfo);
     }
 
+    ob_end_clean();
     echo json_encode(['success' => true, 'message' => 'Phone marked as missing.']);
+
 } catch (Exception $e) {
+    ob_end_clean();
     http_response_code(500);
     echo json_encode(['success' => false, 'error' => 'Server error: ' . $e->getMessage()]);
 }
