@@ -238,6 +238,62 @@ error_reporting(E_ALL);
               </div>
             </div>
 
+            <!-- Modal for ADD USER -->
+            <div id="myModal"
+              class="fixed inset-0  justify-center items-center hidden bg-black bg-opacity-50 z-50 pt-24 pb-24 h-full laptop:px-80 laptop:w-full phone:w-full phone:px-4">
+              <div class="bg-white border border-gray-600 rounded-lg px-6 py-6 shadow-lg relative h-fit w-full">
+                <div class="flex justify-center">
+                  <div class="w-28 h-28 bg-gray-200 rounded-full flex items-center justify-center">
+                    <span class="text-gray-500 text-3xl">&#128100;</span>
+                  </div>
+                </div>
+
+                <div class="flex flex-col gap-4 mt-4">
+                  <div class="flex laptop:flex-row phone:flex-col gap-4">
+                    <div class="flex flex-col gap-2 w-full">
+                      <label for="first_name" class="text-sm font-medium">First Name</label>
+                      <input type="text" id="first_name" placeholder="First Name"
+                        class="border border-gray-700 p-2 rounded-lg text-black" />
+                    </div>
+                    <div class="flex flex-col gap-2 w-full">
+                      <label for="last_name" class="text-sm font-medium">Last Name</label>
+                      <input type="text" id="last_name" placeholder="Last Name"
+                        class="border border-gray-700 p-2 rounded-lg" />
+                    </div>
+                  </div>
+                  <div class="flex laptop:flex-row phone:flex-col gap-4">
+                    
+                    <div class="flex flex-col gap-2 w-full">
+                      <label for="table_number" class="text-sm font-medium">HFID</label>
+                      <input type="text" id="table_number" placeholder="HFID"
+                        class="border border-gray-700 p-2 rounded-lg" />
+                    </div>
+                  </div>
+                  <div class="flex laptop:flex-row phone:flex-col gap-4">
+                    <div class="flex flex-col gap-2 w-full">
+                      <label for="role" class="text-sm font-medium">Role</label>
+                      <select id="role" class="border border-gray-700 p-2 rounded-lg bg-white">
+                        <option value="TL">Team Member</option>
+                      </select>
+                    </div>
+                  </div>
+
+                </div>
+
+                <!-- Buttons -->
+                <div class="flex justify-end space-x-2 mt-4">
+                  <button id="closeModalBtn"
+                    class="w-28 px-4 py-2 shadow-md shadow-gray-300 text-white bg-red-600 border border-white font-medium rounded-lg">
+                    Close
+                  </button>
+                  <button id="addUserBtn"
+                    class="px-4 py-2 w-24 shadow-md shadow-gray-300 bg-blue-400 font-medium text-white border border-white rounded-lg">
+                    Add
+                  </button>
+                </div>
+              </div>
+            </div>
+
             <!-- Pagination -->
             <div class="flex space-x-2">
               <button class="rounded-lg px-4 py-2 hover:bg-blue-50 hover:font-semibold">
@@ -268,6 +324,34 @@ error_reporting(E_ALL);
       </div>
     </div>
 </body>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const openModalBtn = document.getElementById('openModalBtn');
+    const closeModalBtn = document.getElementById('closeModalBtn');
+    const modal = document.getElementById('myModal');
+
+    // Open modal
+    openModalBtn.addEventListener('click', () => {
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+    });
+
+    // Close modal
+    closeModalBtn.addEventListener('click', () => {
+      modal.classList.remove('flex');
+      modal.classList.add('hidden');
+    });
+
+    // Optional: close modal when clicking outside the modal content
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) {
+        modal.classList.remove('flex');
+        modal.classList.add('hidden');
+      }
+    });
+  });
+</script>
+
 
 
 
