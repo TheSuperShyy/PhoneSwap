@@ -346,55 +346,64 @@ require __DIR__ . '/../../dbcon/session_get.php';
 <!-- missing modal -->
 <script>
   function openMissingModal(serialNumber) {
-    Swal.fire({
-      title: 'Mark as Missing?',
-      text: `Are you sure you want to mark phone ${serialNumber} as missing?`,
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#d33',
-      cancelButtonColor: '#3085d6',
-      confirmButtonText: 'Yes, mark as missing'
-    }).then((result) => {
-      if (result.isConfirmed) {
-        fetch('../phone_management/mark_missing.php', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ serial_number: serialNumber })
-        })
-          .then(response => response.json())
-          .then(data => {
-            if (data.success) {
-              Swal.fire({
-                icon: 'success',
-                title: 'Marked as Missing!',
-                text: data.message,
-                confirmButtonColor: '#3085d6'
-              }).then(() => {
-                location.reload();
-              });
-            } else {
-              Swal.fire({
-                icon: 'error',
-                title: 'Failed!',
-                text: data.error,
-                confirmButtonColor: '#d33'
-              });
-            }
-          })
-          .catch(error => {
-            console.error('Error:', error);
-            Swal.fire({
-              icon: 'error',
-              title: 'Oops!',
-              text: 'Something went wrong.',
-              confirmButtonColor: '#d33'
-            });
+  Swal.fire({
+    title: 'Mark as Missing?',
+    text: `Are you sure you want to mark phone ${serialNumber} as missing?`,
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#d33',
+    cancelButtonColor: '#3085d6',
+    confirmButtonText: 'Yes, mark as missing'
+  }).then((result) => {
+    if (result.isConfirmed) {
+      Swal.fire({
+        title: 'Processing...',
+        html: 'Sending notification email and updating records...',
+        allowOutsideClick: false,
+        didOpen: () => {
+          Swal.showLoading();
+        }
+      });
+
+      fetch('../phone_management/mark_missing.php', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ serial_number: serialNumber })
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          Swal.fire({
+            icon: 'success',
+            title: 'Marked as Missing!',
+            text: data.message,
+            confirmButtonColor: '#3085d6'
+          }).then(() => {
+            location.reload();
           });
-      }
-    });
-  }
+        } else {
+          Swal.fire({
+            icon: 'error',
+            title: 'Failed!',
+            text: data.error,
+            confirmButtonColor: '#d33'
+          });
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops!',
+          text: 'Something went wrong.',
+          confirmButtonColor: '#d33'
+        });
+      });
+    }
+  });
+}
 </script>
 
 
