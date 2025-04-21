@@ -268,16 +268,20 @@ error_reporting(E_ALL);
                       <input type="text" id="table_number" placeholder="HFID"
                         class="border border-gray-700 p-2 rounded-lg" />
                     </div>
+                    <div class="flex flex-col gap-2 w-full">
+                      <label for="username" class="text-sm font-medium">Email</label>
+                      <input type="email" id="last_name" placeholder="Email"
+                        class="border border-gray-700 p-2 rounded-lg" />
+                    </div>
                   </div>
                   <div class="flex laptop:flex-row phone:flex-col gap-4">
                     <div class="flex flex-col gap-2 w-full">
                       <label for="role" class="text-sm font-medium">Role</label>
                       <select id="role" class="border border-gray-700 p-2 rounded-lg bg-white">
-                        <option value="TL">Team Member</option>
+                        <option value="TM">Team Member</option>
                       </select>
                     </div>
                   </div>
-
                 </div>
 
                 <!-- Buttons -->
@@ -324,34 +328,76 @@ error_reporting(E_ALL);
       </div>
     </div>
 </body>
+
 <script>
   document.addEventListener('DOMContentLoaded', () => {
     const openModalBtn = document.getElementById('openModalBtn');
     const closeModalBtn = document.getElementById('closeModalBtn');
+    const addUserBtn = document.getElementById('addUserBtn');
     const modal = document.getElementById('myModal');
 
-    // Open modal
-    openModalBtn.addEventListener('click', () => {
-      modal.classList.remove('hidden');
-      modal.classList.add('flex');
-    });
+    if (openModalBtn) {
+      openModalBtn.addEventListener('click', () => {
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+      });
+    }
 
-    // Close modal
     closeModalBtn.addEventListener('click', () => {
       modal.classList.remove('flex');
       modal.classList.add('hidden');
     });
 
-    // Optional: close modal when clicking outside the modal content
     modal.addEventListener('click', (e) => {
       if (e.target === modal) {
         modal.classList.remove('flex');
         modal.classList.add('hidden');
       }
     });
+
+    addUserBtn.addEventListener('click', async () => {
+      const firstName = document.getElementById('first_name').value.trim();
+      const lastName = document.getElementById('last_name').value.trim();
+      const hfId = document.getElementById('table_number').value.trim();
+      const role = document.getElementById('role').value;
+
+      if (!firstName || !lastName || !hfId || !role) {
+        alert('Please fill out all fields.');
+        return;
+      }
+
+      const response = await fetch('../controls/add_user.php', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          first_name: firstName,
+          last_name: lastName,
+          hf_id: hfId,
+          role: role
+        })
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        alert(result.message);
+        document.getElementById('first_name').value = '';
+        document.getElementById('last_name').value = '';
+        document.getElementById('table_number').value = '';
+        document.getElementById('role').value = 'TM';
+
+        modal.classList.remove('flex');
+        modal.classList.add('hidden');
+
+        location.reload();
+      } else {
+        alert(result.message);
+      }
+    });
   });
 </script>
-
 
 
 

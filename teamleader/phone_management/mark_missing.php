@@ -75,7 +75,7 @@ try {
         $mail->Port = SMTP_PORT;
 
         $mail->setFrom(SMTP_FROM, 'Missing Phone Notifier');
-        $mail->addAddress('2021307932@dhvsu.edu.ph', 'Admin');
+        $mail->addAddress('johngilbertabella08@gmail.com', 'Admin');
 
         $mail->isHTML(true);
         $mail->Subject = '📢 Phone Marked as Missing';
