@@ -13,12 +13,12 @@
   // Count total phones in the database
   $totalPhones = $db->phones->countDocuments();
 
-  // Fetch all users with userType = 'TL'
-  $teamLeadersCursor = $usersCollection->find(['userType' => 'TL']);
-  $teamLeaders = [];
-  foreach ($teamLeadersCursor as $tl) {
-    $teamLeaders[] = $tl['first_name']; // Store TL usernames in an array
-  }
+  // // Fetch all users with userType = 'TL'
+  // $teamLeadersCursor = $usersCollection->find(['userType' => 'TL']);
+  // $teamLeaders = [];
+  // foreach ($teamLeadersCursor as $tl) {
+  //   $teamLeaders[] = $tl['first_name'];
+  // }
 
   // Fetch all team members hfId
   $teamMembers = [];
