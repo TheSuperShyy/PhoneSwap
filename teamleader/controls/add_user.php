@@ -1,6 +1,7 @@
 <?php
 require __DIR__ . '/../../dbcon/dbcon.php';
 session_start();
+require '../../dbcon/session_get.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $data = json_decode(file_get_contents("php://input"), true);
@@ -9,28 +10,34 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $lastName = trim($data['last_name'] ?? '');
     $hfId = trim($data['hf_id'] ?? '');
     $role = trim($data['role'] ?? '');
+    $email = trim($data['username'] ?? '');
 
-    if ($firstName && $lastName && $hfId && $role) {
+    if ($firstName && $lastName && $hfId && $role && $email) {
         $userData = [
             'hfId' => $hfId,
             'first_name' => $firstName,
             'last_name' => $lastName,
-            'username' => $firstName . ' ' . $lastName, // Optional: full name
+            'username' => $email,
             'userType' => $role,
             'assigned_phone' => [],
         ];
 
-        if ($role !== 'TM') {
-            $userData['password'] = null;
-            $userData['status'] = null;
-        }
-
+        // Insert the new user
         $insertResult = $usersCollection->insertOne($userData);
 
-        if ($role === 'TM' && isset($_SESSION['hfId'])) {
-            $creatorHfId = $_SESSION['hfId'];
+        // If the new user is a TM, link them to the TL
+        if ($role === 'TM' && isset($_SESSION['user']['hfId'])) {
+            $creatorHfId = $_SESSION['user']['hfId'];
+
+            $tlAccount = $usersCollection->findOne(['hfId' => $creatorHfId, 'userType' => 'TL']);
+            if (!$tlAccount) {
+                echo json_encode(['success' => false, 'message' => 'TL not found in database.']);
+                exit;
+            }
+
+            // Link TM to the TL
             $updateResult = $usersCollection->updateOne(
-                ['hfId' => $creatorHfId, 'userType' => 'TL'],
+                ['hfId' => $creatorHfId],
                 ['$push' => ['team_members' => $hfId]]
             );
 
