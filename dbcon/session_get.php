@@ -1,5 +1,4 @@
 <?php
-
 if (!isset($_SESSION['user'])) {
     echo json_encode(["success" => false, "error" => "User not authenticated."]);
     exit;
@@ -23,15 +22,16 @@ $userStatus = $details['status'] ?? '';
 $assignedPhones = [];
 $teamMembers = []; // To store hfId values of the Team Members
 if ($userRole === 'TL') {
-    $assignedPhones = $details['assigned_phone'] ?? [];
-    $teamMembers = $details['team_members'] ?? [];
-    $phones = $db->phones->find(["serial_number" => ['$in' => $assignedPhones]]);
-} elseif ($userRole === 'admin') {
-    $phones = $db->phones->find(); // Admin sees all phones
+    $teamMembers = $details['team_members'] ?? []; // Get the team_members from TL
 }
 
-
-
-
-
+// Fetch only Team Members assigned to this TL
+if ($userRole === 'TL') {
+    $teamMembersList = $db->users->find([
+        'hfId' => ['$in' => $teamMembers], // Filter based on the hfId in the team_members array
+        'userType' => 'TM' // Ensure only Team Members are shown
+    ]);
+} elseif ($userRole === 'admin') {
+    $teamMembersList = $db->users->find(['userType' => 'TM']); // Admin sees all Team Members
+}
 ?>
