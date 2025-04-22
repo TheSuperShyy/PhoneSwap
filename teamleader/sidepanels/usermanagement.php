@@ -18,6 +18,8 @@ error_reporting(E_ALL);
   <title>User Management</title>
   <link rel="stylesheet" href="../../src/output.css" />
   <script src="https://kit.fontawesome.com/10d593c5dc.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
   <style>
     .dropdown-menu {
       display: none;
@@ -140,7 +142,7 @@ error_reporting(E_ALL);
                     </tr>
                   </thead>
                   <tbody>
-                    <?php foreach ($users as $user): ?>
+                    <?php foreach ($teamMembersList as $user): ?>
                       <tr class="border-b text-left">
                         <td class="py-2 px-4 whitespace-nowrap"><?php echo $user['hfId']; ?></td>
                         <td class="py-2 px-4 whitespace-nowrap">
@@ -270,7 +272,7 @@ error_reporting(E_ALL);
                     </div>
                     <div class="flex flex-col gap-2 w-full">
                       <label for="username" class="text-sm font-medium">Email</label>
-                      <input type="email" id="last_name" placeholder="Email"
+                      <input type="email" id="username" placeholder="Email"
                         class="border border-gray-700 p-2 rounded-lg" />
                     </div>
                   </div>
@@ -360,43 +362,119 @@ error_reporting(E_ALL);
       const lastName = document.getElementById('last_name').value.trim();
       const hfId = document.getElementById('table_number').value.trim();
       const role = document.getElementById('role').value;
+      const username = document.getElementById('username').value.trim();
 
-      if (!firstName || !lastName || !hfId || !role) {
-        alert('Please fill out all fields.');
+      if (!firstName || !lastName || !hfId || !username || !role) {
+        Swal.fire({
+          icon: 'warning',
+          title: 'Missing Fields',
+          text: 'Please fill out all fields.'
+        });
         return;
       }
 
-      const response = await fetch('../controls/add_user.php', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          first_name: firstName,
-          last_name: lastName,
-          hf_id: hfId,
-          role: role
-        })
-      });
+      try {
+        const response = await fetch('../controls/add_user.php', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            first_name: firstName,
+            last_name: lastName,
+            hf_id: hfId,
+            username: username,
+            role: role
+          })
+        });
 
-      const result = await response.json();
+        const result = await response.json();
 
-      if (result.success) {
-        alert(result.message);
-        document.getElementById('first_name').value = '';
-        document.getElementById('last_name').value = '';
-        document.getElementById('table_number').value = '';
-        document.getElementById('role').value = 'TM';
+        if (result.success) {
+          Swal.fire({
+            icon: 'success',
+            title: 'Success',
+            text: result.message,
+            timer: 1500,
+            showConfirmButton: true,
+          }).then(() => {
+            document.getElementById('first_name').value = '';
+            document.getElementById('last_name').value = '';
+            document.getElementById('username').value = '';
+            document.getElementById('table_number').value = '';
+            document.getElementById('role').value = 'TM';
 
-        modal.classList.remove('flex');
-        modal.classList.add('hidden');
+            modal.classList.remove('flex');
+            modal.classList.add('hidden');
 
-        location.reload();
-      } else {
-        alert(result.message);
+            location.reload();
+          });
+        } else {
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: result.message
+          });
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        Swal.fire({
+          icon: 'error',
+          title: 'Request Failed',
+          text: 'Something went wrong. Please try again.'
+        });
       }
     });
   });
+</script>
+
+
+<script>
+document.querySelectorAll('.deleteUserBtn').forEach(button => {
+  button.addEventListener('click', function () {
+    const hfId = this.getAttribute('data-id');
+
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "This action cannot be undone!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Yes, delete it!'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        fetch('../controls/delete_user.php', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ hfId: hfId })
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            Swal.fire({
+              title: 'Deleted!',
+              text: 'User has been deleted.',
+              icon: 'success',
+              timer: 1500,
+              showConfirmButton: true,
+            }).then(() => {
+              location.reload();
+            });
+          } else {
+            Swal.fire('Error', data.message, 'error');
+          }
+        })
+        .catch(error => {
+          console.error('Request failed:', error);
+          Swal.fire('Oops!', 'Something went wrong.', 'error');
+        });
+      }
+    });
+  });
+});
 </script>
 
 
