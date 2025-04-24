@@ -144,7 +144,7 @@ error_reporting(E_ALL);
             <!-- Swap Phones Table -->
             <div class="w-full overflow-x-auto h-full border border-gray-300 rounded-lg shadow-md">
               <table class="w-full bg-white pl-7">
-                <thead>
+                <thead">
                   <tr class="bg-gray-200 border-b border-gray-400 text-sm text-left px-4">
 
                     <th class="py-3 px-4 whitespace-nowrap">Old Phone</th>
@@ -168,7 +168,7 @@ error_reporting(E_ALL);
                       ? $log['timestamp']->toDateTime()->format('F j, Y g:i A')
                       : $log['timestamp'];
                     ?>
-                    <tr class="border-b">
+                    <tr class="border-b user-row">
                       <td class="py-5 px-4 whitespace-nowrap"><?= htmlspecialchars($oldSerial) ?></td>
                       <td class="py-5 px-4 whitespace-nowrap"><?= htmlspecialchars($newSerial) ?></td>
                       <td class="py-5 px-4 whitespace-nowrap"><?= htmlspecialchars($timestamp) ?></td>
@@ -188,27 +188,15 @@ error_reporting(E_ALL);
           </div>
 
           <!-- Pagination -->
-          <div class="flex space-x-2">
-            <button class="rounded-lg px-4 py-2 hover:bg-blue-50 hover:font-semibold">
+          <div class="pagination flex justify-end space-x-2 px-14 mb-4">
+            <button class="rounded-lg px-4 py-2 hover:bg-yellow-100 hover:border-black hover:font-semibold">
               <i class="fa-solid fa-angle-left"></i>
             </button>
-            <button class="rounded-lg px-4 py-2 hover:bg-blue-50 hover:font-semibold">
-              1
-            </button>
-            <button
-              class="border border-gray-300 rounded-lg px-4 py-2 hover:bg-yellow-800 bg-yellow-600 text-white font-medium">
-              2
-            </button>
-            <button class="rounded-lg px-4 py-2 hover:bg-blue-50 hover:font-semibold">
-              3
-            </button>
-            <button class="rounded-lg px-4 py-2 hover:bg-blue-50 hover:font-semibold">
-              4
-            </button>
-            <button class="rounded-lg px-4 py-2 hover:bg-blue-50 hover:font-semibold">
-              5
-            </button>
-            <button class="rounded-lg px-4 py-2 hover:bg-blue-50 hover:font-semibold">
+            <button class="rounded-lg px-4 py-2 hover:bg-yellow-100 hover:border-black hover:font-semibold">1</button>
+            <button class="rounded-lg px-4 py-2 hover:bg-yellow-100 hover:border-black hover:font-semibold">2</button>
+            <button class="rounded-lg px-4 py-2 hover:bg-yellow-100 hover:border-black hover:font-semibold">3</button>
+            <button class="rounded-lg px-4 py-2 hover:bg-yellow-100 hover:border-black hover:font-semibold">4</button>
+            <button class="rounded-lg px-4 py-2 hover:bg-yellow-100 hover:border-black hover:font-semibold">
               <i class="fa-solid fa-angle-right"></i>
             </button>
           </div>
@@ -218,6 +206,63 @@ error_reporting(E_ALL);
   </div>
 </body>
 
+<!-- script for pagination -->
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const rowsPerPage = 5;
+    const tableRows = document.querySelectorAll(".user-row"); // Add class="user-row" to each <tr>
+    const totalPages = Math.ceil(tableRows.length / rowsPerPage);
+
+    const pagination = document.querySelector(".pagination");
+    const paginationButtons = pagination.querySelectorAll("button:not(:first-child):not(:last-child)");
+    const prevBtn = pagination.querySelector("button:first-child");
+    const nextBtn = pagination.querySelector("button:last-child");
+
+    let currentPage = 1;
+
+    function showPage(page) {
+      const start = (page - 1) * rowsPerPage;
+      const end = start + rowsPerPage;
+
+      tableRows.forEach((row, index) => {
+        row.style.display = index >= start && index < end ? "" : "none";
+      });
+
+      paginationButtons.forEach((btn, i) => {
+        if ((i + 1) === page) {
+          btn.classList.add("bg-amber-400", "text-white");
+          btn.classList.remove("hover:bg-yellow-100");
+        } else {
+          btn.classList.remove("bg-amber-400", "text-white");
+          btn.classList.add("hover:bg-yellow-100");
+        }
+      });
+    }
+
+    paginationButtons.forEach((btn, index) => {
+      btn.addEventListener("click", () => {
+        currentPage = index + 1;
+        showPage(currentPage);
+      });
+    });
+
+    prevBtn.addEventListener("click", () => {
+      if (currentPage > 1) {
+        currentPage--;
+        showPage(currentPage);
+      }
+    });
+
+    nextBtn.addEventListener("click", () => {
+      if (currentPage < totalPages) {
+        currentPage++;
+        showPage(currentPage);
+      }
+    });
+
+    showPage(currentPage); // Initial display
+  });
+</script>
 
 
 </html>
