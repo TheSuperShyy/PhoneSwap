@@ -81,7 +81,7 @@ error_reporting(E_ALL);
         <div class="flex flex-row items-center gap-4">
           <!-- Notification Bell -->
           <div class="relative inline-block text-left">
-            
+
           </div>
 
           <!-- profile -->
@@ -141,7 +141,7 @@ error_reporting(E_ALL);
                       <th class="py-3 px-4 border-b">Actions</th>
                     </tr>
                   </thead>
-                  <tbody>
+                  <tbody id="userTableBody">
                     <?php foreach ($teamMembersList as $user): ?>
                       <tr class="border-b text-left">
                         <td class="py-2 px-4 whitespace-nowrap"><?php echo $user['hfId']; ?></td>
@@ -180,7 +180,7 @@ error_reporting(E_ALL);
             </div>
 
             <!-- Modal for EDIT USER -->
-            <div id="myModal1" 
+            <div id="myModal1"
               class="fixed inset-0 flex justify-center items-center hidden bg-black bg-opacity-50 z-50 pt-24 pb-24 h-full laptop:px-80 laptop:w-full phone:w-full phone:px-4">
               <div class="bg-white border border-gray-600 rounded-lg px-6 py-6 shadow-lg relative h-fit w-full">
                 <div class="flex justify-center">
@@ -225,17 +225,19 @@ error_reporting(E_ALL);
                     </div>
                   </div>
                 </div>
-                
+
                 <!-- Buttons -->
                 <div class="flex justify-end space-x-2 mt-4">
-                  <button
+                  <button id="closeEditModalBtn"
                     class="w-28 px-4 py-2 shadow-md shadow-gray-300 text-white bg-red-600 border border-white font-medium rounded-lg">
-                    Deactivate
+                    Close
                   </button>
-                  <button
+
+                  <button id="saveUserBtn"
                     class="px-4 py-2 w-24 shadow-md shadow-gray-300 bg-amber-400 font-medium text-white border border-white rounded-lg">
                     Save
                   </button>
+
                 </div>
               </div>
             </div>
@@ -264,7 +266,7 @@ error_reporting(E_ALL);
                     </div>
                   </div>
                   <div class="flex laptop:flex-row phone:flex-col gap-4">
-                    
+
                     <div class="flex flex-col gap-2 w-full">
                       <label for="table_number" class="text-sm font-medium">HFID</label>
                       <input type="text" id="table_number" placeholder="HFID"
@@ -301,27 +303,23 @@ error_reporting(E_ALL);
             </div>
 
             <!-- Pagination -->
-            <div class="flex space-x-2">
-              <button class="rounded-lg px-4 py-2 hover:bg-blue-50 hover:font-semibold">
+            <div class="flex justify-end space-x-2 px-14 mb-4">
+              <button class="rounded-lg px-4 py-2 hover:bg-yellow-100 hover:border-black hover:font-semibold">
                 <i class="fa-solid fa-angle-left"></i>
               </button>
-              <button class="rounded-lg px-4 py-2 hover:bg-blue-50 hover:font-semibold">
+              <button class="rounded-lg px-4 py-2 hover:bg-yellow-100 hover:border-black hover:font-semibold">
                 1
               </button>
-              <button
-                class="border border-gray-300 rounded-lg px-4 py-2 hover:bg-yellow-800 bg-yellow-600 text-white font-medium">
+              <button class="border border-gray-300 rounded-lg px-4 py-2 bg-amber-400 text-white font-medium">
                 2
               </button>
-              <button class="rounded-lg px-4 py-2 hover:bg-blue-50 hover:font-semibold">
+              <button class="rounded-lg px-4 py-2 hover:bg-yellow-100 hover:border-black hover:font-semibold">
                 3
               </button>
-              <button class="rounded-lg px-4 py-2 hover:bg-blue-50 hover:font-semibold">
+              <button class="rounded-lg px-4 py-2 hover:bg-yellow-100 hover:border-black hover:font-semibold">
                 4
               </button>
-              <button class="rounded-lg px-4 py-2 hover:bg-blue-50 hover:font-semibold">
-                5
-              </button>
-              <button class="rounded-lg px-4 py-2 hover:bg-blue-50 hover:font-semibold">
+              <button class="rounded-lg px-4 py-2 hover:bg-yellow-100 hover:border-black hover:font-semibold">
                 <i class="fa-solid fa-angle-right"></i>
               </button>
             </div>
@@ -430,51 +428,207 @@ error_reporting(E_ALL);
 
 
 <script>
-document.querySelectorAll('.deleteUserBtn').forEach(button => {
-  button.addEventListener('click', function () {
-    const hfId = this.getAttribute('data-id');
+  document.querySelectorAll('.deleteUserBtn').forEach(button => {
+    button.addEventListener('click', function () {
+      const hfId = this.getAttribute('data-id');
 
-    Swal.fire({
-      title: 'Are you sure?',
-      text: "This action cannot be undone!",
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#d33',
-      cancelButtonColor: '#3085d6',
-      confirmButtonText: 'Yes, delete it!'
-    }).then((result) => {
-      if (result.isConfirmed) {
-        fetch('../controls/delete_user.php', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({ hfId: hfId })
-        })
-        .then(response => response.json())
-        .then(data => {
-          if (data.success) {
-            Swal.fire({
-              title: 'Deleted!',
-              text: 'User has been deleted.',
-              icon: 'success',
-              timer: 1500,
-              showConfirmButton: true,
-            }).then(() => {
-              location.reload();
+      Swal.fire({
+        title: 'Are you sure?',
+        text: "This action cannot be undone!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'Yes, delete it!'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          fetch('../controls/delete_user.php', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ hfId: hfId })
+          })
+            .then(response => response.json())
+            .then(data => {
+              if (data.success) {
+                Swal.fire({
+                  title: 'Deleted!',
+                  text: 'User has been deleted.',
+                  icon: 'success',
+                  timer: 1500,
+                  showConfirmButton: true,
+                }).then(() => {
+                  location.reload();
+                });
+              } else {
+                Swal.fire('Error', data.message, 'error');
+              }
+            })
+            .catch(error => {
+              console.error('Request failed:', error);
+              Swal.fire('Oops!', 'Something went wrong.', 'error');
             });
-          } else {
-            Swal.fire('Error', data.message, 'error');
-          }
-        })
-        .catch(error => {
-          console.error('Request failed:', error);
-          Swal.fire('Oops!', 'Something went wrong.', 'error');
-        });
-      }
+        }
+      });
     });
   });
-});
+</script>
+
+
+<!-- edit modal -->
+<script>
+  // Close modal
+  document.getElementById("closeEditModalBtn").addEventListener("click", function () {
+    document.getElementById("myModal1").classList.add("hidden");
+  });
+
+  // Open modal and populate fields
+  document.querySelectorAll(".editUserBtn").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      const modal = document.getElementById("myModal1");
+
+      // Populate modal inputs
+      modal.querySelector("input[name='first_name']").value = btn.dataset.firstname || '';
+      modal.querySelector("input[name='last_name']").value = btn.dataset.lastname || '';
+      modal.querySelector("input[name='email']").value = btn.dataset.email || '';
+      modal.querySelector("select[name='role']").value = btn.dataset.role || 'TM';
+
+      // Store hfId
+      modal.dataset.hfid = btn.dataset.hfid;
+
+      modal.classList.remove("hidden");
+    });
+  });
+
+  // Click outside modal to close
+  window.addEventListener("click", function (e) {
+    const modal = document.getElementById("myModal1");
+    if (e.target === modal) {
+      modal.classList.add("hidden");
+    }
+  });
+
+  // Save button
+  document.getElementById("saveUserBtn").addEventListener("click", function () {
+    const modal = document.getElementById("myModal1");
+
+    const hfId = modal.dataset.hfid;
+    const firstName = modal.querySelector("input[name='first_name']").value;
+    const lastName = modal.querySelector("input[name='last_name']").value;
+    const email = modal.querySelector("input[name='email']").value;
+    const role = modal.querySelector("select[name='role']").value;
+
+    fetch('../controls/update_user.php', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ hfId, first_name: firstName, last_name: lastName, email, role })
+    })
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) {
+          Swal.fire({
+            icon: 'success',
+            title: 'Updated!',
+            text: 'User updated successfully!',
+            timer: 1500,
+            showConfirmButton: false
+          });
+
+          const updatedBtn = document.querySelector(`.editUserBtn[data-hfid='${hfId}']`);
+          if (updatedBtn) {
+            updatedBtn.dataset.firstname = firstName;
+            updatedBtn.dataset.lastname = lastName;
+            updatedBtn.dataset.email = email;
+            updatedBtn.dataset.role = role;
+          }
+
+          const nameCell = document.querySelector(`.user-name[data-hfid='${hfId}']`);
+          if (nameCell) nameCell.textContent = `${firstName} ${lastName}`;
+
+          const emailCell = document.querySelector(`.user-email[data-hfid='${hfId}']`);
+          if (emailCell) emailCell.textContent = email;
+
+          const roleCell = document.querySelector(`.user-role[data-hfid='${hfId}']`);
+          if (roleCell) roleCell.textContent = role;
+
+          modal.classList.add("hidden");
+        } else {
+          Swal.fire({
+            icon: 'error',
+            title: 'Update Failed',
+            text: data.message || 'Something went wrong.'
+          });
+        }
+      })
+      .catch(error => {
+        console.error('Error updating user:', error);
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'Failed to update user. Please try again.'
+        });
+      });
+  });
+</script>
+
+<!-- script for pagination -->
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const rowsPerPage = 5;
+    const tableBody = document.getElementById('userTableBody');
+    const rows = Array.from(tableBody.querySelectorAll('tr'));
+    const totalPages = Math.ceil(rows.length / rowsPerPage);
+
+    let currentPage = 1;
+
+    function showPage(page) {
+      const start = (page - 1) * rowsPerPage;
+      const end = start + rowsPerPage;
+
+      rows.forEach((row, index) => {
+        row.style.display = (index >= start && index < end) ? '' : 'none';
+      });
+
+      document.querySelectorAll('.pagination-btn').forEach((btn, index) => {
+        btn.classList.remove('bg-yellow-600', 'text-white', 'font-medium');
+        btn.classList.add('hover:bg-blue-50', 'hover:font-semibold');
+        if (index + 1 === page) {
+          btn.classList.add('bg-yellow-600', 'text-white', 'font-medium');
+          btn.classList.remove('hover:bg-blue-50', 'hover:font-semibold');
+        }
+      });
+    }
+
+    // Hook up numbered buttons
+    document.querySelectorAll('.pagination-btn').forEach((btn, index) => {
+      btn.addEventListener('click', () => {
+        currentPage = index + 1;
+        showPage(currentPage);
+      });
+    });
+
+    // Prev button
+    document.getElementById('prevBtn').addEventListener('click', () => {
+      if (currentPage > 1) {
+        currentPage--;
+        showPage(currentPage);
+      }
+    });
+
+    // Next button
+    document.getElementById('nextBtn').addEventListener('click', () => {
+      if (currentPage < totalPages) {
+        currentPage++;
+        showPage(currentPage);
+      }
+    });
+
+    // Show the first page initially
+    showPage(currentPage);
+  });
 </script>
 
 

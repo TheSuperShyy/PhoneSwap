@@ -18,11 +18,15 @@ $hfId = $details['hfId'] ?? null;
 $userName = trim(($details['first_name'] ?? '') . ' ' . ($details['last_name'] ?? ''));
 $userRole = $details['userType'] ?? '';
 $userStatus = $details['status'] ?? '';
+$phones = $details['assigned_phone'] ?? [];
 
 $assignedPhones = [];
 $teamMembers = []; // To store hfId values of the Team Members
 if ($userRole === 'TL') {
     $teamMembers = $details['team_members'] ?? []; // Get the team_members from TL
+    $phones = $details['assigned_phone'] ?? []; // Get the assigned phones from TL
+    $assignedPhones = $phones; // It's already an array of serial numbers
+
 }
 
 // Fetch only Team Members assigned to this TL

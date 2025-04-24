@@ -175,20 +175,27 @@ require __DIR__ . '/../../dbcon/session_get.php';
                 </tr>
               </thead>
               <tbody>
-                <?php foreach ($phones as $phone): ?>
-                  <?php if ($phone['status'] === 'Missing'): ?>
-                    <?php
-                    // Check if this phone is assigned to any Team Member
+                <?php foreach ($assignedPhones as $serial): ?>
+                  <?php
+                  // Fetch the full phone document by serial number
+                  $phone = $db->phones->findOne(['serial_number' => $serial]);
+
+                  if (!$phone) {
+                    continue; // Skip if not found
+                  }
+
+                  // Only process if the phone's status is "Missing"
+                  if ($phone['status'] === 'Missing'):
+                    // Check if this phone is assigned to a TM under the TL
                     $assignedUser = $db->users->findOne([
-                      "assigned_phone" => $phone['serial_number'],  // Phone must be assigned to this TM
-                      "userType" => "TM",  // The user must be a Team Member (TM)
-                      "hfId" => ['$in' => $teamMembers]  // The TM's hfId must be in the TL's team_members array
+                      "assigned_phone" => $serial,
+                      "userType" => "TM",
+                      "hfId" => ['$in' => $teamMembers]
                     ]);
                     ?>
                     <tr class="border-b text-left">
                       <td class="py-2 px-4 whitespace-nowrap">
                         <input type="checkbox" name="foundCheckbox" value="<?php echo $phone['serial_number']; ?>">
-
                       </td>
                       <td class="py-2 px-4 flex items-center space-x-2">
                         <?php echo htmlspecialchars($phone['model']); ?>
@@ -197,12 +204,10 @@ require __DIR__ . '/../../dbcon/session_get.php';
                         <?php echo htmlspecialchars($phone['serial_number']); ?>
                       </td>
                       <td class="py-3 px-4 whitespace-nowrap">
-                        <?php if ($phone['status'] === 'Missing'): ?>
-                          <span
-                            class="text-red-800 bg-red-50 border border-red-800 rounded-full py-2 px-6 font-medium shadow-lg">
-                            Missing
-                          </span>
-                        <?php endif; ?>
+                        <span
+                          class="text-red-800 bg-red-50 border border-red-800 rounded-full py-2 px-6 font-medium shadow-lg">
+                          Missing
+                        </span>
                       </td>
                       <td class="py-2 px-4 whitespace-nowrap">
                         <?php if ($assignedUser): ?>
@@ -218,6 +223,7 @@ require __DIR__ . '/../../dbcon/session_get.php';
                   <?php endif; ?>
                 <?php endforeach; ?>
               </tbody>
+
             </table>
           </div>
         </div>

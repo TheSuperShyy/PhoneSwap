@@ -1,7 +1,7 @@
 <?php
 session_start();
 require '../../dbcon/dbcon.php';
-require '../../dbcon/session_get.php'; // 👈 This gives us $userName or $userdetails['username']
+require '../../dbcon/session_get.php';
 header('Content-Type: application/json');
 
 // Get the POST data
@@ -20,32 +20,50 @@ $nameParts = explode(' ', $assignedTo);
 $firstName = $nameParts[0] ?? '';
 $lastName = isset($nameParts[1]) ? $nameParts[1] : '';
 
-// Find the user
-$user = $db->users->findOne([
+// Find the TM user
+$tmUser = $db->users->findOne([
     'userType' => 'TM',
     'first_name' => $firstName,
     'last_name' => $lastName
 ]);
 
-if (!$user) {
-  echo json_encode(["success" => false, "message" => "User not found."]);
+if (!$tmUser) {
+  echo json_encode(["success" => false, "message" => "TM user not found."]);
   exit;
 }
 
-// Remove old phone
-$result = $db->users->updateOne(
-  ['hfId' => $user['hfId']],
+// Find the TL user from session
+$tlUser = $db->users->findOne([
+    'hfId' => $hfId,
+    'userType' => 'TL'
+]);
+
+if (!$tlUser) {
+  echo json_encode(["success" => false, "message" => "TL user not found."]);
+  exit;
+}
+
+// Remove old phone from TM
+$db->users->updateOne(
+  ['hfId' => $tmUser['hfId']],
   ['$pull' => ['assigned_phone' => $oldSerial]]
 );
 
-if ($result->getModifiedCount() === 0) {
-  echo json_encode(["success" => false, "message" => "Failed to remove the old phone."]);
-  exit;
-}
+// Remove old phone from TL
+$db->users->updateOne(
+  ['hfId' => $tlUser['hfId']],
+  ['$pull' => ['assigned_phone' => $oldSerial]]
+);
 
-// Add new phone
-$result = $db->users->updateOne(
-  ['hfId' => $user['hfId']],
+// Add new phone to TM
+$db->users->updateOne(
+  ['hfId' => $tmUser['hfId']],
+  ['$addToSet' => ['assigned_phone' => $newSerial]]
+);
+
+// Add new phone to TL
+$db->users->updateOne(
+  ['hfId' => $tlUser['hfId']],
   ['$addToSet' => ['assigned_phone' => $newSerial]]
 );
 
@@ -54,20 +72,16 @@ date_default_timezone_set('Asia/Manila');
 $timestampPH = date('F j, Y g:i A');
 
 // Insert audit log to 'phone_swap_audit'
-if ($result->getModifiedCount() > 0) {
-  $db->phone_swap_audit->insertOne([
-    'action' => 'swap_phone',
-    'timestamp' => $timestampPH,
-    'performed_by' => '['. $hfId .'] '. $userName  ?? 'Unknown', // 👈 now this should work
-    'details' => [
-      'user' => $assignedTo,
-      'old_serial' => $oldSerial,
-      'new_serial' => $newSerial
-    ]
-  ]);
+$db->phone_swap_audit->insertOne([
+  'action' => 'swap_phone',
+  'timestamp' => $timestampPH,
+  'performed_by' => '['. $hfId .'] '. $userName ?? 'Unknown',
+  'details' => [
+    'user' => $assignedTo,
+    'old_serial' => $oldSerial,
+    'new_serial' => $newSerial
+  ]
+]);
 
-  echo json_encode(["success" => true, "message" => "Phone swap successful!"]);
-} else {
-  echo json_encode(["success" => false, "message" => "Phone swap failed."]);
-}
+echo json_encode(["success" => true, "message" => "Phone swap successful!"]);
 ?>
