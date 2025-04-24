@@ -51,6 +51,8 @@ if ($teamMembers) {
     $data = array_map(function($tm) {
         return [
             'hfId' => $tm['hfId'],
+            'first_name' => $tm['first_name'] ?? '',  // Add first name
+            'last_name' => $tm['last_name'] ?? '',    // Add last name
             'assigned_phone' => $tm['assigned_phone'] ?? [] // Only include assigned_phone if it exists
         ];
     }, $teamMembers);
