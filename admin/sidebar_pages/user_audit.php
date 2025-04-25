@@ -139,27 +139,14 @@ require __DIR__ . '/../../dbcon/session_get.php';
 
 
                         <!-- Pagination -->
-                        <div class="flex space-x-2">
-                            <button class="rounded-lg px-4 py-2 hover:bg-blue-50 hover:font-semibold">
+                        <div class="pagination flex justify-end space-x-2 px-14 mb-4" id="pagination">
+                            <button
+                                class="prev-btn rounded-lg px-4 py-2 hover:bg-yellow-100 hover:border-black hover:font-semibold">
                                 <i class="fa-solid fa-angle-left"></i>
                             </button>
-                            <button class="rounded-lg px-4 py-2 hover:bg-blue-50 hover:font-semibold">
-                                1
-                            </button>
+                            <!-- Numbered buttons will be generated here by JS -->
                             <button
-                                class="border border-gray-300 rounded-lg px-4 py-2 hover:bg-yellow-800 bg-yellow-600 text-white font-medium">
-                                2
-                            </button>
-                            <button class="rounded-lg px-4 py-2 hover:bg-blue-50 hover:font-semibold">
-                                3
-                            </button>
-                            <button class="rounded-lg px-4 py-2 hover:bg-blue-50 hover:font-semibold">
-                                4
-                            </button>
-                            <button class="rounded-lg px-4 py-2 hover:bg-blue-50 hover:font-semibold">
-                                5
-                            </button>
-                            <button class="rounded-lg px-4 py-2 hover:bg-blue-50 hover:font-semibold">
+                                class="next-btn rounded-lg px-4 py-2 hover:bg-yellow-100 hover:border-black hover:font-semibold">
                                 <i class="fa-solid fa-angle-right"></i>
                             </button>
                         </div>
@@ -168,66 +155,127 @@ require __DIR__ . '/../../dbcon/session_get.php';
 </body>
 <!-- audit table -->
 <script>
-    document.addEventListener("DOMContentLoaded", function () {
-        fetch("../audit_log/fetch_user_audit.php")
-            .then(response => {
-                if (!response.ok) {
-                    console.error("Error fetching audit logs. HTTP Status:", response.status);
-                    return Promise.reject('Failed to fetch data.');
-                }
+document.addEventListener("DOMContentLoaded", function () {
+  fetch("../audit_log/fetch_user_audit.php")
+    .then(response => {
+      if (!response.ok) {
+        console.error("Error fetching audit logs. HTTP Status:", response.status);
+        return Promise.reject('Failed to fetch data.');
+      }
+      return response.text().then(text => {
+        try {
+          return JSON.parse(text);
+        } catch (error) {
+          console.error("Failed to parse JSON:", error, text);
+          return Promise.reject('Invalid JSON response.');
+        }
+      });
+    })
+    .then(data => {
+      if (data.success) {
+        const tableBody = document.querySelector("#auditTableBody");
+        tableBody.innerHTML = "";
 
-                return response.text().then(text => {
-                    try {
-                        // Try parsing the response text as JSON
-                        const data = JSON.parse(text);
-                        return data;
-                    } catch (error) {
-                        console.error("Failed to parse JSON:", error, text);
-                        return Promise.reject('Invalid JSON response.');
-                    }
-                });
-            })
-            .then(data => {
-                console.log("Parsed Data:", data);
+        data.data.forEach(log => {
+          const row = `
+            <tr class="border-b text-sm user-row">
+              <td class="py-3 px-4 whitespace-nowrap">${log.date}</td>
+              <td class="py-3 px-4 whitespace-nowrap">${log.user}</td>
+              <td class="py-3 px-4 whitespace-nowrap">${log.action}</td>
+              <td class="py-3 px-4 whitespace-nowrap">${log.details}</td> 
+            </tr>
+          `;
+          tableBody.innerHTML += row;
+        });
 
-                if (data.success) {
-                    const tableBody = document.querySelector("#auditTableBody");
-                    if (!tableBody) {
-                        console.error("Error: Table body with ID 'auditTableBody' not found.");
-                        return;
-                    }
+        // 🔥 INIT PAGINATION AFTER TABLE IS POPULATED
+        initializePagination();
 
-                    tableBody.innerHTML = ""; // Clear previous content
-
-                    // Populate the table with the fetched data
-                    data.data.forEach(log => {
-                        // Ensure required data exists before appending
-                        const date = log.date || "N/A";
-                        const user = log.user || "Unknown User";
-                        const action = log.action || "Unknown Action";
-                        const details = log.details || "No details available";
-
-                        const row = `
-                            <tr class="border-b text-sm">
-                                <td class="py-3 px-4 whitespace-nowrap">${log.date}</td>
-                                <td class="py-3 px-4 whitespace-nowrap">${log.user}</td>
-                                <td class="py-3 px-4 whitespace-nowrap">${log.action}</td>
-                                <td class="py-3 px-4 whitespace-nowrap">${log.details}</td> 
-                            </tr>
-                        `;
-                        tableBody.innerHTML += row;
-                    });
-                } else {
-                    console.error("Failed to fetch audit logs:", data.message);
-                    alert("Error fetching data: " + data.message);
-                }
-            })
-            .catch(error => {
-                console.error("Fetch Error:", error);
-                alert("An error occurred while fetching the data.");
-            });
+      } else {
+        console.error("Failed to fetch audit logs:", data.message);
+        alert("Error fetching data: " + data.message);
+      }
+    })
+    .catch(error => {
+      console.error("Fetch Error:", error);
+      alert("An error occurred while fetching the data.");
     });
-</script>
 
+  function initializePagination() {
+    const rowsPerPage = 5;
+    const tableRows = document.querySelectorAll(".user-row");
+    const totalPages = Math.ceil(tableRows.length / rowsPerPage);
+
+    const pagination = document.querySelector(".pagination");
+    const prevBtn = pagination.querySelector(".prev-btn");
+    const nextBtn = pagination.querySelector(".next-btn");
+
+    let currentPage = 1;
+    let paginationButtons = [];
+
+    if (totalPages === 0) {
+      prevBtn.style.display = "none";
+      nextBtn.style.display = "none";
+      return;
+    }
+
+    function createPaginationButtons() {
+      paginationButtons.forEach(btn => btn.remove());
+      paginationButtons = [];
+
+      for (let i = 1; i <= totalPages; i++) {
+        const btn = document.createElement("button");
+        btn.textContent = i;
+        btn.className = "rounded-lg px-4 py-2 hover:bg-yellow-100 hover:border-black hover:font-semibold page-btn";
+
+        pagination.insertBefore(btn, nextBtn);
+
+        btn.addEventListener("click", () => {
+          currentPage = i;
+          showPage(currentPage);
+        });
+
+        paginationButtons.push(btn);
+      }
+    }
+
+    function showPage(page) {
+      const start = (page - 1) * rowsPerPage;
+      const end = start + rowsPerPage;
+
+      tableRows.forEach((row, index) => {
+        row.style.display = index >= start && index < end ? "" : "none";
+      });
+
+      paginationButtons.forEach((btn, i) => {
+        if ((i + 1) === page) {
+          btn.classList.add("bg-amber-400", "text-white");
+          btn.classList.remove("hover:bg-yellow-100");
+        } else {
+          btn.classList.remove("bg-amber-400", "text-white");
+          btn.classList.add("hover:bg-yellow-100");
+        }
+      });
+    }
+
+    prevBtn.addEventListener("click", () => {
+      if (currentPage > 1) {
+        currentPage--;
+        showPage(currentPage);
+      }
+    });
+
+    nextBtn.addEventListener("click", () => {
+      if (currentPage < totalPages) {
+        currentPage++;
+        showPage(currentPage);
+      }
+    });
+
+    createPaginationButtons();
+    showPage(currentPage);
+  }
+});
+</script>
 
 </html>
