@@ -153,35 +153,35 @@ error_reporting(E_ALL);
                     <th class="py-3 px-4 whitespace-nowrap">Actions</th>
                     <th class="py-3 px-4 whitespace-nowrap">Performed By</th>
                   </tr>
-                </thead>
-                <tbody>
-                  <?php
-                  $auditLogs = $phoneswapauditCollection->find([], ['sort' => ['timestamp' => -1]]); // latest first
-                  
-                  foreach ($auditLogs as $log):
-                    // Access the old and new serial from the 'details' array field inside the log
-                    $oldSerial = isset($log['details']['old_serial']) && !empty($log['details']['old_serial']) ? $log['details']['old_serial'] : 'N/A';
-                    $newSerial = isset($log['details']['new_serial']) && !empty($log['details']['new_serial']) ? $log['details']['new_serial'] : 'N/A';
+                  </thead>
+                  <tbody>
+                    <?php
+                    $auditLogs = $phoneswapauditCollection->find([], ['sort' => ['timestamp' => -1]]); // latest first
+                    
+                    foreach ($auditLogs as $log):
+                      // Access the old and new serial from the 'details' array field inside the log
+                      $oldSerial = isset($log['details']['old_serial']) && !empty($log['details']['old_serial']) ? $log['details']['old_serial'] : 'N/A';
+                      $newSerial = isset($log['details']['new_serial']) && !empty($log['details']['new_serial']) ? $log['details']['new_serial'] : 'N/A';
 
-                    $performedBy = $log['performed_by'] ?? 'Unknown';
-                    $timestamp = $log['timestamp'] instanceof MongoDB\BSON\UTCDateTime
-                      ? $log['timestamp']->toDateTime()->format('F j, Y g:i A')
-                      : $log['timestamp'];
-                    ?>
-                    <tr class="border-b user-row">
-                      <td class="py-5 px-4 whitespace-nowrap"><?= htmlspecialchars($oldSerial) ?></td>
-                      <td class="py-5 px-4 whitespace-nowrap"><?= htmlspecialchars($newSerial) ?></td>
-                      <td class="py-5 px-4 whitespace-nowrap"><?= htmlspecialchars($timestamp) ?></td>
-                      <td class="py-2 px-4 whitespace-nowrap">
-                        <span
-                          class="text-green-800 bg-green-50 border border-green-800 rounded-full bg-opacity-100 py-2 px-6 font-medium shadow-lg">
-                          Swapped
-                        </span>
-                      </td>
-                      <td class="py-5 px-4 whitespace-nowrap"><?= htmlspecialchars($performedBy) ?></td>
-                    </tr>
-                  <?php endforeach; ?>
-                </tbody>
+                      $performedBy = $log['performed_by'] ?? 'Unknown';
+                      $timestamp = $log['timestamp'] instanceof MongoDB\BSON\UTCDateTime
+                        ? $log['timestamp']->toDateTime()->format('F j, Y g:i A')
+                        : $log['timestamp'];
+                      ?>
+                      <tr class="border-b user-row">
+                        <td class="py-5 px-4 whitespace-nowrap"><?= htmlspecialchars($oldSerial) ?></td>
+                        <td class="py-5 px-4 whitespace-nowrap"><?= htmlspecialchars($newSerial) ?></td>
+                        <td class="py-5 px-4 whitespace-nowrap"><?= htmlspecialchars($timestamp) ?></td>
+                        <td class="py-2 px-4 whitespace-nowrap">
+                          <span
+                            class="text-green-800 bg-green-50 border border-green-800 rounded-full bg-opacity-100 py-2 px-6 font-medium shadow-lg">
+                            Swapped
+                          </span>
+                        </td>
+                        <td class="py-5 px-4 whitespace-nowrap"><?= htmlspecialchars($performedBy) ?></td>
+                      </tr>
+                    <?php endforeach; ?>
+                  </tbody>
 
               </table>
             </div>
@@ -189,14 +189,14 @@ error_reporting(E_ALL);
 
           <!-- Pagination -->
           <div class="pagination flex justify-end space-x-2 px-14 mb-4">
-            <button class="rounded-lg px-4 py-2 hover:bg-yellow-100 hover:border-black hover:font-semibold">
+            <button class="prev-btn rounded-lg px-4 py-2 hover:bg-yellow-100 hover:border-black hover:font-semibold">
               <i class="fa-solid fa-angle-left"></i>
             </button>
             <button class="rounded-lg px-4 py-2 hover:bg-yellow-100 hover:border-black hover:font-semibold">1</button>
             <button class="rounded-lg px-4 py-2 hover:bg-yellow-100 hover:border-black hover:font-semibold">2</button>
             <button class="rounded-lg px-4 py-2 hover:bg-yellow-100 hover:border-black hover:font-semibold">3</button>
             <button class="rounded-lg px-4 py-2 hover:bg-yellow-100 hover:border-black hover:font-semibold">4</button>
-            <button class="rounded-lg px-4 py-2 hover:bg-yellow-100 hover:border-black hover:font-semibold">
+            <button class="next-btn rounded-lg px-4 py-2 hover:bg-yellow-100 hover:border-black hover:font-semibold">
               <i class="fa-solid fa-angle-right"></i>
             </button>
           </div>
@@ -214,9 +214,9 @@ error_reporting(E_ALL);
     const totalPages = Math.ceil(tableRows.length / rowsPerPage);
 
     const pagination = document.querySelector(".pagination");
-    const paginationButtons = pagination.querySelectorAll("button:not(:first-child):not(:last-child)");
-    const prevBtn = pagination.querySelector("button:first-child");
-    const nextBtn = pagination.querySelector("button:last-child");
+    const prevBtn = pagination.querySelector(".prev-btn");
+    const nextBtn = pagination.querySelector(".next-btn");
+    const paginationButtons = pagination.querySelectorAll("button:not(.prev-btn):not(.next-btn)");
 
     let currentPage = 1;
 
