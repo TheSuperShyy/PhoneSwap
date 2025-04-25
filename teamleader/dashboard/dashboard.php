@@ -727,6 +727,13 @@ require __DIR__ . '/../../dbcon/session_get.php';
     let currentPage = 1;
     let paginationButtons = [];
 
+    if (totalPages === 0) {
+      prevBtn.style.display = "none";
+      nextBtn.style.display = "none";
+      return; // No need to proceed further
+    }
+
+
     function createPaginationButtons() {
       // Remove existing number buttons if any
       paginationButtons.forEach(btn => btn.remove());
@@ -736,7 +743,7 @@ require __DIR__ . '/../../dbcon/session_get.php';
         const btn = document.createElement("button");
         btn.textContent = i;
         btn.className = "rounded-lg px-4 py-2 hover:bg-yellow-100 hover:border-black hover:font-semibold page-btn";
-        
+
         // Insert the button before the "next" button
         pagination.insertBefore(btn, nextBtn);
 
