@@ -113,6 +113,7 @@ require __DIR__ . '/../../dbcon/session_get.php';
         <!-- contents -->
         <div class="flex flex-col gap-1 items-end justify-center w-full mx-auto">
           <div class="flex flex-col gap-3 mx-auto py-4 w-full">
+            
             <!-- Filter & Search -->
             <div class="flex laptop:flex-row phone:flex-col gap-2 w-full">
               <div class="flex justify-start">
@@ -155,94 +156,44 @@ require __DIR__ . '/../../dbcon/session_get.php';
                   </tr>
                 </thead>
                 <tbody>
-                  <tr class=" border-b">
-                    <td class="py-5 px-4 whitespace-nowrap">Iphone 8</td>
-                    <td class="py-5 px-4 whitespace-nowrap">
-                      I8-2024110023
-                    </td>
-                    <td class="py-2 px-4 whitespace-nowrap">
-                      <span
-                        class="text-green-800 bg-green-100 border border-green-800 rounded-full bg-opacity-100 py-2 px-6 font-medium shadow-lg">Active</span>
-                    </td>
+                    <?php
+                    $auditLogs = $phoneswapauditCollection->find([], ['sort' => ['timestamp' => -1]]); // latest first
+                    
+                    foreach ($auditLogs as $log):
+                      // Access the old and new serial from the 'details' array field inside the log
+                      $oldSerial = isset($log['details']['old_serial']) && !empty($log['details']['old_serial']) ? $log['details']['old_serial'] : 'N/A';
+                      $newSerial = isset($log['details']['new_serial']) && !empty($log['details']['new_serial']) ? $log['details']['new_serial'] : 'N/A';
 
-                    <td class="py-5 px-4 whitespace-nowrap">Yul Grant Gatchalian</td>
-                    <td class="py-5 px-4 whitespace-nowrap">Table 1</td>
-                  </tr>
-                  <tr class=" border-b">
-                    <td class="py-5 px-4 whitespace-nowrap">Iphone 8</td>
-                    <td class="py-5 px-4 whitespace-nowrap">
-                      I8-2024110023
-                    </td>
-                    <td class="py-2 px-4 whitespace-nowrap">
-                      <span
-                        class="text-green-800 bg-green-100 border border-green-800 rounded-full bg-opacity-100 py-2 px-6 font-medium shadow-lg">Active</span>
-                    </td>
-                    <td class="py-5 px-4 whitespace-nowrap">Cylie Gonzales</td>
-                    <td class="py-5 px-4 whitespace-nowrap">Table 2</td>
-                  </tr>
-                  <tr class=" border-b">
-                    <td class="py-5 px-4 whitespace-nowrap">Iphone 8</td>
-                    <td class="py-5 px-4 whitespace-nowrap">
-                      I8-2024110023
-                    </td>
-                    <td class="py-2 px-4 whitespace-nowrap">
-                      <span
-                        class="text-green-800 bg-green-100 border border-green-800 rounded-full bg-opacity-100 py-2 px-6 font-medium shadow-lg">Active</span>
-                    </td>
-                    <td class="py-5 px-4 whitespace-nowrap">Kian David</td>
-                    <td class="py-5 px-4 whitespace-nowrap">Table 2</td>
-                  </tr>
-                  <tr class=" border-b">
-                    <td class="py-5 px-4 whitespace-nowrap">Iphone 8</td>
-                    <td class="py-5 px-4 whitespace-nowrap">
-                      I8-2024110023
-                    </td>
-                    <td class="py-2 px-4 whitespace-nowrap">
-                      <span
-                        class="text-green-800 bg-green-100 border border-green-800 rounded-full bg-opacity-100 py-2 px-6 font-medium shadow-lg">Active</span>
-                    </td>
-                    <td class="py-5 px-4 whitespace-nowrap">Miko Basilio</td>
-                    <td class="py-5 px-4 whitespace-nowrap">Table 2</td>
-                  </tr>
-                  <tr class=" border-b">
-                    <td class="py-5 px-4 whitespace-nowrap">Iphone 8</td>
-                    <td class="py-5 px-4 whitespace-nowrap">
-                      I8-2024110023
-                    </td>
-                    <td class="py-2 px-4 whitespace-nowrap">
-                      <span
-                        class="text-green-800 bg-green-100 border border-green-800 rounded-full bg-opacity-100 py-2 px-6 font-medium shadow-lg">Active</span>
-                    </td>
-                    <td class="py-5 px-4 whitespace-nowrap">Daniel Quinzy Digo</td>
-                    <td class="py-5 px-4 whitespace-nowrap">Table 1</td>
-                  </tr>
-                </tbody>
+                      $performedBy = $log['performed_by'] ?? 'Unknown';
+                      $timestamp = $log['timestamp'] instanceof MongoDB\BSON\UTCDateTime
+                        ? $log['timestamp']->toDateTime()->format('F j, Y g:i A')
+                        : $log['timestamp'];
+                      ?>
+                      <tr class="border-b user-row">
+                        <td class="py-5 px-4 whitespace-nowrap"><?= htmlspecialchars($oldSerial) ?></td>
+                        <td class="py-5 px-4 whitespace-nowrap"><?= htmlspecialchars($newSerial) ?></td>
+                        <td class="py-5 px-4 whitespace-nowrap"><?= htmlspecialchars($timestamp) ?></td>
+                        <td class="py-2 px-4 whitespace-nowrap">
+                          <span
+                            class="text-green-800 bg-green-50 border border-green-800 rounded-full bg-opacity-100 py-2 px-6 font-medium shadow-lg">
+                            Swapped
+                          </span>
+                        </td>
+                        <td class="py-5 px-4 whitespace-nowrap"><?= htmlspecialchars($performedBy) ?></td>
+                      </tr>
+                    <?php endforeach; ?>
+                  </tbody>
               </table>
             </div>
           </div>
 
           <!-- Pagination -->
-          <div class="flex space-x-2">
-            <button class="rounded-lg px-4 py-2 hover:bg-blue-50 hover:font-semibold">
+          <div class="pagination flex justify-end space-x-2 px-14 mb-4" id="pagination">
+            <button class="prev-btn rounded-lg px-4 py-2 hover:bg-yellow-100 hover:border-black hover:font-semibold">
               <i class="fa-solid fa-angle-left"></i>
             </button>
-            <button class="rounded-lg px-4 py-2 hover:bg-blue-50 hover:font-semibold">
-              1
-            </button>
-            <button
-              class="border border-gray-300 rounded-lg px-4 py-2 hover:bg-yellow-800 bg-yellow-600 text-white font-medium">
-              2
-            </button>
-            <button class="rounded-lg px-4 py-2 hover:bg-blue-50 hover:font-semibold">
-              3
-            </button>
-            <button class="rounded-lg px-4 py-2 hover:bg-blue-50 hover:font-semibold">
-              4
-            </button>
-            <button class="rounded-lg px-4 py-2 hover:bg-blue-50 hover:font-semibold">
-              5
-            </button>
-            <button class="rounded-lg px-4 py-2 hover:bg-blue-50 hover:font-semibold">
+            <!-- Numbered buttons will be generated here by JS -->
+            <button class="next-btn rounded-lg px-4 py-2 hover:bg-yellow-100 hover:border-black hover:font-semibold">
               <i class="fa-solid fa-angle-right"></i>
             </button>
           </div>
@@ -250,16 +201,7 @@ require __DIR__ . '/../../dbcon/session_get.php';
       </div>
 </body>
 
-<!-- Script for notification bell dropdown-->
-<script>
-  const notificationButton = document.getElementById("notificationButton");
-  const notificationDropdown = document.getElementById(
-    "notificationDropdown"
-  );
-
-  notificationButton.addEventListener("click", () => {
-    notificationDropdown.classList.toggle("hidden");
-  });
-</script>
+<!-- script for pagination -->
+<script src="../../scripts/script.js"> </script>
 
 </html>
