@@ -155,13 +155,14 @@ $teamLeaders = $teamLeaders ?? [];
                       <th class="py-3 px-4 border-b whitespace-nowrap">Complete Name</th>
                       <th class="py-3 px-4 border-b whitespace-nowrap">Position</th>
                       <th class="py-3 px-4 border-b whitespace-nowrap">Email</th>
+                      <th class="py-3 px-4 border-b whitespace-nowrap">Status</th>
                       <th class="py-3 px-4 border-b whitespace-nowrap">Action</th>
                     </tr>
                   </thead>
                   <tbody>
                     <?php if (!empty($teamLeaders)): ?>
                       <?php foreach ($teamLeaders as $tl): ?>
-                        <tr class="border-b text-left">
+                        <tr class="border-b text-left user-row">
                           <td class="py-2 px-4 whitespace-nowrap"><?php echo $tl["hfId"] ?? "UNKNOWN"; ?></td>
                           <td class="py-2 px-4 whitespace-nowrap">
                             <?php echo ($tl["first_name"] ?? "UNKNOWN") . " " . ($tl["last_name"] ?? ""); ?>
@@ -169,9 +170,18 @@ $teamLeaders = $teamLeaders ?? [];
                           <td class="py-2 px-4 whitespace-nowrap">Team Leader</td>
                           <td class="py-2 px-4 whitespace-nowrap"><?php echo $tl["email"] ?? "No Email"; ?></td>
                           <!-- Hidden status column -->
-                          <td class="text-center space-x-2 status-cell" style="display: none;">
-                            <?php echo $tl["status"] ?? "Unknown"; ?>
+                          <?php
+                          $tlstatus = $tl["status"] ?? "Unknown";
+                          $statusClass = $tlstatus === 'deactivated'
+                            ? 'text-red-800 bg-red-100 border border-red-800 rounded-full py-2 px-6 font-medium shadow-lg'
+                            : 'text-green-800 bg-green-100 border border-green-800 rounded-full py-2 px-6 font-medium shadow-lg';
+                          ?>
+                          <td class="py-2 px-4 whitespace-nowrap">
+                            <span class="<?php echo $statusClass; ?>">
+                              <?php echo ucfirst($tlstatus); ?>
+                            </span>
                           </td>
+
                           <td class="text-center space-x-2">
                             <div class="flex flex-row py-2 px-4 gap-1">
                               <button
@@ -332,27 +342,12 @@ $teamLeaders = $teamLeaders ?? [];
 
 
             <!-- Pagination -->
-            <div class="flex space-x-2">
-              <button class="rounded-lg px-4 py-2 hover:bg-blue-50 hover:font-semibold">
+            <div class="pagination flex justify-end space-x-2 px-14 mb-4" id="pagination">
+              <button class="prev-btn rounded-lg px-4 py-2 hover:bg-yellow-100 hover:border-black hover:font-semibold">
                 <i class="fa-solid fa-angle-left"></i>
               </button>
-              <button class="rounded-lg px-4 py-2 hover:bg-blue-50 hover:font-semibold">
-                1
-              </button>
-              <button
-                class="border border-gray-300 rounded-lg px-4 py-2 hover:bg-yellow-800 bg-yellow-600 text-white font-medium">
-                2
-              </button>
-              <button class="rounded-lg px-4 py-2 hover:bg-blue-50 hover:font-semibold">
-                3
-              </button>
-              <button class="rounded-lg px-4 py-2 hover:bg-blue-50 hover:font-semibold">
-                4
-              </button>
-              <button class="rounded-lg px-4 py-2 hover:bg-blue-50 hover:font-semibold">
-                5
-              </button>
-              <button class="rounded-lg px-4 py-2 hover:bg-blue-50 hover:font-semibold">
+              <!-- Numbered buttons will be generated here by JS -->
+              <button class="next-btn rounded-lg px-4 py-2 hover:bg-yellow-100 hover:border-black hover:font-semibold">
                 <i class="fa-solid fa-angle-right"></i>
               </button>
             </div>
@@ -425,63 +420,63 @@ $teamLeaders = $teamLeaders ?? [];
 
         // Send data to PHP backend
         fetch("../user_management/add_user.php", {
-  method: "POST",
-  headers: { "Content-Type": "application/json" },
-  body: JSON.stringify({
-    first_name: firstName,
-    last_name: lastName,
-    username: email,
-    hfId: hfId,
-    userType: role,
-    team_members: role === "TL" ? [] : undefined,
-    assigned_phone: []
-  }),
-})
-  .then(response => response.text())
-  .then(data => {
-    console.log("Raw Response:", data);
-    // Attempt to parse the response if it's valid JSON
-    try {
-      const parsedData = JSON.parse(data);
-      console.log("Parsed JSON:", parsedData);
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            first_name: firstName,
+            last_name: lastName,
+            username: email,
+            hfId: hfId,
+            userType: role,
+            team_members: role === "TL" ? [] : undefined,
+            assigned_phone: []
+          }),
+        })
+          .then(response => response.text())
+          .then(data => {
+            console.log("Raw Response:", data);
+            // Attempt to parse the response if it's valid JSON
+            try {
+              const parsedData = JSON.parse(data);
+              console.log("Parsed JSON:", parsedData);
 
-      if (parsedData.success) {
-        Swal.fire({
-          icon: "success",
-          title: "User Added!",
-          text: "The user has been successfully added.",
-          confirmButtonColor: "#3085d6"
-        }).then(() => {
-          console.log("Page will refresh now...");
-          location.reload();
-        });
-      } else {
-        Swal.fire({
-          icon: "error",
-          title: "Error",
-          text: parsedData.message,
-          confirmButtonColor: "#d33"
-        });
-      }
-    } catch (error) {
-      console.error("Failed to parse JSON:", error);
-      Swal.fire({
-        icon: "error",
-        title: "Failed to Add User",
-        text: "The server response is invalid. Please try again.",
-        confirmButtonColor: "#d33"
-      });
-    }
-  })
-  .catch(error => {
-    console.error("Fetch Error:", error);
-    Swal.fire({
-      icon: "error",
-      title: "Failed to Add User",
-      text: "An error occurred. Please try again.",
-      confirmButtonColor: "#d33"
-    });
-  });
+              if (parsedData.success) {
+                Swal.fire({
+                  icon: "success",
+                  title: "User Added!",
+                  text: "The user has been successfully added.",
+                  confirmButtonColor: "#3085d6"
+                }).then(() => {
+                  console.log("Page will refresh now...");
+                  location.reload();
+                });
+              } else {
+                Swal.fire({
+                  icon: "error",
+                  title: "Error",
+                  text: parsedData.message,
+                  confirmButtonColor: "#d33"
+                });
+              }
+            } catch (error) {
+              console.error("Failed to parse JSON:", error);
+              Swal.fire({
+                icon: "error",
+                title: "Failed to Add User",
+                text: "The server response is invalid. Please try again.",
+                confirmButtonColor: "#d33"
+              });
+            }
+          })
+          .catch(error => {
+            console.error("Fetch Error:", error);
+            Swal.fire({
+              icon: "error",
+              title: "Failed to Add User",
+              text: "An error occurred. Please try again.",
+              confirmButtonColor: "#d33"
+            });
+          });
 
       });
     } else {
@@ -494,186 +489,186 @@ $teamLeaders = $teamLeaders ?? [];
 
 <!-- Script for edit modal -->
 <script>
- document.addEventListener("DOMContentLoaded", function () {
-  const modal = document.getElementById("myModal1");
-  const statusSelect = document.getElementById("status");
-  const closeModalBtn = document.getElementById("closeModalBtn1");
-  const saveUserBtn = document.getElementById("saveUserBtn");
-  const editButtons = document.querySelectorAll(".openEditModalBtn");
+  document.addEventListener("DOMContentLoaded", function () {
+    const modal = document.getElementById("myModal1");
+    const statusSelect = document.getElementById("status");
+    const closeModalBtn = document.getElementById("closeModalBtn1");
+    const saveUserBtn = document.getElementById("saveUserBtn");
+    const editButtons = document.querySelectorAll(".openEditModalBtn");
 
-  // Get modal input fields by their IDs
-  const firstNameInput = modal.querySelector("#firstName");
-  const lastNameInput = modal.querySelector("#lastName");
-  const emailInput = modal.querySelector("#email");
-  const hfIdInput = modal.querySelector("#hfId");
-  const roleInput = modal.querySelector("#role");
-  const statusInput = modal.querySelector("#status");
-  const userIdInput = document.getElementById("userId");
+    // Get modal input fields by their IDs
+    const firstNameInput = modal.querySelector("#firstName");
+    const lastNameInput = modal.querySelector("#lastName");
+    const emailInput = modal.querySelector("#email");
+    const hfIdInput = modal.querySelector("#hfId");
+    const roleInput = modal.querySelector("#role");
+    const statusInput = modal.querySelector("#status");
+    const userIdInput = document.getElementById("userId");
 
-  let currentRow = null;
-  let currentStatus = ""; // Store the initial status
+    let currentRow = null;
+    let currentStatus = ""; // Store the initial status
 
-  // Open modal and populate data
-  editButtons.forEach((button) => {
-    button.addEventListener("click", function () {
-      currentRow = this.closest("tr");
+    // Open modal and populate data
+    editButtons.forEach((button) => {
+      button.addEventListener("click", function () {
+        currentRow = this.closest("tr");
+        if (!currentRow) {
+          console.error("No row found!");
+          return;
+        }
+
+        const userId = this.getAttribute("data-id"); // Fetch _id from data-id
+        const hfId = currentRow.cells[0].innerText.trim();
+        const fullName = currentRow.cells[1].innerText.trim();
+        const nameParts = fullName.split(" ");
+        const firstName = nameParts.length > 1 ? nameParts.slice(0, -1).join(" ") : nameParts[0];
+        const lastName = nameParts.length > 1 ? nameParts[nameParts.length - 1] : "";
+        const role = currentRow.cells[2].innerText.trim();
+        const email = currentRow.cells[3].innerText.trim();
+        const status = this.getAttribute("data-status"); // Use data-status from the button
+
+        currentStatus = status; // ✅ Store initial status
+
+        // Debugging log
+        console.log("Editing User:", { hfId, firstName, lastName, role, email, status, userId });
+
+        // Populate modal inputs
+        hfIdInput.value = hfId;
+        firstNameInput.value = firstName;
+        lastNameInput.value = lastName;
+        emailInput.value = email;
+        roleInput.value = role;
+
+        // Set the status dropdown to the correct value
+        statusInput.value = status === "active" ? "active" : "deactivated"; // Make sure to set the correct value
+
+        window.currentUserId = userId;
+
+        // Show modal
+        modal.classList.remove("hidden");
+      });
+    });
+
+    // Save button event listener
+    saveUserBtn.addEventListener("click", function () {
       if (!currentRow) {
-        console.error("No row found!");
+        console.error("No row selected for update!");
         return;
       }
 
-      const userId = this.getAttribute("data-id"); // Fetch _id from data-id
-      const hfId = currentRow.cells[0].innerText.trim();
-      const fullName = currentRow.cells[1].innerText.trim();
-      const nameParts = fullName.split(" ");
-      const firstName = nameParts.length > 1 ? nameParts.slice(0, -1).join(" ") : nameParts[0];
-      const lastName = nameParts.length > 1 ? nameParts[nameParts.length - 1] : "";
-      const role = currentRow.cells[2].innerText.trim();
-      const email = currentRow.cells[3].innerText.trim();
-      const status = this.getAttribute("data-status"); // Use data-status from the button
+      // Get updated values from modal inputs
+      const updatedHfId = hfIdInput.value.trim();
+      const updatedFirstName = firstNameInput.value.trim();
+      const updatedLastName = lastNameInput.value.trim();
+      const updatedRole = roleInput.value.trim();
+      const updatedEmail = emailInput.value.trim();
+      const updatedStatus = statusInput.value.trim();
 
-      currentStatus = status; // ✅ Store initial status
+      // Validate inputs
+      if (!updatedHfId || !updatedFirstName || !updatedLastName || !updatedEmail || !updatedRole) {
+        Swal.fire({
+          icon: "warning",
+          title: "Missing Data!",
+          text: "Please fill in all fields before saving.",
+        });
+        return;
+      }
 
-      // Debugging log
-      console.log("Editing User:", { hfId, firstName, lastName, role, email, status, userId });
+      // Check if status is the same as before
+      if (updatedStatus === currentStatus) {
+        Swal.fire({
+          icon: "info",
+          title: "No Changes",
+          text: "The status is the same as before, no changes have been made.",
+        }).then(() => {
+          window.location.reload(); // Reload the page after popup
+        });
+        return;
+      }
 
-      // Populate modal inputs
-      hfIdInput.value = hfId;
-      firstNameInput.value = firstName;
-      lastNameInput.value = lastName;
-      emailInput.value = email;
-      roleInput.value = role;
+      // Update table row (optional visual update)
+      currentRow.cells[0].innerText = updatedHfId;
+      currentRow.cells[1].innerText = `${updatedFirstName} ${updatedLastName}`;
+      currentRow.cells[2].innerText = updatedRole;
+      currentRow.cells[3].innerText = updatedEmail;
+      const statusCell = currentRow.cells[4];
+      const statusText = statusCell.querySelector(".status-text");
 
-      // Set the status dropdown to the correct value
-      statusInput.value = status === "active" ? "active" : "deactivated"; // Make sure to set the correct value
+      if (statusText) {
+        statusText.innerText = updatedStatus; // ✅ Update text only
+      }
 
-      window.currentUserId = userId;
+      modal.classList.add("hidden");
 
-      // Show modal
-      modal.classList.remove("hidden");
-    });
-  });
+      const userData = {
+        userId: window.currentUserId,
+        hfId: updatedHfId,
+        firstName: updatedFirstName,
+        lastName: updatedLastName,
+        username: updatedEmail,
+        role: updatedRole,
+        status: updatedStatus,
+      };
 
-  // Save button event listener
-  saveUserBtn.addEventListener("click", function () {
-    if (!currentRow) {
-      console.error("No row selected for update!");
-      return;
-    }
+      console.log("Sending Data:", userData);
 
-    // Get updated values from modal inputs
-    const updatedHfId = hfIdInput.value.trim();
-    const updatedFirstName = firstNameInput.value.trim();
-    const updatedLastName = lastNameInput.value.trim();
-    const updatedRole = roleInput.value.trim();
-    const updatedEmail = emailInput.value.trim();
-    const updatedStatus = statusInput.value.trim();
+      fetch("../user_management/update_user.php", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(userData),
+      })
+        .then(response => response.text())
+        .then(text => {
+          console.log("Raw Response:", text);
+          try {
+            const data = JSON.parse(text);
+            console.log("Server Response:", data);
 
-    // Validate inputs
-    if (!updatedHfId || !updatedFirstName || !updatedLastName || !updatedEmail || !updatedRole) {
-      Swal.fire({
-        icon: "warning",
-        title: "Missing Data!",
-        text: "Please fill in all fields before saving.",
-      });
-      return;
-    }
-
-    // Check if status is the same as before
-    if (updatedStatus === currentStatus) {
-      Swal.fire({
-        icon: "info",
-        title: "No Changes",
-        text: "The status is the same as before, no changes have been made.",
-      }).then(() => {
-        window.location.reload(); // Reload the page after popup
-      });
-      return;
-    }
-
-    // Update table row (optional visual update)
-    currentRow.cells[0].innerText = updatedHfId;
-    currentRow.cells[1].innerText = `${updatedFirstName} ${updatedLastName}`;
-    currentRow.cells[2].innerText = updatedRole;
-    currentRow.cells[3].innerText = updatedEmail;
-    const statusCell = currentRow.cells[4];
-    const statusText = statusCell.querySelector(".status-text");
-
-    if (statusText) {
-      statusText.innerText = updatedStatus; // ✅ Update text only
-    }
-
-    modal.classList.add("hidden");
-
-    const userData = {
-      userId: window.currentUserId,
-      hfId: updatedHfId,
-      firstName: updatedFirstName,
-      lastName: updatedLastName,
-      username: updatedEmail,
-      role: updatedRole,
-      status: updatedStatus,
-    };
-
-    console.log("Sending Data:", userData);
-
-    fetch("../user_management/update_user.php", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(userData),
-    })
-      .then(response => response.text())
-      .then(text => {
-        console.log("Raw Response:", text);
-        try {
-          const data = JSON.parse(text);
-          console.log("Server Response:", data);
-
-          if (data.success) {
-            Swal.fire({
-              icon: "success",
-              title: "Success",
-              text: data.message,
-            }).then(() => location.reload());
-          } else {
-            if (data.message === 'No changes made') {
+            if (data.success) {
               Swal.fire({
-                icon: "info",
-                title: "No Changes Were Made",
-                text: "The status remains the same as before.",
-              });
-            } else {
-              Swal.fire({
-                icon: "error",
-                title: "Error",
+                icon: "success",
+                title: "Success",
                 text: data.message,
-              });
+              }).then(() => location.reload());
+            } else {
+              if (data.message === 'No changes made') {
+                Swal.fire({
+                  icon: "info",
+                  title: "No Changes Were Made",
+                  text: "The status remains the same as before.",
+                });
+              } else {
+                Swal.fire({
+                  icon: "error",
+                  title: "Error",
+                  text: data.message,
+                });
+              }
             }
+          } catch (error) {
+            console.error("JSON Parse Error:", error);
+            Swal.fire({
+              icon: "error",
+              title: "Parse Error",
+              text: "Server response is not valid JSON!",
+            });
           }
-        } catch (error) {
-          console.error("JSON Parse Error:", error);
+        })
+        .catch(error => {
+          console.error("Fetch Error:", error);
           Swal.fire({
             icon: "error",
-            title: "Parse Error",
-            text: "Server response is not valid JSON!",
+            title: "Fetch Error",
+            text: "Something went wrong! Check console for details.",
           });
-        }
-      })
-      .catch(error => {
-        console.error("Fetch Error:", error);
-        Swal.fire({
-          icon: "error",
-          title: "Fetch Error",
-          text: "Something went wrong! Check console for details.",
         });
-      });
-  });
+    });
 
-  // Close modal
-  closeModalBtn.addEventListener("click", function () {
-    modal.classList.add("hidden");
+    // Close modal
+    closeModalBtn.addEventListener("click", function () {
+      modal.classList.add("hidden");
+    });
   });
-});
 
 </script>
 
@@ -737,6 +732,8 @@ $teamLeaders = $teamLeaders ?? [];
     });
   });
 </script>
+
+<script src="../../scripts/script.js"></script>
 
 
 </html>

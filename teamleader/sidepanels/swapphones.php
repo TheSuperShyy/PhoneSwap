@@ -108,8 +108,8 @@ error_reporting(E_ALL);
             <!-- navig section, filter, search and export button -->
             <div class="flex laptop:flex-row phone:flex-col gap-3 justify-between">
               <div class="flex flex-row gap-5 border-b border-black">
-                <a href="swapphones.php"
-                  class="font-semibold laptop:text-lg phone:text-sm border-b-2 border-black">Swap Phones</a>
+                <a href="swapphones.php" class="font-semibold laptop:text-lg phone:text-sm border-b-2 border-black">Swap
+                  Phones</a>
                 <a href="swappedphones.php"
                   class="font-semibold laptop:text-lg phone:text-sm hover:border-b-2 hover:border-black">Swapped
                   Phones</a>
@@ -152,7 +152,7 @@ error_reporting(E_ALL);
                     <th class="py-3 px-4 whitespace-nowrap">Serial Number</th>
                     <th class="py-3 px-4 whitespace-nowrap">Status</th>
                     <th class="py-3 px-4 whitespace-nowrap">Team Member</th>
-                    <th class="py-3 px-4 whitespace-nowrap"></th>
+                    <th class="py-3 px-4 whitespace-nowrap">Action</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -182,7 +182,7 @@ error_reporting(E_ALL);
                       ?>
 
                       <!-- Table Row for Phone Details -->
-                      <tr class="border-b">
+                      <tr class="border-b user-row">
                         <!-- Phone Model Column -->
                         <td class="py-5 px-4 whitespace-nowrap"><?= htmlspecialchars($phone['model']) ?></td>
 
@@ -206,10 +206,10 @@ error_reporting(E_ALL);
                           <button
                             class="swap-button flex flex-row gap-2 items-center border font-semibold border-black bg-amber-400 hover:bg-amber-600 text-black px-6 py-1.5 rounded-full shadow-lg"
                             onclick='openSwapModal([{
-              "model": "<?= htmlspecialchars($phone['model']) ?>", 
-              "serial_number": "<?= htmlspecialchars($phone['serial_number']) ?>", 
-              "assigned_to": "<?= htmlspecialchars($tm['first_name'] . ' ' . $tm['last_name']) ?>"
-            }])'>
+                                "model": "<?= htmlspecialchars($phone['model']) ?>", 
+                                "serial_number": "<?= htmlspecialchars($phone['serial_number']) ?>", 
+                                "assigned_to": "<?= htmlspecialchars($tm['first_name'] . ' ' . $tm['last_name']) ?>"
+                              }])'>
                             Swap
                           </button>
                         </td>
@@ -263,27 +263,12 @@ error_reporting(E_ALL);
           </div>
 
           <!-- Pagination -->
-          <div class="flex space-x-2">
-            <button class="rounded-lg px-4 py-2 hover:bg-blue-50 hover:font-semibold">
+          <div class="pagination flex justify-end space-x-2 px-14 mb-4" id="pagination">
+            <button class="prev-btn rounded-lg px-4 py-2 hover:bg-yellow-100 hover:border-black hover:font-semibold">
               <i class="fa-solid fa-angle-left"></i>
             </button>
-            <button class="rounded-lg px-4 py-2 hover:bg-blue-50 hover:font-semibold">
-              1
-            </button>
-            <button
-              class="border border-gray-300 rounded-lg px-4 py-2 hover:bg-yellow-800 bg-yellow-600 text-white font-medium">
-              2
-            </button>
-            <button class="rounded-lg px-4 py-2 hover:bg-blue-50 hover:font-semibold">
-              3
-            </button>
-            <button class="rounded-lg px-4 py-2 hover:bg-blue-50 hover:font-semibold">
-              4
-            </button>
-            <button class="rounded-lg px-4 py-2 hover:bg-blue-50 hover:font-semibold">
-              5
-            </button>
-            <button class="rounded-lg px-4 py-2 hover:bg-blue-50 hover:font-semibold">
+            <!-- Numbered buttons will be generated here by JS -->
+            <button class="next-btn rounded-lg px-4 py-2 hover:bg-yellow-100 hover:border-black hover:font-semibold">
               <i class="fa-solid fa-angle-right"></i>
             </button>
           </div>
@@ -417,6 +402,88 @@ error_reporting(E_ALL);
 
   }
 
+</script>
+
+<!-- script for pagination -->
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const rowsPerPage = 5;
+    const tableRows = document.querySelectorAll(".user-row");
+    const totalPages = Math.ceil(tableRows.length / rowsPerPage);
+
+    const pagination = document.querySelector(".pagination");
+    const prevBtn = pagination.querySelector(".prev-btn");
+    const nextBtn = pagination.querySelector(".next-btn");
+
+    let currentPage = 1;
+    let paginationButtons = [];
+
+    if (totalPages === 0) {
+      prevBtn.style.display = "none";
+      nextBtn.style.display = "none";
+      return; // No need to proceed further
+    }
+
+
+    function createPaginationButtons() {
+      // Remove existing number buttons if any
+      paginationButtons.forEach(btn => btn.remove());
+      paginationButtons = [];
+
+      for (let i = 1; i <= totalPages; i++) {
+        const btn = document.createElement("button");
+        btn.textContent = i;
+        btn.className = "rounded-lg px-4 py-2 hover:bg-yellow-100 hover:border-black hover:font-semibold page-btn";
+
+        // Insert the button before the "next" button
+        pagination.insertBefore(btn, nextBtn);
+
+        // Add click event
+        btn.addEventListener("click", () => {
+          currentPage = i;
+          showPage(currentPage);
+        });
+
+        paginationButtons.push(btn);
+      }
+    }
+
+    function showPage(page) {
+      const start = (page - 1) * rowsPerPage;
+      const end = start + rowsPerPage;
+
+      tableRows.forEach((row, index) => {
+        row.style.display = index >= start && index < end ? "" : "none";
+      });
+
+      paginationButtons.forEach((btn, i) => {
+        if ((i + 1) === page) {
+          btn.classList.add("bg-amber-400", "text-white");
+          btn.classList.remove("hover:bg-yellow-100");
+        } else {
+          btn.classList.remove("bg-amber-400", "text-white");
+          btn.classList.add("hover:bg-yellow-100");
+        }
+      });
+    }
+
+    prevBtn.addEventListener("click", () => {
+      if (currentPage > 1) {
+        currentPage--;
+        showPage(currentPage);
+      }
+    });
+
+    nextBtn.addEventListener("click", () => {
+      if (currentPage < totalPages) {
+        currentPage++;
+        showPage(currentPage);
+      }
+    });
+
+    createPaginationButtons(); // Build buttons dynamically
+    showPage(currentPage);     // Show initial page
+  });
 </script>
 
 

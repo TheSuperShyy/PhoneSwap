@@ -153,6 +153,7 @@ require __DIR__ . '/../../dbcon/session_get.php';
                     </div>
                 </div>
 </body>
+
 <!-- audit table -->
 <script>
 document.addEventListener("DOMContentLoaded", function () {
