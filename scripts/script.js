@@ -1,73 +1,78 @@
+document.addEventListener("DOMContentLoaded", () => {
+    const rowsPerPage = 5;
+    const tableRows = document.querySelectorAll(".user-row");
+    const totalPages = Math.ceil(tableRows.length / rowsPerPage);
 
-document.addEventListener("DOMContentLoaded", function () {
-    const serialSelect = document.getElementById("serialNumberSelect");
-    const modelInput = document.getElementById("deviceModel");
+    const pagination = document.querySelector(".pagination");
+    const prevBtn = pagination.querySelector(".prev-btn");
+    const nextBtn = pagination.querySelector(".next-btn");
 
-    serialSelect.addEventListener("change", function () {
-        let selectedOption = serialSelect.options[serialSelect.selectedIndex];
-        let modelValue = selectedOption.getAttribute("data-model");
+    let currentPage = 1;
+    let paginationButtons = [];
 
-        modelInput.value = modelValue || ""; // Auto-fill model or clear it
-    });
-});
-
-//assign phone function 
-document.addEventListener("DOMContentLoaded", function () {
-    console.log("script.js is running and DOM is fully loaded!");
-    const modal = document.getElementById("myModal");
-    const openModalBtn1 = document.getElementById("openModalBtn1");
-    const closeModalBtn1 = document.getElementById("closeModalBtn1");
-    const modalCancelButton1 = document.getElementById("modalCancelButton1");
-    const saveButton = document.getElementById("saveModalBtn1");
-    const serialSelect = document.getElementById("serialNumberSelect");
-    const teamSelect = document.getElementById("teamMemberSelect");
-
-    // Open modal
-    if (openModalBtn1) {
-        openModalBtn1.addEventListener("click", () => modal.classList.remove("hidden"));
+    if (totalPages === 0) {
+      prevBtn.style.display = "none";
+      nextBtn.style.display = "none";
+      return; // No need to proceed further
     }
 
-    // Close modal (Cancel / Close buttons)
-    [closeModalBtn1, modalCancelButton1].forEach(button => {
-        if (button) button.addEventListener("click", () => modal.classList.add("hidden"));
-    });
 
-    // Save and assign phone
-    if (saveButton) {
-        saveButton.addEventListener("click", function (event) {
-            event.preventDefault();
+    function createPaginationButtons() {
+      // Remove existing number buttons if any
+      paginationButtons.forEach(btn => btn.remove());
+      paginationButtons = [];
 
-            const serialNumber = serialSelect.value.trim();
-            const teamMember = teamSelect.value.trim();
+      for (let i = 1; i <= totalPages; i++) {
+        const btn = document.createElement("button");
+        btn.textContent = i;
+        btn.className = "rounded-lg px-4 py-2 hover:bg-yellow-100 hover:border-black hover:font-semibold page-btn";
 
-            if (!serialNumber || !teamMember) {
-                alert("Please select both a Serial Number and a Team Member.");
-                return;
-            }
+        // Insert the button before the "next" button
+        pagination.insertBefore(btn, nextBtn);
 
-            fetch("assign_phone.php", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ serial_number: serialNumber, team_member: teamMember })
-            })
-                .then(response => response.text()) // Read response as text
-                .then(text => {
-                    try {
-                        return JSON.parse(text); // Try converting to JSON
-                    } catch (error) {
-                        throw new Error("Invalid JSON response: " + text);
-                    }
-                })
-                .then(data => {
-                    if (data.success) {
-                        alert("Phone assigned successfully!");
-                        modal.classList.add("hidden"); // Hide modal only on success
-                        location.reload();
-                    } else {
-                        alert("Error: " + data.error);
-                    }
-                })
-                .catch(error => console.error("Fetch Error:", error));
+        // Add click event
+        btn.addEventListener("click", () => {
+          currentPage = i;
+          showPage(currentPage);
         });
+
+        paginationButtons.push(btn);
+      }
     }
-});
+
+    function showPage(page) {
+      const start = (page - 1) * rowsPerPage;
+      const end = start + rowsPerPage;
+
+      tableRows.forEach((row, index) => {
+        row.style.display = index >= start && index < end ? "" : "none";
+      });
+
+      paginationButtons.forEach((btn, i) => {
+        if ((i + 1) === page) {
+          btn.classList.add("bg-amber-400", "text-white");
+          btn.classList.remove("hover:bg-yellow-100");
+        } else {
+          btn.classList.remove("bg-amber-400", "text-white");
+          btn.classList.add("hover:bg-yellow-100");
+        }
+      });
+    }
+
+    prevBtn.addEventListener("click", () => {
+      if (currentPage > 1) {
+        currentPage--;
+        showPage(currentPage);
+      }
+    });
+
+    nextBtn.addEventListener("click", () => {
+      if (currentPage < totalPages) {
+        currentPage++;
+        showPage(currentPage);
+      }
+    });
+
+    createPaginationButtons(); // Build buttons dynamically
+    showPage(currentPage);     // Show initial page
+  });
