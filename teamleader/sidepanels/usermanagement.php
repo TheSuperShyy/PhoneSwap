@@ -130,7 +130,7 @@ error_reporting(E_ALL);
 
             <!-- User Management Table -->
             <div class="rounded-lg shadow-md">
-              <div class="w-full overflow-x-auto h-full rounded-lg">
+              <div class="w-full overflow-x-auto h-full border border-gray-300 rounded-lg shadow-md">
                 <table class="w-full bg-white">
                   <thead class="bg-gray-200">
                     <tr class="bg-gray-200 border-b border-gray-400 text-sm text-left px-4">
@@ -143,7 +143,7 @@ error_reporting(E_ALL);
                   </thead>
                   <tbody id="userTableBody">
                     <?php foreach ($teamMembersList as $user): ?>
-                      <tr class="border-b text-left">
+                      <tr class="border-b text-left user-row">
                         <td class="py-2 px-4 whitespace-nowrap"><?php echo $user['hfId']; ?></td>
                         <td class="py-2 px-4 whitespace-nowrap">
                           <?php echo htmlspecialchars($user['first_name'] . ' ' . $user['last_name']); ?>
@@ -188,8 +188,6 @@ error_reporting(E_ALL);
                     <span class="text-gray-500 text-3xl">&#128100;</span>
                   </div>
                 </div>
-                <span class="absolute top-3 right-3 text-gray-500 hover:text-gray-700 cursor-pointer text-2xl"
-                  id="closeModalBtn1">&times;</span>
 
                 <div class="flex flex-col gap-4 mt-4">
                   <!-- Name Fields -->
@@ -303,23 +301,12 @@ error_reporting(E_ALL);
             </div>
 
             <!-- Pagination -->
-            <div class="flex justify-end space-x-2 px-14 mb-4">
-              <button class="rounded-lg px-4 py-2 hover:bg-yellow-100 hover:border-black hover:font-semibold">
+            <div class="pagination flex justify-end space-x-2 px-14 mb-4" id="pagination">
+              <button class="prev-btn rounded-lg px-4 py-2 hover:bg-yellow-100 hover:border-black hover:font-semibold">
                 <i class="fa-solid fa-angle-left"></i>
               </button>
-              <button class="rounded-lg px-4 py-2 hover:bg-yellow-100 hover:border-black hover:font-semibold">
-                1
-              </button>
-              <button class="border border-gray-300 rounded-lg px-4 py-2 bg-amber-400 text-white font-medium">
-                2
-              </button>
-              <button class="rounded-lg px-4 py-2 hover:bg-yellow-100 hover:border-black hover:font-semibold">
-                3
-              </button>
-              <button class="rounded-lg px-4 py-2 hover:bg-yellow-100 hover:border-black hover:font-semibold">
-                4
-              </button>
-              <button class="rounded-lg px-4 py-2 hover:bg-yellow-100 hover:border-black hover:font-semibold">
+              <!-- Numbered buttons will be generated here by JS -->
+              <button class="next-btn rounded-lg px-4 py-2 hover:bg-yellow-100 hover:border-black hover:font-semibold">
                 <i class="fa-solid fa-angle-right"></i>
               </button>
             </div>
@@ -535,6 +522,8 @@ error_reporting(E_ALL);
             text: 'User updated successfully!',
             timer: 1500,
             showConfirmButton: false
+          }).then(() => {
+            window.location.reload();
           });
 
           const updatedBtn = document.querySelector(`.editUserBtn[data-hfid='${hfId}']`);
@@ -576,58 +565,83 @@ error_reporting(E_ALL);
 
 <!-- script for pagination -->
 <script>
-  document.addEventListener('DOMContentLoaded', function () {
+  document.addEventListener("DOMContentLoaded", () => {
     const rowsPerPage = 5;
-    const tableBody = document.getElementById('userTableBody');
-    const rows = Array.from(tableBody.querySelectorAll('tr'));
-    const totalPages = Math.ceil(rows.length / rowsPerPage);
+    const tableRows = document.querySelectorAll(".user-row");
+    const totalPages = Math.ceil(tableRows.length / rowsPerPage);
+
+    const pagination = document.querySelector(".pagination");
+    const prevBtn = pagination.querySelector(".prev-btn");
+    const nextBtn = pagination.querySelector(".next-btn");
 
     let currentPage = 1;
+    let paginationButtons = [];
+
+    if (totalPages === 0) {
+      prevBtn.style.display = "none";
+      nextBtn.style.display = "none";
+      return; // No need to proceed further
+    }
+
+
+    function createPaginationButtons() {
+      // Remove existing number buttons if any
+      paginationButtons.forEach(btn => btn.remove());
+      paginationButtons = [];
+
+      for (let i = 1; i <= totalPages; i++) {
+        const btn = document.createElement("button");
+        btn.textContent = i;
+        btn.className = "rounded-lg px-4 py-2 hover:bg-yellow-100 hover:border-black hover:font-semibold page-btn";
+
+        // Insert the button before the "next" button
+        pagination.insertBefore(btn, nextBtn);
+
+        // Add click event
+        btn.addEventListener("click", () => {
+          currentPage = i;
+          showPage(currentPage);
+        });
+
+        paginationButtons.push(btn);
+      }
+    }
 
     function showPage(page) {
       const start = (page - 1) * rowsPerPage;
       const end = start + rowsPerPage;
 
-      rows.forEach((row, index) => {
-        row.style.display = (index >= start && index < end) ? '' : 'none';
+      tableRows.forEach((row, index) => {
+        row.style.display = index >= start && index < end ? "" : "none";
       });
 
-      document.querySelectorAll('.pagination-btn').forEach((btn, index) => {
-        btn.classList.remove('bg-yellow-600', 'text-white', 'font-medium');
-        btn.classList.add('hover:bg-blue-50', 'hover:font-semibold');
-        if (index + 1 === page) {
-          btn.classList.add('bg-yellow-600', 'text-white', 'font-medium');
-          btn.classList.remove('hover:bg-blue-50', 'hover:font-semibold');
+      paginationButtons.forEach((btn, i) => {
+        if ((i + 1) === page) {
+          btn.classList.add("bg-amber-400", "text-white");
+          btn.classList.remove("hover:bg-yellow-100");
+        } else {
+          btn.classList.remove("bg-amber-400", "text-white");
+          btn.classList.add("hover:bg-yellow-100");
         }
       });
     }
 
-    // Hook up numbered buttons
-    document.querySelectorAll('.pagination-btn').forEach((btn, index) => {
-      btn.addEventListener('click', () => {
-        currentPage = index + 1;
-        showPage(currentPage);
-      });
-    });
-
-    // Prev button
-    document.getElementById('prevBtn').addEventListener('click', () => {
+    prevBtn.addEventListener("click", () => {
       if (currentPage > 1) {
         currentPage--;
         showPage(currentPage);
       }
     });
 
-    // Next button
-    document.getElementById('nextBtn').addEventListener('click', () => {
+    nextBtn.addEventListener("click", () => {
       if (currentPage < totalPages) {
         currentPage++;
         showPage(currentPage);
       }
     });
 
-    // Show the first page initially
-    showPage(currentPage);
+    createPaginationButtons(); // Build buttons dynamically
+    showPage(currentPage);     // Show initial page
   });
 </script>
 
