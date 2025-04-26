@@ -179,7 +179,7 @@ require __DIR__ . '/../../dbcon/session_get.php';
 
         <!-- Main table -->
         <div class="rounded-lg shadow-md mt-3">
-          <div class="w-full overflow-x-auto h-full rounded-lg">
+          <div class="w-full overflow-x-auto h-full border border-gray-300 rounded-lg shadow-md">
             <table class="w-full bg-white">
               <thead class="bg-gray-300">
                 <tr class="text-left text-sm">
@@ -193,7 +193,7 @@ require __DIR__ . '/../../dbcon/session_get.php';
                   <th class="py-3 px-4 border-b">Action</th>
                 </tr>
               </thead>
-              <tbody class="user-row">
+              <tbody>
                 <?php foreach ($assignedPhones as $serial): ?>
                   <?php
                   // Fetch the full phone document by serial number
