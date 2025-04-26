@@ -3,7 +3,7 @@ require __DIR__ . '/../../dbcon/dbcon.php';
 require __DIR__ . '/../../queries/phone_query.php';
 require __DIR__ . '/../../dbcon/authentication.php';
 require __DIR__ . '/../../dbcon/session_get.php';
-
+$phones = iterator_to_array($db->phones->find([]));
 ?>
 <!DOCTYPE html>
 
@@ -153,17 +153,17 @@ require __DIR__ . '/../../dbcon/session_get.php';
                 <select name="filter" id="filterSelect"
                   class="px-4 py-2 h-10 w-48 text-sm border border-gray-700 rounded-l-lg outline-none">
                   <option value="">Select Filter</option>
-                  <option value="">Device Model</option>
-                  <option value="">Serial Number</option>
-                  <option value="">Table Number</option>
-                  <option value="">Status</option>
-                  <option value="">Assigned</option>
-                  <option value="">Report</option>
+                  <option value="model">Device Model</option>
+                  <option value="serial_number">Serial Number</option>
+                  <option value="status">Status</option>
+                  <option value="team_leader">Team Leader</option>
                 </select>
-                <input type="text" name="" id="" placeholder="Search" value
+                <input type="text" name="" id="searchInput" placeholder="Search"
                   class="w-full h-10 p-2 border border-gray-700 shadow-sm sm:text-sm outline-none rounded-r-lg" />
               </form>
             </div>
+
+
             <div class="flex ml-auto gap-2">
               <a href="">
                 <button
@@ -184,76 +184,79 @@ require __DIR__ . '/../../dbcon/session_get.php';
               <tr class="text-left text-sm">
                 <th class="py-3 px-4 border-b">Device Model</th>
                 <th class="py-3 px-4 border-b">Serial Number</th>
-                <th class="py-3 px-4 border-b">Table Number</th>
                 <th class="py-3 px-4 border-b">Status</th>
                 <th class="py-3 px-4 border-b">Team Leader</th>
                 <th class="py-3 px-4 border-b">Action</th>
               </tr>
             </thead>
             <tbody>
-              <?php foreach ($phones as $phone): ?>
-                <tr class="border-b text-left">
-                  <td class="py-2 px-4 flex items-center space-x-2">
-                    <?php echo htmlspecialchars($phone['model']); ?>
-                  </td>
-                  <td class="py-2 px-4 whitespace-nowrap">
-                    <?php echo htmlspecialchars($phone['serial_number']); ?>
-                  </td>
-                  <td class="py-2 px-4 whitespace-nowrap">
-                    <?php echo $tableNumber == 0 ? 'Unassigned' : htmlspecialchars($tableNumber); ?>
-                  </td>
-                  <td class="py-2 px-4 whitespace-nowrap">
-                    <?php if ($phone['status'] === 'Active'): ?>
-                      <span
-                        class="text-green-800 bg-green-100 border border-green-800 rounded-full py-2 px-6 font-medium shadow-lg">
-                        Active
-                      </span>
-                    <?php elseif ($phone['status'] === 'Inactive'): ?>
-                      <span
-                        class="text-red-800 bg-red-100 border border-red-800 rounded-full py-2 px-6 font-medium shadow-lg">
-                        Inactive
-                      </span>
-                    <?php elseif ($phone['status'] === 'Missing'): ?>
-                      <span
-                        class="text-red-800 bg-red-100 border border-red-800 rounded-full py-2 px-6 font-medium shadow-lg">
-                        Missing
-                      </span>
-                    <?php else: ?>
-                      <span
-                        class="text-gray-800 bg-gray-100 border border-gray-800 rounded-full py-2 px-6 font-medium shadow-lg">
-                        <?php echo htmlspecialchars($phone['status']); ?>
-                      </span>
-                    <?php endif; ?>
-                  </td>
-                  <td class="py-2 px-4 whitespace-nowrap">
-                    <?php
-                    $assignedTL = $db->users->findOne([
-                      'assigned_phone' => $phone['serial_number'],
-                      'userType' => 'TL'
-                    ]);
-
-                    echo $assignedTL
-                      ? htmlspecialchars('( ' . $assignedTL['hfId'] . ') ' . $assignedTL['first_name'] . ' ' . $assignedTL['last_name'])
-                      : 'Unassigned';
-                    ?>
-                  </td>
-
-                  <td class="text-center space-x-2">
-                    <div class="flex flex-row py-2 px-4 gap-2">
-                      <button
-                        onclick="openAssignModal('<?php echo $phone['serial_number']; ?>', '<?php echo $phone['model']; ?>')"
-                        class="flex flex-row gap-2 items-center font-semibold border border-white bg-blue-500 hover:bg-blue-700 text-white px-6 py-1.5 rounded-full shadow-lg">
-                        Assign
-                      </button>
-                      <button onclick="window.location.href='missingphones.php'"
-                        class="flex flex-row gap-2 items-center border font-semibold border-white bg-red-700 hover:bg-red-900 text-white px-6 py-1.5 rounded-full shadow-lg">
-                        Missing
-                      </button>
-                    </div>
+              <?php if (!empty($phones)): ?>
+                <?php foreach ($phones as $phone): ?>
+                  <tr class="border-b text-left user-row">
+                    <td class="py-2 px-4 flex items-center space-x-2">
+                      <?php echo htmlspecialchars($phone['model']); ?>
+                    </td>
+                    <td class="py-2 px-4 whitespace-nowrap">
+                      <?php echo htmlspecialchars($phone['serial_number']); ?>
+                    </td>
+                    <td class="py-2 px-4 whitespace-nowrap">
+                      <?php if ($phone['status'] === 'Active'): ?>
+                        <span
+                          class="text-green-800 bg-green-100 border border-green-800 rounded-full py-2 px-6 font-medium shadow-lg">
+                          Active
+                        </span>
+                      <?php elseif ($phone['status'] === 'Inactive'): ?>
+                        <span
+                          class="text-red-800 bg-red-100 border border-red-800 rounded-full py-2 px-6 font-medium shadow-lg">
+                          Inactive
+                        </span>
+                      <?php elseif ($phone['status'] === 'Missing'): ?>
+                        <span
+                          class="text-red-800 bg-red-100 border border-red-800 rounded-full py-2 px-6 font-medium shadow-lg">
+                          Missing
+                        </span>
+                      <?php else: ?>
+                        <span
+                          class="text-gray-800 bg-gray-100 border border-gray-800 rounded-full py-2 px-6 font-medium shadow-lg">
+                          <?php echo htmlspecialchars($phone['status']); ?>
+                        </span>
+                      <?php endif; ?>
+                    </td>
+                    <td class="py-2 px-4 whitespace-nowrap">
+                      <?php
+                      $assignedTL = $db->users->findOne([
+                        'assigned_phone' => $phone['serial_number'],
+                        'userType' => 'TL'
+                      ]);
+                      echo $assignedTL
+                        ? htmlspecialchars('( ' . $assignedTL['hfId'] . ') ' . $assignedTL['first_name'] . ' ' . $assignedTL['last_name'])
+                        : 'Unassigned';
+                      ?>
+                    </td>
+                    <td class="text-center space-x-2">
+                      <div class="flex flex-row py-2 px-4 gap-2">
+                        <button
+                          onclick="openAssignModal('<?php echo $phone['serial_number']; ?>', '<?php echo $phone['model']; ?>')"
+                          class="flex flex-row gap-2 items-center font-semibold border border-white bg-blue-500 hover:bg-blue-700 text-white px-6 py-1.5 rounded-full shadow-lg">
+                          Assign
+                        </button>
+                        <button onclick="window.location.href='missingphones.php'"
+                          class="flex flex-row gap-2 items-center border font-semibold border-white bg-red-700 hover:bg-red-900 text-white px-6 py-1.5 rounded-full shadow-lg">
+                          Missing
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                <?php endforeach; ?>
+              <?php else: ?>
+                <tr>
+                  <td colspan="5" class="text-center py-4 text-gray-500">
+                    No phones found.
                   </td>
                 </tr>
-              <?php endforeach; ?>
+              <?php endif; ?>
             </tbody>
+
           </table>
         </div>
       </div>
@@ -301,29 +304,16 @@ require __DIR__ . '/../../dbcon/session_get.php';
           </form>
         </div>
       </div>
-
-
-      <!-- Pagination -->
-      <div class="flex justify-end space-x-2 px-14 mb-4">
-        <button class="rounded-lg px-4 py-2 hover:bg-yellow-100 hover:border-black hover:font-semibold">
-          <i class="fa-solid fa-angle-left"></i>
-        </button>
-        <button class="rounded-lg px-4 py-2 hover:bg-yellow-100 hover:border-black hover:font-semibold">
-          1
-        </button>
-        <button class="border border-gray-300 rounded-lg px-4 py-2 bg-amber-400 text-white font-medium">
-          2
-        </button>
-        <button class="rounded-lg px-4 py-2 hover:bg-yellow-100 hover:border-black hover:font-semibold">
-          3
-        </button>
-        <button class="rounded-lg px-4 py-2 hover:bg-yellow-100 hover:border-black hover:font-semibold">
-          4
-        </button>
-        <button class="rounded-lg px-4 py-2 hover:bg-yellow-100 hover:border-black hover:font-semibold">
-          <i class="fa-solid fa-angle-right"></i>
-        </button>
-      </div>
+    </div>
+    <!-- Pagination -->
+    <div class="pagination flex justify-end space-x-2 px-14 mb-4" id="pagination">
+      <button class="prev-btn rounded-lg px-4 py-2 hover:bg-yellow-100 hover:border-black hover:font-semibold">
+        <i class="fa-solid fa-angle-left"></i>
+      </button>
+      <!-- Numbered buttons will be generated here by JS -->
+      <button class="next-btn rounded-lg px-4 py-2 hover:bg-yellow-100 hover:border-black hover:font-semibold">
+        <i class="fa-solid fa-angle-right"></i>
+      </button>
     </div>
   </div>
 
@@ -516,6 +506,9 @@ require __DIR__ . '/../../dbcon/session_get.php';
     });
   </script>
 
+  <!-- script for pagination -->
+  <script src="../../scripts/script.js"> </script>
 
+  <script src="../../scripts/filtering.js"> </script>
 
   </html>
