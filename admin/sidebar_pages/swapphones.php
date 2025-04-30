@@ -123,9 +123,9 @@ require __DIR__ . '/../../dbcon/session_get.php';
                     <option value="">Select Filter</option>
                     <option value="">Device Model</option>
                     <option value="">Serial Number</option>
-                    <option value="">Status</option>
+                    <option value="">Date</option>
+                    <option value="">Action</option>
                     <option value="">Team Leader</option>
-                    <option value="">Table Number</option>
                   </select>
                   <input type="text" name="" id="" placeholder="Search" value
                     class="w-full h-10 p-2 border border-gray-700 shadow-sm sm:text-sm outline-none rounded-r-lg" />
@@ -150,9 +150,9 @@ require __DIR__ . '/../../dbcon/session_get.php';
                   <tr class="bg-gray-200 border-b border-gray-400 text-sm text-left px-4">
                     <th class="py-3 px-4 whitespace-nowrap">Device Model</th>
                     <th class="py-3 px-4 whitespace-nowrap">Serial Number</th>
-                    <th class="py-3 px-4 whitespace-nowrap">Status</th>
+                    <th class="py-3 px-4 whitespace-nowrap">Date & Time</th>
+                    <th class="py-3 px-4 whitespace-nowrap">Action</th>
                     <th class="py-3 px-4 whitespace-nowrap">Team Leader</th>
-                    <th class="py-3 px-4 whitespace-nowrap">Table Number</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -203,5 +203,6 @@ require __DIR__ . '/../../dbcon/session_get.php';
 
 <!-- script for pagination -->
 <script src="../../scripts/script.js"> </script>
+<script src="../../filtering.js"></script>
 
 </html>
