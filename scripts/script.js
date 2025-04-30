@@ -1,78 +1,95 @@
 document.addEventListener("DOMContentLoaded", () => {
-    const rowsPerPage = 5;
-    const tableRows = document.querySelectorAll(".user-row");
-    const totalPages = Math.ceil(tableRows.length / rowsPerPage);
+  const rowsPerPage = 5;
+  const tableRows = document.querySelectorAll(".user-row");
+  const totalPages = Math.ceil(tableRows.length / rowsPerPage);
 
-    const pagination = document.querySelector(".pagination");
-    const prevBtn = pagination.querySelector(".prev-btn");
-    const nextBtn = pagination.querySelector(".next-btn");
+  const pagination = document.querySelector(".pagination");
+  const prevBtn = pagination.querySelector(".prev-btn");
+  const nextBtn = pagination.querySelector(".next-btn");
 
-    let currentPage = 1;
-    let paginationButtons = [];
+  let currentPage = 1;
 
-    if (totalPages === 0) {
-      prevBtn.style.display = "none";
-      nextBtn.style.display = "none";
-      return; // No need to proceed further
-    }
+  if (totalPages === 0) {
+    prevBtn.style.display = "none";
+    nextBtn.style.display = "none";
+    return; // No need to proceed further
+  }
 
+  function showPage(page) {
+    const start = (page - 1) * rowsPerPage;
+    const end = start + rowsPerPage;
 
-    function createPaginationButtons() {
-      // Remove existing number buttons if any
-      paginationButtons.forEach(btn => btn.remove());
-      paginationButtons = [];
-
-      for (let i = 1; i <= totalPages; i++) {
-        const btn = document.createElement("button");
-        btn.textContent = i;
-        btn.className = "rounded-lg px-4 py-2 hover:bg-yellow-100 hover:border-black hover:font-semibold page-btn";
-
-        // Insert the button before the "next" button
-        pagination.insertBefore(btn, nextBtn);
-
-        // Add click event
-        btn.addEventListener("click", () => {
-          currentPage = i;
-          showPage(currentPage);
-        });
-
-        paginationButtons.push(btn);
-      }
-    }
-
-    function showPage(page) {
-      const start = (page - 1) * rowsPerPage;
-      const end = start + rowsPerPage;
-
-      tableRows.forEach((row, index) => {
-        row.style.display = index >= start && index < end ? "" : "none";
-      });
-
-      paginationButtons.forEach((btn, i) => {
-        if ((i + 1) === page) {
-          btn.classList.add("bg-amber-400", "text-white");
-          btn.classList.remove("hover:bg-yellow-100");
-        } else {
-          btn.classList.remove("bg-amber-400", "text-white");
-          btn.classList.add("hover:bg-yellow-100");
-        }
-      });
-    }
-
-    prevBtn.addEventListener("click", () => {
-      if (currentPage > 1) {
-        currentPage--;
-        showPage(currentPage);
-      }
+    tableRows.forEach((row, index) => {
+      row.style.display = index >= start && index < end ? "" : "none";
     });
 
-    nextBtn.addEventListener("click", () => {
-      if (currentPage < totalPages) {
-        currentPage++;
-        showPage(currentPage);
-      }
-    });
+    currentPage = page;
+    createPaginationButtons();
+  }
 
-    createPaginationButtons(); // Build buttons dynamically
-    showPage(currentPage);     // Show initial page
+  function createPaginationButtons() {
+    // Remove existing page buttons and dots
+    const oldButtons = pagination.querySelectorAll(".page-btn, .dots");
+    oldButtons.forEach(btn => btn.remove());
+    
+    const maxVisibleButtons = 3;
+    let startPage = Math.max(1, currentPage - 2);
+    let endPage = Math.min(totalPages, currentPage + 2);
+
+    if (currentPage <= 3) {
+      startPage = 1;
+      endPage = Math.min(totalPages, maxVisibleButtons);
+    } else if (currentPage >= totalPages - 2) {
+      endPage = totalPages;
+      startPage = Math.max(1, totalPages - maxVisibleButtons + 1);
+    }
+
+    if (startPage > 1) {
+      addPageButton(1);
+      if (startPage > 2) addDots();
+    }
+
+    for (let i = startPage; i <= endPage; i++) {
+      addPageButton(i);
+    }
+
+    if (endPage < totalPages) {
+      if (endPage < totalPages - 1) addDots();
+      addPageButton(totalPages);
+    }
+  }
+
+  function addPageButton(page) {
+    const btn = document.createElement("button");
+    btn.textContent = page;
+    btn.className = "rounded-lg px-4 py-2 hover:bg-yellow-100 hover:border-black hover:font-semibold page-btn";
+    if (page === currentPage) {
+      btn.classList.add("bg-amber-400", "text-white");
+    }
+    btn.addEventListener("click", () => {
+      showPage(page);
+    });
+    pagination.insertBefore(btn, nextBtn);
+  }
+
+  function addDots() {
+    const dots = document.createElement("span");
+    dots.textContent = "...";
+    dots.className = "dots px-2";
+    pagination.insertBefore(dots, nextBtn);
+  }
+
+  prevBtn.addEventListener("click", () => {
+    if (currentPage > 1) {
+      showPage(currentPage - 1);
+    }
   });
+
+  nextBtn.addEventListener("click", () => {
+    if (currentPage < totalPages) {
+      showPage(currentPage + 1);
+    }
+  });
+
+  showPage(currentPage); // Initialize
+});
