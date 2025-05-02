@@ -109,128 +109,110 @@ require __DIR__ . '/../../dbcon/session_get.php';
             <!-- Filter -->
             <div class="items-start w-full">
               <form method="GET" class="flex flex-row items-center">
-                <select name="filter" id="filterSelect"
-                  class="px-4 py-2 h-10 w-48 text-sm border border-gray-700 rounded-l-lg outline-none"></select>
-                <input type="text" name="search" id="searchInput" placeholder="Search" value
-                  class="w-1/3 h-10 p-2 border border-gray-700 shadow-sm sm:text-sm outline-none rounded-r-lg" />
-              </form>
-            </div>
+                <div class="flex justify-start mb-4">
+                  <form class="flex flex-row items-center gap-0">
 
-            <!-- Audit trail table -->
-            <div class="w-full overflow-x-auto h-full border border-gray-300 rounded-lg shadow-md">
-              <table class="w-full bg-white">
-                <thead>
-                  <tr class="bg-gray-200 border-b border-gray-400 text-sm text-left">
-                    <th class="py-3 px-4 whitespace-nowrap">Date & Time</th>
-                    <th class="py-3 px-4 whitespace-nowrap">User</th>
-                    <th class="py-3 px-4 whitespace-nowrap">Action</th>
-                    <th class="py-3 px-4 whitespace-nowrap">Details</th>
-                  </tr>
-                </thead>
-                <tbody id="auditTableBody"></tbody>
-              </table>
-            </div>
+                    <select id="filterSelect"
+                      class="px-4 py-2 h-10 w-48 text-sm border border-gray-700 rounded-l-lg outline-none">
+                      <option value="">Sort by Date</option>
+                      <option value="asc">Date Ascending</option>
+                      <option value="desc">Date Descending</option>
+                    </select>
+
+                    <input type="text" id="searchInput" placeholder="Search"
+                      class="w-full h-10 p-2 border border-gray-700 shadow-sm sm:text-sm outline-none rounded-r-lg" />
+                  </form>
+                </div>
+
+                <!-- Audit trail table -->
+                <div class="w-full overflow-x-auto h-full border border-gray-300 rounded-lg shadow-md">
+                  <table class="w-full bg-white">
+                    <thead>
+                      <tr class="bg-gray-200 border-b border-gray-400 text-sm text-left">
+                        <th class="py-3 px-4 whitespace-nowrap">Date & Time</th>
+                        <th class="py-3 px-4 whitespace-nowrap">User</th>
+                        <th class="py-3 px-4 whitespace-nowrap">Action</th>
+                        <th class="py-3 px-4 whitespace-nowrap">Details</th>
+                      </tr>
+                    </thead>
+                    <tbody id="auditTableBody"></tbody>
+                  </table>
+                </div>
 
 
 
-            <!-- Pagination -->
-            <div class="pagination flex justify-end space-x-2 px-14 mb-4" id="pagination">
-              <button class="prev-btn rounded-lg px-4 py-2 hover:bg-yellow-100 hover:border-black hover:font-semibold">
-                <i class="fa-solid fa-angle-left"></i>
-              </button>
-              <!-- Numbered buttons will be generated here by JS -->
-              <button class="next-btn rounded-lg px-4 py-2 hover:bg-yellow-100 hover:border-black hover:font-semibold">
-                <i class="fa-solid fa-angle-right"></i>
-              </button>
+                <!-- Pagination -->
+                <div class="pagination flex justify-end space-x-2 px-14 mb-4" id="pagination">
+                  <button
+                    class="prev-btn rounded-lg px-4 py-2 hover:bg-yellow-100 hover:border-black hover:font-semibold">
+                    <i class="fa-solid fa-angle-left"></i>
+                  </button>
+                  <!-- Numbered buttons will be generated here by JS -->
+                  <button
+                    class="next-btn rounded-lg px-4 py-2 hover:bg-yellow-100 hover:border-black hover:font-semibold">
+                    <i class="fa-solid fa-angle-right"></i>
+                  </button>
+                </div>
             </div>
           </div>
-        </div>
 </body>
 
 <!-- audit table -->
 <script>
-document.addEventListener("DOMContentLoaded", function () {
-  fetch("../audit_log/fetch_user_audit.php")
-    .then(response => {
-      if (!response.ok) {
-        console.error("Error fetching audit logs. HTTP Status:", response.status);
-        return Promise.reject('Failed to fetch data.');
-      }
-      return response.text().then(text => {
-        try {
-          return JSON.parse(text);
-        } catch (error) {
-          console.error("Failed to parse JSON:", error, text);
-          return Promise.reject('Invalid JSON response.');
-        }
-      });
-    })
-    .then(data => {
-      if (data.success) {
-        const tableBody = document.querySelector("#auditTableBody");
-        tableBody.innerHTML = "";
-
-        data.data.forEach(log => {
-          const row = `
-            <tr class="border-b text-sm user-row">
-              <td class="py-3 px-4 whitespace-nowrap">${log.date}</td>
-              <td class="py-3 px-4 whitespace-nowrap">${log.user}</td>
-              <td class="py-3 px-4 whitespace-nowrap">${log.action}</td>
-              <td class="py-3 px-4 whitespace-nowrap">${log.details}</td> 
-            </tr>
-          `;
-          tableBody.innerHTML += row;
-        });
-
-        initializePagination();
-      } else {
-        console.error("Failed to fetch audit logs:", data.message);
-        alert("Error fetching data: " + data.message);
-      }
-    })
-    .catch(error => {
-      console.error("Fetch Error:", error);
-      alert("An error occurred while fetching the data.");
-    });
-
-  function initializePagination() {
+  function setupPaginationAndSorting(logs) {
     const rowsPerPage = 5;
-    const tableRows = document.querySelectorAll(".user-row");
-    const totalPages = Math.ceil(tableRows.length / rowsPerPage);
-
+    const tableBody = document.querySelector("#auditTableBody");
     const pagination = document.querySelector(".pagination");
     const prevBtn = pagination.querySelector(".prev-btn");
     const nextBtn = pagination.querySelector(".next-btn");
 
     let currentPage = 1;
+    let currentLogs = [...logs];
 
-    function showPage(page) {
-      const start = (page - 1) * rowsPerPage;
-      const end = start + rowsPerPage;
-
-      tableRows.forEach((row, index) => {
-        row.style.display = index >= start && index < end ? "" : "none";
+    function renderTableRows(data) {
+      tableBody.innerHTML = "";
+      data.forEach(log => {
+        const row = `
+          <tr class="border-b text-sm user-row">
+            <td class="py-3 px-4 whitespace-nowrap">${log.date}</td>
+            <td class="py-3 px-4 whitespace-nowrap">${log.user}</td>
+            <td class="py-3 px-4 whitespace-nowrap">${log.action}</td>
+            <td class="py-3 px-4 whitespace-nowrap">${log.details}</td>
+          </tr>`;
+        tableBody.innerHTML += row;
       });
-
-      currentPage = page;
-      renderPaginationButtons();
     }
 
-    function renderPaginationButtons() {
-      // Remove all old buttons/dots
+    function paginateData(data) {
+      const start = (currentPage - 1) * rowsPerPage;
+      return data.slice(start, start + rowsPerPage);
+    }
+
+    function createPaginationButtons(data) {
+      // Remove old buttons
       const oldButtons = pagination.querySelectorAll(".page-btn, .dots");
       oldButtons.forEach(btn => btn.remove());
 
-      const maxButtons = 3;
-      let startPage = Math.max(1, currentPage - 2);
-      let endPage = Math.min(totalPages, currentPage + 2);
+      const totalPages = Math.ceil(data.length / rowsPerPage);
+      if (totalPages === 0) {
+        prevBtn.style.display = "none";
+        nextBtn.style.display = "none";
+        return;
+      } else {
+        prevBtn.style.display = "inline-block";
+        nextBtn.style.display = "inline-block";
+      }
 
-      if (currentPage <= 3) {
+      const maxVisibleButtons = 3;
+      let startPage = Math.max(1, currentPage - 1);
+      let endPage = Math.min(totalPages, startPage + maxVisibleButtons - 1);
+
+      if (currentPage <= 2) {
         startPage = 1;
-        endPage = Math.min(totalPages, maxButtons);
-      } else if (currentPage >= totalPages - 2) {
+        endPage = Math.min(totalPages, maxVisibleButtons);
+      } else if (currentPage >= totalPages - 1) {
         endPage = totalPages;
-        startPage = Math.max(1, totalPages - maxButtons + 1);
+        startPage = Math.max(1, totalPages - maxVisibleButtons + 1);
       }
 
       if (startPage > 1) {
@@ -246,6 +228,8 @@ document.addEventListener("DOMContentLoaded", function () {
         if (endPage < totalPages - 1) addDots();
         addPageButton(totalPages);
       }
+
+      updatePaginationStyle();
     }
 
     function addPageButton(page) {
@@ -256,7 +240,9 @@ document.addEventListener("DOMContentLoaded", function () {
         btn.classList.add("bg-amber-400", "text-white");
       }
       btn.addEventListener("click", () => {
-        showPage(page);
+        currentPage = page;
+        renderTableRows(paginateData(currentLogs));
+        createPaginationButtons(currentLogs);
       });
       pagination.insertBefore(btn, nextBtn);
     }
@@ -268,21 +254,86 @@ document.addEventListener("DOMContentLoaded", function () {
       pagination.insertBefore(dots, nextBtn);
     }
 
+    function updatePaginationStyle() {
+      const buttons = pagination.querySelectorAll(".page-btn");
+      buttons.forEach(btn => {
+        if (parseInt(btn.textContent) === currentPage) {
+          btn.classList.add("bg-amber-400", "text-white");
+          btn.classList.remove("hover:bg-yellow-100");
+        } else {
+          btn.classList.remove("bg-amber-400", "text-white");
+          btn.classList.add("hover:bg-yellow-100");
+        }
+      });
+    }
+
+    function applySortingAndSearch() {
+      const sortValue = document.getElementById("filterSelect").value;
+      const searchValue = document.getElementById("searchInput").value.toLowerCase();
+
+      let filtered = [...logs];
+
+      if (searchValue) {
+        filtered = filtered.filter(log =>
+          Object.values(log).some(val =>
+            String(val).toLowerCase().includes(searchValue)
+          )
+        );
+      }
+
+      if (sortValue === "asc") {
+        filtered.sort((a, b) => new Date(a.date) - new Date(b.date));
+      } else if (sortValue === "desc") {
+        filtered.sort((a, b) => new Date(b.date) - new Date(a.date));
+      }
+
+      currentLogs = filtered;
+      currentPage = 1;
+      renderTableRows(paginateData(currentLogs));
+      createPaginationButtons(currentLogs);
+    }
+
+    // Event Listeners
+    document.getElementById("filterSelect").addEventListener("change", applySortingAndSearch);
+    document.getElementById("searchInput").addEventListener("input", applySortingAndSearch);
+
     prevBtn.addEventListener("click", () => {
       if (currentPage > 1) {
-        showPage(currentPage - 1);
+        currentPage--;
+        renderTableRows(paginateData(currentLogs));
+        createPaginationButtons(currentLogs);
       }
     });
 
     nextBtn.addEventListener("click", () => {
-      if (currentPage < totalPages) {
-        showPage(currentPage + 1);
+      const maxPage = Math.ceil(currentLogs.length / rowsPerPage);
+      if (currentPage < maxPage) {
+        currentPage++;
+        renderTableRows(paginateData(currentLogs));
+        createPaginationButtons(currentLogs);
       }
     });
 
-    showPage(currentPage);
+    applySortingAndSearch(); // Initial load
   }
-});
+
+  document.addEventListener("DOMContentLoaded", () => {
+    fetch("../audit_log/fetch_user_audit.php")
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          setupPaginationAndSorting(data.data);
+        } else {
+          alert("Error: " + data.message);
+        }
+      })
+      .catch(err => {
+        console.error("Fetch error:", err);
+        alert("An error occurred while fetching the data.");
+      });
+  });
 </script>
+
+
 
 </html>
