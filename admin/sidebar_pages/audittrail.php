@@ -40,7 +40,8 @@ require __DIR__ . '/../../dbcon/authentication.php';
           </a>
         </li>
         <li class="mb-4">
-          <a class="flex items-center bg-opacity-30 bg-white p-2 text-base font-medium rounded-lg" href="audittrail.php">
+          <a class="flex items-center bg-opacity-30 bg-white p-2 text-base font-medium rounded-lg"
+            href="audittrail.php">
             <i class="fas fa-list-alt mr-3"></i>
             Audit Trail
           </a>
@@ -103,14 +104,23 @@ require __DIR__ . '/../../dbcon/authentication.php';
         <div class="flex flex-col gap-1 items-end justify-center w-full mx-auto">
           <div class="flex flex-col gap-3 mx-auto py-4 w-full">
             <!-- Filter -->
-            <div class="items-start w-full">
-              <form method="GET" class="flex flex-row items-center">
-                <select name="filter" id="filterSelect"
-                  class="px-4 py-2 h-10 w-48 text-sm border border-gray-700 rounded-l-lg outline-none"></select>
-                <input type="text" name="search" id="searchInput" placeholder="Search" value
-                  class="w-1/3 h-10 p-2 border border-gray-700 shadow-sm sm:text-sm outline-none rounded-r-lg" />
+            <div class="flex justify-start mb-4">
+              <form class="flex flex-row items-center gap-0">
+
+                <select id="filterSelect"
+                  class="px-4 py-2 h-10 w-48 text-sm border border-gray-700 rounded-l-lg outline-none">
+                  <option value="">Sort by Date</option>
+                  <option value="asc">Date Ascending</option>
+                  <option value="desc">Date Descending</option>
+                </select>
+
+                <input type="text" id="searchInput" placeholder="Search"
+                  class="w-full h-10 p-2 border border-gray-700 shadow-sm sm:text-sm outline-none rounded-r-lg" />
               </form>
             </div>
+
+
+
 
             <!-- Audit trail table -->
             <div class="w-full overflow-x-auto h-full border border-gray-300 rounded-lg shadow-md">
@@ -148,129 +158,152 @@ require __DIR__ . '/../../dbcon/authentication.php';
 
 <!-- audit table -->
 <script>
-  function setupPagination() {
-  const rowsPerPage = 5;
-  const tableRows = document.querySelectorAll(".user-row");
-  const totalPages = Math.ceil(tableRows.length / rowsPerPage);
+  function setupPaginationAndSorting(logs) {
+    const rowsPerPage = 5;
+    const tableBody = document.querySelector("#auditTableBody");
+    const pagination = document.querySelector(".pagination");
+    const prevBtn = pagination.querySelector(".prev-btn");
+    const nextBtn = pagination.querySelector(".next-btn");
 
-  const pagination = document.querySelector(".pagination");
-  const prevBtn = pagination.querySelector(".prev-btn");
-  const nextBtn = pagination.querySelector(".next-btn");
+    let currentPage = 1;
+    let paginationButtons = [];
 
-  let currentPage = 1;
-  let paginationButtons = [];
-
-  if (totalPages === 0) {
-    prevBtn.style.display = "none";
-    nextBtn.style.display = "none";
-    return;
-  } else {
-    prevBtn.style.display = "inline-block"; // Ensure buttons are shown
-    nextBtn.style.display = "inline-block"; // Ensure buttons are shown
-  }
-
-  // Add the pagination buttons (1, 2, 3, etc.)
-  function createPaginationButtons() {
-    paginationButtons.forEach(btn => btn.remove());
-    paginationButtons = [];
-
-    for (let i = 1; i <= totalPages; i++) {
-      const btn = document.createElement("button");
-      btn.textContent = i;
-      btn.className = "rounded-lg px-4 py-2 hover:bg-yellow-100 hover:border-black hover:font-semibold page-btn";
-
-      // Insert the button before the "next" button
-      pagination.insertBefore(btn, nextBtn);
-
-      // Add click event for each page
-      btn.addEventListener("click", () => {
-        currentPage = i;
-        showPage(currentPage);
+    function renderTableRows(filteredLogs) {
+      tableBody.innerHTML = "";
+      filteredLogs.forEach(log => {
+        const row = `
+          <tr class="border-b text-sm user-row">
+            <td class="py-3 px-4 whitespace-nowrap">${log.date}</td>
+            <td class="py-3 px-4 whitespace-nowrap">${log.user}</td>
+            <td class="py-3 px-4 whitespace-nowrap">${log.serial_number}</td>
+            <td class="py-3 px-4 whitespace-nowrap">${log.model}</td>
+            <td class="py-3 px-4 whitespace-nowrap">${log.action}</td>
+          </tr>
+        `;
+        tableBody.innerHTML += row;
       });
-
-      paginationButtons.push(btn);
     }
-  }
 
-  // Show the table rows for the current page
-  function showPage(page) {
-    const start = (page - 1) * rowsPerPage;
-    const end = start + rowsPerPage;
+    function paginateData(data) {
+      const start = (currentPage - 1) * rowsPerPage;
+      const end = start + rowsPerPage;
+      return data.slice(start, end);
+    }
 
-    tableRows.forEach((row, index) => {
-      row.style.display = index >= start && index < end ? "" : "none";
-    });
+    function createPaginationButtons(data) {
+      paginationButtons.forEach(btn => btn.remove());
+      paginationButtons = [];
 
-    paginationButtons.forEach((btn, i) => {
-      if ((i + 1) === page) {
-        btn.classList.add("bg-amber-400", "text-white");
-        btn.classList.remove("hover:bg-yellow-100");
+      const totalPages = Math.ceil(data.length / rowsPerPage);
+      if (totalPages === 0) {
+        prevBtn.style.display = "none";
+        nextBtn.style.display = "none";
+        return;
       } else {
-        btn.classList.remove("bg-amber-400", "text-white");
-        btn.classList.add("hover:bg-yellow-100");
+        prevBtn.style.display = "inline-block";
+        nextBtn.style.display = "inline-block";
       }
-    });
-  }
 
-  // Event listener for the prev button
-  prevBtn.addEventListener("click", () => {
-    if (currentPage > 1) {
-      currentPage--;
-      showPage(currentPage);
-    }
-  });
-
-  // Event listener for the next button
-  nextBtn.addEventListener("click", () => {
-    if (currentPage < totalPages) {
-      currentPage++;
-      showPage(currentPage);
-    }
-  });
-
-  createPaginationButtons();  // Create the page buttons
-  showPage(currentPage);      // Show the first page
-}
-
-document.addEventListener("DOMContentLoaded", function () {
-  fetch("../audit_log/fetch_audit.php")
-    .then(response => response.json())
-    .then(data => {
-      console.log("Raw Response:", data);
-
-      if (data.success) {
-        const tableBody = document.querySelector("#auditTableBody");
-        if (!tableBody) {
-          console.error("Error: Table body with ID 'auditTableBody' not found.");
-          return;
-        }
-
-        tableBody.innerHTML = "";
-
-        data.data.forEach(log => {
-          const row = `
-            <tr class="border-b text-sm user-row">
-              <td class="py-3 px-4 whitespace-nowrap">${log.date}</td>
-              <td class="py-3 px-4 whitespace-nowrap">${log.user}</td>
-              <td class="py-3 px-4 whitespace-nowrap">${log.serial_number}</td>
-              <td class="py-3 px-4 whitespace-nowrap">${log.model}</td>
-              <td class="py-3 px-4 whitespace-nowrap">${log.action}</td>
-            </tr>
-          `;
-          tableBody.innerHTML += row;
+      for (let i = 1; i <= totalPages; i++) {
+        const btn = document.createElement("button");
+        btn.textContent = i;
+        btn.className = "rounded-lg px-4 py-2 hover:bg-yellow-100 hover:border-black hover:font-semibold page-btn";
+        pagination.insertBefore(btn, nextBtn);
+        btn.addEventListener("click", () => {
+          currentPage = i;
+          renderTableRows(paginateData(currentLogs));
+          updatePaginationStyle();
         });
-
-        // Once rows are added, set up pagination
-        setupPagination();
-
-      } else {
-        console.error("Failed to fetch audit logs:", data.message);
+        paginationButtons.push(btn);
       }
-    })
-    .catch(error => {
-      console.error("Fetch Error:", error);
+
+      updatePaginationStyle();
+    }
+
+    function updatePaginationStyle() {
+      paginationButtons.forEach((btn, i) => {
+        if ((i + 1) === currentPage) {
+          btn.classList.add("bg-amber-400", "text-white");
+          btn.classList.remove("hover:bg-yellow-100");
+        } else {
+          btn.classList.remove("bg-amber-400", "text-white");
+          btn.classList.add("hover:bg-yellow-100");
+        }
+      });
+    }
+
+    function applySortingAndSearch() {
+      const sortValue = document.getElementById("filterSelect").value;
+      const searchValue = document.getElementById("searchInput").value.toLowerCase();
+
+      let filtered = [...logs];
+
+      // Apply search filter
+      if (searchValue) {
+        filtered = filtered.filter(log =>
+          Object.values(log).some(val =>
+            val.toLowerCase().includes(searchValue)
+          )
+        );
+      }
+
+      // Apply date sorting
+      if (sortValue === "asc") {
+        filtered.sort((a, b) => new Date(a.date) - new Date(b.date));
+      } else if (sortValue === "desc") {
+        filtered.sort((a, b) => new Date(b.date) - new Date(a.date));
+      }
+
+      currentLogs = filtered;
+      currentPage = 1;
+      renderTableRows(paginateData(currentLogs));
+      createPaginationButtons(currentLogs);
+    }
+
+    let currentLogs = [...logs]; // To track the filtered and sorted state
+
+    // Set up event listeners
+    document.getElementById("filterSelect").addEventListener("change", applySortingAndSearch);
+    document.getElementById("searchInput").addEventListener("input", applySortingAndSearch);
+
+    // Pagination buttons
+    prevBtn.addEventListener("click", () => {
+      if (currentPage > 1) {
+        currentPage--;
+        renderTableRows(paginateData(currentLogs));
+        updatePaginationStyle();
+      }
     });
-});
+
+    nextBtn.addEventListener("click", () => {
+      const totalPages = Math.ceil(currentLogs.length / rowsPerPage);
+      if (currentPage < totalPages) {
+        currentPage++;
+        renderTableRows(paginateData(currentLogs));
+        updatePaginationStyle();
+      }
+    });
+
+    // Initial render
+    applySortingAndSearch();
+  }
+
+  document.addEventListener("DOMContentLoaded", function () {
+    fetch("../audit_log/fetch_audit.php")
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          setupPaginationAndSorting(data.data);
+        } else {
+          console.error("Failed to fetch audit logs:", data.message);
+        }
+      })
+      .catch(error => {
+        console.error("Fetch Error:", error);
+      });
+  });
 </script>
+
+
 
 </html>
