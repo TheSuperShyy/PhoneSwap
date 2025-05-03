@@ -112,7 +112,7 @@ require __DIR__ . '/../../dbcon/session_get.php';
                 <div class="flex justify-start mb-4">
                   <form class="flex flex-row items-center gap-0">
 
-                    <select id="filterSelect"
+                    <select id="filterSelect"disabled
                       class="px-4 py-2 h-10 w-48 text-sm border border-gray-700 rounded-l-lg outline-none">
                       <option value="">Sort by Date</option>
                       <option value="asc">Date Ascending</option>
