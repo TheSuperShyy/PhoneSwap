@@ -63,8 +63,8 @@ $phones = iterator_to_array($db->phones->find([]));
           </a>
         </li>
         <li class="mb-4">
-        <a class="flex items-center hover:bg-opacity-30 hover:bg-white p-2 text-base font-medium rounded-lg"
-        href="../sidebar_pages/user_audit.php">
+          <a class="flex items-center hover:bg-opacity-30 hover:bg-white p-2 text-base font-medium rounded-lg"
+            href="../sidebar_pages/user_audit.php">
             <i class="fas fa-list-alt mr-3"></i>
             User Audit Log
           </a>
@@ -88,7 +88,7 @@ $phones = iterator_to_array($db->phones->find([]));
           <div class="flex flex-row items-center gap-4">
             <!-- Notification Bell -->
             <div class="relative inline-block text-left">
-              
+
 
             </div>
           </div>
@@ -153,26 +153,24 @@ $phones = iterator_to_array($db->phones->find([]));
           <div class="flex flex-row gap-4">
             <!-- Filter and Search -->
             <div class="flex laptop:flex-row phone:flex-col gap-2 w-full">
-              <div class="flex justify-start">
-                <form method="" class="flex flex-row items-center">
-                  <select name="filter" id="filterSelect" disabled
-                    class="px-4 py-2 h-10 w-36 text-sm border border-gray-700 rounded-l-lg outline-none">
-                    <option value="">Select Filter</option>
-                    <option value="">Device Model</option>
-                    <option value="">Serial Number</option>
-                    <option value="">Table Number</option>
-                    <option value="">Status</option>
-                    <option value="">Team Leader</option>
-                    <option value="">Action</option>
-                  </select>
-                  <input type="text" name="" id="" placeholder="Search" value
-                    class="w-2/3 h-10 p-2 border border-gray-700 shadow-sm sm:text-sm outline-none rounded-r-lg" />
-                </form>
-              </div>
+            <div class="flex justify-start">
+              <form method="" class="flex flex-row items-center">
+                <select name="filter" id="filterSelect"disabled
+                  class="px-4 py-2 h-10 w-48 text-sm border border-gray-700 rounded-l-lg outline-none">
+                  <option value="">Select Filter</option>
+                  <option value="model">Device Model</option>
+                  <option value="serial_number">Serial Number</option>
+                  <option value="status">Status</option>
+                  <option value="team_leader">Team Leader</option>
+                </select>
+                <input type="text" name="" id="searchInput" placeholder="Search"
+                  class="w-full h-10 p-2 border border-gray-700 shadow-sm sm:text-sm outline-none rounded-r-lg" />
+              </form>
+            </div>
               <div class="flex flex-row ml-auto gap-2">
                 <a href="">
                   <button
-                    class="flex items-center gap-2 border border-black bg-white hover:bg-gray-100 hover:bg-opacity-95 text-black px-4 py-2 rounded-lg shadow-md">
+                    class="flex items-center gap-2 border border-white bg-blue-950 hover:bg-blue-950 hover:bg-opacity-95 text-white px-4 py-2 rounded-lg shadow-md">
                     <i class="fa-solid fa-filter"></i></i><span>Export</span>
                   </button>
                 </a>
@@ -275,12 +273,12 @@ $phones = iterator_to_array($db->phones->find([]));
                   <div class="flex laptop:flex-row phone:flex-col gap-4">
                     <div class="flex flex-col gap-2 w-full">
                       <label for="model" class="text-sm font-medium">Device Model</label>
-                      <input type="text" id="deviceModel" name="model" readonly
+                      <input type="text" id="deviceModel" name="model"
                         class="border border-gray-700 p-2 w-full rounded-lg bg-gray-100">
                     </div>
                     <div class="flex flex-col gap-2 w-full">
                       <label for="serial_number" class="text-sm font-medium">Serial Number</label>
-                      <input type="text" id="serialNumber" name="serial_number" readonly
+                      <input type="text" id="serialNumber" name="serial_number"
                         class="border border-gray-700 p-2 w-full rounded-lg bg-gray-100">
                     </div>
                   </div>
@@ -359,14 +357,14 @@ $phones = iterator_to_array($db->phones->find([]));
 
         <!-- Pagination -->
         <div class="pagination flex justify-end space-x-2 px-14 mb-4" id="pagination">
-            <button class="prev-btn rounded-lg px-4 py-2 hover:bg-yellow-100 hover:border-black hover:font-semibold">
-              <i class="fa-solid fa-angle-left"></i>
-            </button>
-            <!-- Numbered buttons will be generated here by JS -->
-            <button class="next-btn rounded-lg px-4 py-2 hover:bg-yellow-100 hover:border-black hover:font-semibold">
-              <i class="fa-solid fa-angle-right"></i>
-            </button>
-          </div>
+          <button class="prev-btn rounded-lg px-4 py-2 hover:bg-yellow-100 hover:border-black hover:font-semibold">
+            <i class="fa-solid fa-angle-left"></i>
+          </button>
+          <!-- Numbered buttons will be generated here by JS -->
+          <button class="next-btn rounded-lg px-4 py-2 hover:bg-yellow-100 hover:border-black hover:font-semibold">
+            <i class="fa-solid fa-angle-right"></i>
+          </button>
+        </div>
       </div>
     </div>
 
@@ -456,46 +454,50 @@ $phones = iterator_to_array($db->phones->find([]));
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-<!-- Script for modal edit assets -->
-  <script>
-    document.addEventListener("DOMContentLoaded", function () {
-      const modal1 = document.getElementById("myModal1");
-      const closeModalBtn1 = document.getElementById("closeModalBtn1");
-      const editButtons = document.querySelectorAll(".openModalBtn1");
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    // Grab modal and close button
+    const modal1 = document.getElementById("myModal1");
+    const closeModalBtn1 = document.getElementById("closeModalBtn1");
+    const editButtons = document.querySelectorAll(".openModalBtn1");
 
-      const editForm = document.querySelector("#myModal1 form"); // Select the form inside modal
+    const editForm = document.querySelector("#myModal1 form"); // Select the form inside modal
 
-      editButtons.forEach(button => {
-        button.addEventListener("click", function () {
-          const serial = this.getAttribute("data-serial");
-          const model = this.getAttribute("data-model");
+    // Open modal when the edit button is clicked
+    editButtons.forEach(button => {
+      button.addEventListener("click", function () {
+        const serial = this.getAttribute("data-serial");
+        const model = this.getAttribute("data-model");
+        const status = this.getAttribute("data-status");
 
-          document.getElementById("serialNumber").value = serial;
-          document.getElementById("deviceModel").value = model;
+        // Pre-fill the form with the current data
+        document.getElementById("serialNumber").value = serial;
+        document.getElementById("deviceModel").value = model;
+        document.getElementById("statusSelect").value = status;
 
-          // ✅ Show modal
-          modal1.classList.remove("hidden");
-        });
+        // Show the modal
+        modal1.classList.remove("hidden");
       });
+    });
 
-      // ✅ Close modal when clicking cancel
-      closeModalBtn1.addEventListener("click", function () {
-        modal1.classList.add("hidden");
-      });
+    // Close modal when the close button is clicked
+    closeModalBtn1.addEventListener("click", function () {
+      modal1.classList.add("hidden");
+    });
 
-      // ✅ Handle form submission with AJAX
-      editForm.addEventListener("submit", function (e) {
-        e.preventDefault(); // Prevent default form submission
+    // Handle form submission via AJAX
+    editForm.addEventListener("submit", function (e) {
+      e.preventDefault(); // Prevent default form submission
 
-        const formData = new FormData(this);
+      const formData = new FormData(this);
 
-        fetch(this.action, {
-          method: "POST",
-          body: formData
-        })
+      fetch(this.action, {
+        method: "POST",
+        body: formData
+      })
         .then(response => response.json())
         .then(data => {
-          console.log("Response Data:", data); // ✅ Debug response
+          console.log("Response Data:", data);
           if (data.success) {
             Swal.fire({
               icon: "success",
@@ -504,7 +506,7 @@ $phones = iterator_to_array($db->phones->find([]));
               confirmButtonColor: "#3085d6",
             }).then(() => {
               modal1.classList.add("hidden"); // Close modal
-              location.reload(); // Refresh page to update table
+              location.reload(); // Refresh page to reflect updates
             });
           } else {
             Swal.fire({
@@ -524,10 +526,11 @@ $phones = iterator_to_array($db->phones->find([]));
             confirmButtonColor: "#d33",
           });
         });
-      });
-
     });
-  </script>
+  });
+</script>
+
+
 
 <!-- Script for add modal -->
 <script>
@@ -576,5 +579,6 @@ $phones = iterator_to_array($db->phones->find([]));
 
 <!-- script for pagination -->
 <script src="../../scripts/script.js"></script>
+<script src="../../scripts/filtering.js"> </script>
 
 </html>

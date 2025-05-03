@@ -1,0 +1,32 @@
+Array
+(
+    [serial_number] => i8-2024307932
+    [TM] => HF001
+)
+Array
+(
+    [serial_number] => i8-2024307932
+    [TM] => HF001
+)
+Array
+(
+    [serial_number] => i8-2024307932
+    [TM] => HF001
+)
+Array
+(
+    [serial_number] => i8-2024307932
+    [TM] => HF001
+)
+Array
+(
+    [serial_number] => i8-2024307932
+    [TM] => HF001
+)
+Array
+(
+    [serial_number] => i8-2024307932
+    [TM] => HF001
+)
+2025-05-03 20:27:45 - RAW: {"serial_number":"i8-2024307932","TM":"HF001"}
+2025-05-03 20:28:58 - RAW: {"serial_number":"i8-2024307932","TM":"HF001"}

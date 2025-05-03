@@ -116,18 +116,18 @@ require __DIR__ . '/../../dbcon/session_get.php';
             
             <!-- Filter & Search -->
             <div class="flex laptop:flex-row phone:flex-col gap-2 w-full">
-              <div class="flex justify-start">
+            <div class="flex justify-start">
                 <form method="" class="flex flex-row items-center">
-                  <select name="filter" id="filterSelect"
+                  <select name="filter" id="filterSelect" disabled
                     class="px-4 py-2 h-10 w-48 text-sm border border-gray-700 rounded-l-lg outline-none">
                     <option value="">Select Filter</option>
-                    <option value="">Device Model</option>
-                    <option value="">Serial Number</option>
-                    <option value="">Date</option>
-                    <option value="">Action</option>
-                    <option value="">Team Leader</option>
+                    <option value="">ID</option>
+                    <option value="">Complete Name</option>
+                    <option value="">Position</option>
+                    <option value="">Email</option>
+
                   </select>
-                  <input type="text" name="" id="" placeholder="Search" value
+                  <input type="text" name="" id="searchInput" placeholder="Search" value
                     class="w-full h-10 p-2 border border-gray-700 shadow-sm sm:text-sm outline-none rounded-r-lg" />
                 </form>
               </div>
@@ -203,6 +203,6 @@ require __DIR__ . '/../../dbcon/session_get.php';
 
 <!-- script for pagination -->
 <script src="../../scripts/script.js"> </script>
-<script src="../../filtering.js"></script>
+<script src="../../scripts/filtering.js"> </script>
 
 </html>

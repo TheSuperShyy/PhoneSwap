@@ -79,7 +79,7 @@ $result = $usersCollection->updateOne(
     ['$set' => $updateFields]
 );
 
-if ($result->getModifiedCount() > 0) {
+if ($result->isAcknowledged()) {
     // ✅ Log audit entry
     $auditData = [
         "timestamp" => date("Y-m-d H:i:s"),
@@ -91,7 +91,6 @@ if ($result->getModifiedCount() > 0) {
         "details" => $updateFields
     ];
 
-    // Debugging: Log audit insert result
     try {
         $insertResult = $db->user_audit->insertOne($auditData);
         error_log("Audit Log Insert Result: " . json_encode($insertResult));
@@ -99,10 +98,9 @@ if ($result->getModifiedCount() > 0) {
         error_log("Audit Insert Error: " . $e->getMessage());
     }
 
-    // Send success response after update
     echo json_encode(["success" => true, "message" => "User updated successfully!"]);
 } else {
-    // If no changes were made, send the corresponding response
-    echo json_encode(["success" => false, "message" => "No changes made."]);
+    echo json_encode(["success" => false, "message" => "Update failed."]);
 }
+
 ?>
