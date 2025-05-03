@@ -1,0 +1,10 @@
+[03-May-2025 20:27:45 Asia/Manila] PHP Fatal error:  Uncaught TypeError: in_array(): Argument #2 ($haystack) must be of type array, MongoDB\Model\BSONArray given in C:\xampp\htdocs\phoneswap\PhoneSwap\admin\controls\assign_phone.php:53
+Stack trace:
+#0 C:\xampp\htdocs\phoneswap\PhoneSwap\admin\controls\assign_phone.php(53): in_array('i8-2024307932', Object(MongoDB\Model\BSONArray))
+#1 {main}
+  thrown in C:\xampp\htdocs\phoneswap\PhoneSwap\admin\controls\assign_phone.php on line 53
+[03-May-2025 20:28:58 Asia/Manila] PHP Fatal error:  Uncaught TypeError: in_array(): Argument #2 ($haystack) must be of type array, MongoDB\Model\BSONArray given in C:\xampp\htdocs\phoneswap\PhoneSwap\admin\controls\assign_phone.php:53
+Stack trace:
+#0 C:\xampp\htdocs\phoneswap\PhoneSwap\admin\controls\assign_phone.php(53): in_array('i8-2024307932', Object(MongoDB\Model\BSONArray))
+#1 {main}
+  thrown in C:\xampp\htdocs\phoneswap\PhoneSwap\admin\controls\assign_phone.php on line 53
