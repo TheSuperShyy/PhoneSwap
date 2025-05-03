@@ -122,7 +122,7 @@ $teamLeaders = $teamLeaders ?? [];
             <div class="flex laptop:flex-row phone:flex-col gap-2 w-full">
               <div class="flex justify-start">
                 <form method="" class="flex flex-row items-center">
-                  <select name="filter" id="filterSelect"
+                  <select name="filter" id="filterSelect" disabled
                     class="px-4 py-2 h-10 w-48 text-sm border border-gray-700 rounded-l-lg outline-none">
                     <option value="">Select Filter</option>
                     <option value="">ID</option>
@@ -131,7 +131,7 @@ $teamLeaders = $teamLeaders ?? [];
                     <option value="">Email</option>
 
                   </select>
-                  <input type="text" name="" id="" placeholder="Search" value
+                  <input type="text" name="" id="searchInput" placeholder="Search" value
                     class="w-full h-10 p-2 border border-gray-700 shadow-sm sm:text-sm outline-none rounded-r-lg" />
                 </form>
               </div>
@@ -575,16 +575,7 @@ $teamLeaders = $teamLeaders ?? [];
       }
 
       // Check if status is the same as before
-      if (updatedStatus === currentStatus) {
-        Swal.fire({
-          icon: "info",
-          title: "No Changes",
-          text: "The status is the same as before, no changes have been made.",
-        }).then(() => {
-          window.location.reload(); // Reload the page after popup
-        });
-        return;
-      }
+      
 
       // Update table row (optional visual update)
       currentRow.cells[0].innerText = updatedHfId;
@@ -734,6 +725,7 @@ $teamLeaders = $teamLeaders ?? [];
 </script>
 
 <script src="../../scripts/script.js"></script>
+<script src="../../scripts/filtering.js"> </script>
 
 
 </html>
