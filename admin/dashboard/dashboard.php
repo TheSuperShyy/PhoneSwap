@@ -141,7 +141,8 @@ $phones = iterator_to_array($db->phones->find([]));
           <a href="dashboard.php" class="font-semibold laptop:text-lg phone:text-sm border-b-2 border-black">Assign
             Phones</a>
           <a href="managephones.php"
-            class="font-semibold laptop:text-lg phone:text-sm hover:border-b-2 hover:border-black">Manage Phones</a>
+            class="font-semibold laptop:text-lg phone:text-sm hover:border-b-2 hover:border-black">Manage
+            Phones</a>
           <a href="missingphones.php"
             class="font-semibold laptop:text-lg phone:text-sm hover:border-b-2 hover:border-black">Missing Phones</a>
         </div>
@@ -150,9 +151,9 @@ $phones = iterator_to_array($db->phones->find([]));
           <div class="flex laptop:flex-row phone:flex-col gap-2 w-full">
             <div class="flex justify-start">
               <form method="" class="flex flex-row items-center">
-                <select name="filter" id="filterSelect" disabled
+                <select name="filter" id="filterSelect"
                   class="px-4 py-2 h-10 w-48 text-sm border border-gray-700 rounded-l-lg outline-none">
-                  <option value="">Filter</option>
+                  <option value="">Select Filter</option>
                   <option value="model">Device Model</option>
                   <option value="serial_number">Serial Number</option>
                   <option value="status">Status</option>
@@ -162,15 +163,32 @@ $phones = iterator_to_array($db->phones->find([]));
                   class="w-full h-10 p-2 border border-gray-700 shadow-sm sm:text-sm outline-none rounded-r-lg" />
               </form>
             </div>
+            <!-- assign and return buttons -->
+            <div class="flex flex-row ml-auto gap-2">
+
+              <button id="returnBtn" onclick="openReturnModal()"
+                class="flex items-center gap-2 border border-white bg-blue-400 hover:bg-blue-600 hover:bg-opacity-95 text-white px-4 py-2 rounded-lg shadow-md"
+                disabled>
+                <i class="fa-solid fa-rotate-right"></i>
+                <span>Return</span>
+              </button>
+
+              <button id="assignBtn" onclick="openAssignModal()"
+                class="flex items-center gap-2 border border-white bg-amber-400 hover:bg-amber-600 hover:bg-opacity-95 text-white px-4 py-2 rounded-lg shadow-md"
+                disabled>
+                <i class="fa-solid fa-right-to-bracket"></i>
+                <span>Assign</span>
+              </button>
 
 
-            <div class="flex ml-auto gap-2">
-              <a href="">
-                <button
-                  class="flex items-center gap-2 border border-black bg-blue-950 hover:bg-blue-950 hover:bg-opacity-95 text-white px-4 py-2 rounded-lg shadow-md">
-                  <i class="fa-solid fa-filter"></i></i><span>Export</span>
-                </button>
-              </a>
+              <form action="../controls/import_excel.php" method="POST" enctype="multipart/form-data">
+                <label
+                  class="flex items-center gap-2 border border-white bg-blue-950 hover:bg-opacity-95 text-white px-4 py-2 rounded-lg shadow-md cursor-pointer">
+                  <i class="fa-solid fa-filter"></i>
+                  <span>Import</span>
+                  <input type="file" name="excel_file" accept=".xlsx, .xls" hidden>
+                </label>
+              </form>
             </div>
           </div>
         </div>
@@ -182,6 +200,9 @@ $phones = iterator_to_array($db->phones->find([]));
           <table class="w-full bg-white">
             <thead class="bg-gray-300">
               <tr class="text-left text-sm">
+                <th class="py-3 px-4 border-b">
+                  <input type="checkbox" onclick="toggleSelectAll(this)" />
+                </th>
                 <th class="py-3 px-4 border-b">Device Model</th>
                 <th class="py-3 px-4 border-b">Serial Number</th>
                 <th class="py-3 px-4 border-b">Status</th>
@@ -192,13 +213,35 @@ $phones = iterator_to_array($db->phones->find([]));
             <tbody>
               <?php if (!empty($phones)): ?>
                 <?php foreach ($phones as $phone): ?>
+                  <?php
+                  // Check if the phone is already assigned to any user (TL or TM)
+                  $assignedUser = $db->users->findOne([
+                    'assigned_phone' => $phone['serial_number']
+                  ]);
+                  $isAssigned = $assignedUser ? true : false;
+                  ?>
                   <tr class="border-b text-left user-row">
+                    <!-- Checkbox Column -->
+                    <td class="py-2 px-4 whitespace-nowrap">
+                      <input type="checkbox" name="phoneCheckbox"
+                        value="<?php echo htmlspecialchars($phone['serial_number']); ?>"
+                        data-model="<?php echo htmlspecialchars($phone['model']); ?>"
+                        data-status="<?php echo htmlspecialchars($phone['status']); ?>"
+                        data-assigned="<?php echo $isAssigned ? 'true' : 'false'; ?>" <?php echo $isAssigned ? '' : ''; ?>
+                        onchange="handleCheckboxChange()" />
+                    </td>
+
+                    <!-- Phone Model -->
                     <td class="py-2 px-4 flex items-center space-x-2">
                       <?php echo htmlspecialchars($phone['model']); ?>
                     </td>
+
+                    <!-- Serial Number -->
                     <td class="py-2 px-4 whitespace-nowrap">
                       <?php echo htmlspecialchars($phone['serial_number']); ?>
                     </td>
+
+                    <!-- Phone Status -->
                     <td class="py-2 px-4 whitespace-nowrap">
                       <?php if ($phone['status'] === 'Active'): ?>
                         <span
@@ -222,6 +265,8 @@ $phones = iterator_to_array($db->phones->find([]));
                         </span>
                       <?php endif; ?>
                     </td>
+
+                    <!-- Assigned Team Leader -->
                     <td class="py-2 px-4 whitespace-nowrap">
                       <?php
                       $assignedTL = $db->users->findOne([
@@ -229,17 +274,14 @@ $phones = iterator_to_array($db->phones->find([]));
                         'userType' => 'TL'
                       ]);
                       echo $assignedTL
-                        ? htmlspecialchars('( ' . $assignedTL['hfId'] . ') ' . $assignedTL['first_name'] . ' ' . $assignedTL['last_name'])
+                        ? htmlspecialchars('(' . $assignedTL['hfId'] . ') ' . $assignedTL['first_name'] . ' ' . $assignedTL['last_name'])
                         : 'Unassigned';
                       ?>
                     </td>
+
+                    <!-- Action Buttons -->
                     <td class="text-center space-x-2">
                       <div class="flex flex-row py-2 px-4 gap-2">
-                        <button
-                          onclick="openAssignModal('<?php echo $phone['serial_number']; ?>', '<?php echo $phone['model']; ?>')"
-                          class="flex flex-row gap-2 items-center font-semibold border border-white bg-blue-500 hover:bg-blue-700 text-white px-6 py-1.5 rounded-full shadow-lg">
-                          Assign
-                        </button>
                         <button onclick="window.location.href='missingphones.php'"
                           class="flex flex-row gap-2 items-center border font-semibold border-white bg-red-700 hover:bg-red-900 text-white px-6 py-1.5 rounded-full shadow-lg">
                           Missing
@@ -250,58 +292,52 @@ $phones = iterator_to_array($db->phones->find([]));
                 <?php endforeach; ?>
               <?php else: ?>
                 <tr>
-                  <td colspan="5" class="text-center py-4 text-gray-500">
+                  <td colspan="6" class="text-center py-4 text-gray-500">
                     No phones found.
                   </td>
                 </tr>
               <?php endif; ?>
             </tbody>
 
+
           </table>
         </div>
       </div>
 
 
-      <!-- Assign Phone Modal -->
-      <div id="assignModal"
-        class="fixed inset-0 justify-center hidden bg-black bg-opacity-50 z-50 pt-24 pb-24 h-full w-full laptop:px-80 laptop:w-full phone:w-full phone:px-4">
-        <div class="bg-white border border-gray-600 rounded-lg px-6 py-6 shadow-lg relative h-fit">
-          <h2 class="text-2xl font-bold mb-4">Assigns Phone to Team Leader</h2>
+      <!-- Modal for Assigning Phones -->
+      <div id="myModal"
+        class="fixed inset-0 flex justify-center hidden bg-black bg-opacity-50 z-50 pt-24 pb-24 h-full laptop:px-80 laptop:w-full phone:w-full phone:px-4">
+        <div class="bg-white border border-gray-600 rounded-lg px-6 py-6 shadow-lg relative h-fit w-full">
+          <div class="flex flex-col gap-4">
+            <h2 class="text-2xl font-russo mb-2">Assign Team Leader</h2>
 
-          <form id="assignForm">
-            <!-- Device Model (Read-Only) -->
-            <div class="mb-4">
-              <label class="text-sm font-medium">Device Model</label>
-              <input type="text" id="deviceModel" readonly
-                class="border border-gray-700 p-2 w-full rounded-lg bg-gray-100">
+            <!-- 📦 Selected Phones Container -->
+            <div id="selectedPhonesContainer" class="flex flex-col gap-3 max-h-52 overflow-y-auto">
+              <!-- dynamically inserted phone cards -->
             </div>
 
-            <!-- Serial Number (Read-Only) -->
-            <div class="mb-4">
-              <label class="text-sm font-medium">Serial Number</label>
-              <input type="text" id="serialNumber" readonly
-                class="border border-gray-700 p-2 w-full rounded-lg bg-gray-100">
-            </div>
-
-            <!-- Select Team Leader -->
-            <div class="mb-4">
-              <label class="text-sm font-medium">Select Team Leader</label>
-              <select id="teamLeaderSelect" class="border border-gray-700 p-2 w-full rounded-lg">
+            <!-- 👤 Team Leader Select -->
+            <div class="flex flex-col gap-2 w-full mt-4">
+              <label for="selectUser" class="text-sm font-medium">Team Leader</label>
+              <select name="selectUser" id="selectUser"
+                class="p-2 h-10 w-full text-sm border border-gray-700 rounded-lg outline-none">
+                <option value="">Select Team Leader</option>
+                <!-- options will be inserted dynamically here -->
               </select>
-
             </div>
 
-            <!-- Buttons -->
-            <div class="flex justify-end gap-2">
-              <button type="button" id="closeAssignModal"
-                class="w-24 px-4 py-2 border border-black text-black rounded-lg hover:bg-gray-200">
+            <div class="flex justify-end gap-2 mt-6">
+              <button id="closeModalBtn1"
+                class="w-24 px-4 py-2 shadow-md shadow-gray-300 hover:ring-slate-400 text-black border border-black font-medium rounded-lg">
                 Cancel
               </button>
-              <button type="submit" class="w-24 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-700">
-                Assign
+              <button onclick="assignPhonesToUser()"
+                class="px-4 py-2 w-24 shadow-md shadow-gray-300 bg-amber-400 font-medium text-black border border-black rounded-lg">
+                Save
               </button>
             </div>
-          </form>
+          </div>
         </div>
       </div>
     </div>
@@ -316,164 +352,6 @@ $phones = iterator_to_array($db->phones->find([]));
       </button>
     </div>
   </div>
-
-
-
-  <script>
-    document.addEventListener("DOMContentLoaded", function () {
-      console.log("JS Loaded");
-
-      const assignModal = document.getElementById("assignModal");
-      const closeAssignModal = document.getElementById("closeAssignModal");
-      const assignForm = document.getElementById("assignForm");
-
-      if (!assignModal) {
-        console.error("Error: assignModal element not found!");
-        return;
-      }
-
-      if (closeAssignModal) {
-        closeAssignModal.addEventListener("click", function () {
-          assignModal.classList.add("hidden");
-          console.log("Modal closed");
-        });
-      } else {
-        console.warn("Warning: closeAssignModal button not found.");
-      }
-
-      // ✅ Handle form submission
-      assignForm.addEventListener("submit", function (event) {
-        event.preventDefault(); // Prevent default form submission
-
-        const serialNumber = document.getElementById("serialNumber").value;
-        const deviceModel = document.getElementById("deviceModel").value;
-        const teamLeaderId = document.getElementById("teamLeaderSelect").value; // This is hfId
-
-        if (!serialNumber || !deviceModel || !teamLeaderId) {
-          Swal.fire({
-            icon: "warning",
-            title: "Incomplete Details",
-            text: "Please select all fields before assigning.",
-            confirmButtonColor: "#3085d6"
-          });
-          return;
-        }
-
-        console.log("Assigning phone to Team Leader (hfId):", teamLeaderId);
-
-        // ✅ Send assignment request to backend
-        fetch("../manage_phones/assign_phone.php", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            serial_number: serialNumber,
-            device_model: deviceModel,
-            hfId: teamLeaderId,
-          }),
-        })
-          .then((response) => response.json())
-          .then((data) => {
-            if (data.success) {
-              Swal.fire({
-                icon: "success",
-                title: "Phone Assigned!",
-                text: "The phone has been successfully assigned.",
-                confirmButtonColor: "#3085d6"
-              }).then(() => {
-                assignModal.classList.add("hidden");
-                location.reload(); // Reload the page to reflect changes
-              });
-            } else {
-              Swal.fire({
-                icon: "error",
-                title: "Error",
-                text: data.message,
-                confirmButtonColor: "#d33"
-              });
-            }
-          })
-          .catch((error) => {
-            console.error("Fetch Error:", error);
-            Swal.fire({
-              icon: "error",
-              title: "Failed to Assign Phone",
-              text: "An error occurred. Please try again.",
-              confirmButtonColor: "#d33"
-            });
-          });
-      });
-    });
-
-    // ✅ Open Assign Modal
-    function openAssignModal(serial, model) {
-      console.log("Opening modal for:", serial, model);
-
-      const assignModal = document.getElementById("assignModal");
-      const teamLeaderSelect = document.getElementById("teamLeaderSelect");
-
-      if (!assignModal || !teamLeaderSelect) {
-        console.error("Modal elements missing!");
-        return;
-      }
-
-      document.getElementById("serialNumber").value = serial;
-      document.getElementById("deviceModel").value = model;
-
-      // ✅ Fetch Team Leaders
-      fetch("../manage_phones/fetch_team_leaders.php")
-        .then((response) => response.json())
-        .then((data) => {
-          console.log("Fetched Data:", data);
-
-          if (!data.success || !Array.isArray(data.data)) { // Ensure correct response
-            console.error("Unexpected response format.");
-            return;
-          }
-
-          const teamLeaders = data.data; // ✅ Get the "data" array
-
-          const teamLeaderSelect = document.getElementById("teamLeaderSelect");
-          if (!teamLeaderSelect) {
-            console.error("teamLeaderSelect element not found!");
-            return;
-          }
-
-          teamLeaderSelect.innerHTML = `
-          <option value="">Select Team Leader</option>
-          <option value="unassigned">Unassigned</option>
-        `;
-
-          if (teamLeaders.length === 0) {
-            Swal.fire({
-              icon: "info",
-              title: "No Team Leaders Found",
-              text: "There are no available Team Leaders to assign phones.",
-              confirmButtonColor: "#3085d6"
-            });
-            teamLeaderSelect.innerHTML = '<option value="">No Team Leaders Found</option>';
-            teamLeaderSelect.disabled = true;
-          } else {
-            teamLeaderSelect.disabled = false;
-            teamLeaders.forEach((user) => {
-              let displayName = `(${user.hfId}) ${user.username}`;
-              teamLeaderSelect.innerHTML += `<option value="${user.hfId}">${displayName}</option>`;
-            });
-          }
-
-          assignModal.classList.remove("hidden");
-        })
-        .catch((error) => {
-          console.error("Fetch Error:", error);
-          Swal.fire({
-            icon: "error",
-            title: "Fetch Error",
-            text: "Failed to fetch team leaders. Please try again.",
-            confirmButtonColor: "#d33"
-          });
-        });
-    }
-  </script>
-
 
   </body>
 
@@ -506,9 +384,370 @@ $phones = iterator_to_array($db->phones->find([]));
     });
   </script>
 
+  <script>
+    let allowOutsideClickClose = false;
+
+    // Function to toggle "Select All" checkbox
+    function toggleSelectAll(source) {
+      const checkboxes = document.querySelectorAll('input[name="phoneCheckbox"]');
+      checkboxes.forEach(checkbox => {
+        checkbox.checked = source.checked;
+      });
+      handleCheckboxChange(); // Update button state when Select All is clicked
+    }
+
+    function handleCheckboxChange() {
+      const checkboxes = document.querySelectorAll('input[name="phoneCheckbox"]');
+      const assignButton = document.getElementById("assignBtn");
+      const returnButton = document.getElementById("returnBtn");
+
+      if (!assignButton || !returnButton) {
+        console.error('Assign or Return button not found.');
+        return;
+      }
+
+      let checkedBoxes = [];
+      let assignable = true;
+      let returnable = true;
+
+      // Gather all checked checkboxes
+      checkboxes.forEach(checkbox => {
+        if (checkbox.checked) {
+          checkedBoxes.push(checkbox);
+        }
+      });
+
+      // If nothing is selected, enable both buttons and show all checkboxes
+      if (checkedBoxes.length === 0) {
+        assignButton.disabled = true;
+        returnButton.disabled = true;
+        checkboxes.forEach(cb => cb.style.display = '');
+        return;
+      }
+
+      const firstAssignedStatus = checkedBoxes[0].getAttribute('data-assigned');
+
+      // Ensure all checked checkboxes have the same assigned status
+      const sameStatus = checkedBoxes.every(cb => cb.getAttribute('data-assigned') === firstAssignedStatus);
+
+      // Hide checkboxes that don't match the selected status
+      checkboxes.forEach(cb => {
+        if (!cb.checked && cb.getAttribute('data-assigned') !== firstAssignedStatus) {
+          cb.style.display = 'none';
+        } else {
+          cb.style.display = '';
+        }
+      });
+
+      if (!sameStatus) {
+        assignButton.disabled = true;
+        returnButton.disabled = true;
+        return;
+      }
+
+      if (firstAssignedStatus === 'true') {
+        assignButton.disabled = true;
+        returnButton.disabled = false;
+      } else {
+        assignButton.disabled = false;
+        returnButton.disabled = true;
+      }
+    }
+
+    function openReturnModal() {
+      const selectedPhones = document.querySelectorAll('input[name="phoneCheckbox"]:checked');
+
+      if (selectedPhones.length === 0) {
+        Swal.fire("No Phones Selected", "Please select at least one phone to return.", "warning");
+        return;
+      }
+
+      Swal.fire({
+        title: "Confirm Return",
+        html: `
+      <p>Please type <strong>RETURN</strong> to confirm.</p>
+      <input type="text" id="confirmInput" class="swal2-input" placeholder="Type RETURN here">
+    `,
+        showCancelButton: true,
+        confirmButtonText: "Confirm",
+        preConfirm: () => {
+          const input = Swal.getPopup().querySelector("#confirmInput").value;
+          if (input !== "RETURN") {
+            Swal.showValidationMessage("You must type RETURN to proceed.");
+          }
+          return input;
+        }
+      }).then(result => {
+        if (result.isConfirmed) {
+          // Proceed to return phones
+          const serialNumbers = Array.from(selectedPhones).map(cb => cb.value);
+
+          fetch("../controls/return_phones.php", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ phones: serialNumbers })
+          })
+            .then(res => res.json())
+            .then(data => {
+              if (data.success) {
+                Swal.fire("Returned!", "Selected phones have been returned.", "success").then(() => {
+                  location.reload();
+                });
+              } else {
+                Swal.fire("Error", data.message || "Something went wrong while returning phones.", "error");
+              }
+            })
+            .catch(err => {
+              Swal.fire("Error", err.message || "Request failed.", "error");
+            });
+        }
+      });
+    }
+
+
+    // Open assign modal and fetch team members
+    function openAssignModal() {
+      const selected = document.querySelectorAll('input[name="phoneCheckbox"]:checked');
+      const container = document.getElementById("selectedPhonesContainer");
+      const select = document.getElementById("selectUser");
+
+      console.log("Total selected checkboxes:", selected.length);
+
+      container.innerHTML = "";
+      select.innerHTML = '<option value="">Select Team Leader</option>'; // reset dropdown
+
+      if (selected.length === 0) {
+        Swal.fire("No Phones Selected", "Please select at least one phone to assign.", "warning");
+        return;
+      }
+
+      fetch("../controls/fetch_team_leaders.php")
+        .then(res => res.json())
+        .then(data => {
+          if (data.success) {
+            data.data.forEach(tl => {
+              const opt = document.createElement("option");
+              opt.value = tl.hfId;
+              opt.textContent = `[${tl.hfId}] ${tl.first_name} ${tl.last_name}`;
+              select.appendChild(opt);
+            });
+          } else {
+            console.error("Failed to fetch team members:", data.message);
+          }
+        })
+        .catch(err => {
+          console.error("Error fetching team members:", err);
+        });
+
+      // Fill phone cards in modal
+      selected.forEach(checkbox => {
+        const serial = checkbox.value;
+        const model = checkbox.getAttribute("data-model");
+
+        console.log("Selected Phone -> Serial:", serial, "Model:", model);
+
+        const phoneCard = document.createElement("div");
+        phoneCard.className = "flex-row flex-col justify-between items-start bg-gray-300 gap-2 pl-4 py-2 rounded-md";
+        phoneCard.innerHTML = `
+      <p class="pl-2"><strong>Serial:</strong> ${serial}</p>
+      <p class="pl-2"><strong>Model:</strong> ${model}</p>
+    `;
+
+        container.appendChild(phoneCard);
+      });
+
+      const modal = document.getElementById("myModal");
+      modal.classList.remove("hidden");
+
+      setTimeout(() => {
+        allowOutsideClickClose = true;
+      }, 100);
+    }
+
+    // Close modal event listener
+    document.getElementById("closeModalBtn1").addEventListener("click", function () {
+      document.getElementById("myModal").classList.add("hidden");
+      allowOutsideClickClose = false;
+    });
+
+    // Close modal when clicking outside
+    window.addEventListener("click", function (e) {
+      const modal = document.getElementById("myModal");
+      const modalContent = modal.querySelector(".bg-white");
+
+      if (
+        allowOutsideClickClose &&
+        !modal.classList.contains("hidden") &&
+        !modalContent.contains(e.target)
+      ) {
+        modal.classList.add("hidden");
+        allowOutsideClickClose = false;
+      }
+    });
+
+    // Assign or Unassign phones to a Team Member
+    function assignPhonesToUser() {
+      const selectedTL = document.getElementById("selectUser").value;
+      const selectedPhones = document.querySelectorAll('input[name="phoneCheckbox"]:checked');
+
+      if (selectedTL === "") {
+        Swal.fire("No Team Member Selected", "Please select a Team Member.", "warning");
+        return;
+      }
+
+      if (selectedPhones.length === 0) {
+        Swal.fire("No Phones Selected", "Please select at least one phone.", "warning");
+        return;
+      }
+
+      let completed = 0;
+      let errors = [];
+
+      selectedPhones.forEach((checkbox, index) => {
+        const serial = checkbox.value;
+
+        // UNASSIGN CASE
+        if (selectedTL === "Unassigned") {
+          fetch("../controls/fetch_team_leaders.php")
+            .then(res => res.json())
+            .then(tmData => {
+              if (!tmData.success) {
+                errors.push(`Serial ${serial}: Failed to fetch team leaders.`);
+                throw new Error(tmData.message);
+              }
+
+              const teamMembers = tmData.data;
+              const owner = teamMembers.find(tm =>
+                tm.assigned_phone && tm.assigned_phone.includes(serial)
+              );
+
+              if (!owner) {
+                errors.push(`Serial ${serial}: No TL found with this phone.`);
+                return;
+              }
+
+              return fetch("../controls/assign_phone.php", {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                  serial_number: "unassigned",
+                  TM: owner.hfId
+                })
+              });
+            })
+            .then(res => res?.json())
+            .then(result => {
+              if (result?.success) {
+                console.log(`✅ Phone ${serial} unassigned`);
+              } else if (result) {
+                errors.push(`Serial ${serial}: ${result.error}`);
+              }
+            })
+            .catch(err => {
+              errors.push(`Serial ${serial}: ${err.message}`);
+            })
+            .finally(() => {
+              completed++;
+              if (completed === selectedPhones.length) handleAssignFinish(errors);
+            });
+
+        } else {
+          // ASSIGN CASE
+          fetch("../controls/assign_phone.php", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+              serial_number: serial,
+              TM: selectedTL
+            })
+          })
+            .then(res => res.json())
+            .then(data => {
+              if (data.success) {
+                console.log(`✅ Phone ${serial} assigned to TL ${selectedTL}`);
+              } else {
+                errors.push(`Serial ${serial}: ${data.error}`);
+              }
+            })
+            .catch(err => {
+              errors.push(`Serial ${serial}: ${err.message}`);
+            })
+            .finally(() => {
+              completed++;
+              if (completed === selectedPhones.length) handleAssignFinish(errors);
+            });
+        }
+      });
+
+      function handleAssignFinish(errors) {
+        if (errors.length > 0) {
+          console.log("Assignment Errors:", errors);
+          Swal.fire("Some Assignments Failed", errors.join("<br>"), "error");
+        } else {
+          console.log("All phones assigned/unassigned successfully.");
+          Swal.fire("Success", "All phone updates completed!", "success").then(() => {
+            location.reload();
+          });
+        }
+      }
+    }
+
+  </script>
+
   <!-- script for pagination -->
   <script src="../../scripts/script.js"> </script>
 
   <script src="../../scripts/filtering.js"> </script>
+
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script>
+    document.querySelector('input[name="excel_file"]').addEventListener('change', function () {
+      const form = this.closest('form');
+      const formData = new FormData(form);
+
+      Swal.fire({
+        title: 'Importing...',
+        text: 'Please wait while we process the file.',
+        allowOutsideClick: false,
+        didOpen: () => Swal.showLoading()
+      });
+
+      const startTime = Date.now();
+
+      fetch(form.action, {
+        method: 'POST',
+        body: formData
+      })
+        .then(response => response.json())
+        .then(data => {
+          const elapsedTime = Date.now() - startTime;
+          const delay = Math.max(2000 - elapsedTime, 0); // at least 2 seconds
+
+          setTimeout(() => {
+            Swal.fire({
+              icon: data.status === 'success' ? 'success' : 'error',
+              title: data.status === 'success' ? 'Success' : 'Error',
+              text: data.message
+            }).then(() => {
+              window.location.reload(); // reloads dashboard after confirmation
+            });
+          }, delay);
+        })
+        .catch(error => {
+          Swal.fire({
+            icon: 'error',
+            title: 'Unexpected Error',
+            text: 'Something went wrong while importing.'
+          });
+        });
+    });
+  </script>
+
 
   </html>
