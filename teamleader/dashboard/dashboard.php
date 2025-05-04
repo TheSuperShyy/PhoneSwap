@@ -165,12 +165,13 @@ require __DIR__ . '/../../dbcon/session_get.php';
                 </button>
 
 
-                <a href="">
+                <a href="../export/export_tl_table.php">
                   <button
                     class="flex items-center gap-2 border border-white bg-blue-950 hover:bg-blue-950 hover:bg-opacity-95 text-white px-4 py-2 rounded-lg shadow-md">
-                    <i class="fa-solid fa-filter"></i></i><span>Export</span>
+                    <i class="fa-solid fa-file-export"></i><span>Export</span>
                   </button>
                 </a>
+
               </div>
             </div>
           </div>
