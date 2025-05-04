@@ -1,6 +1,6 @@
 <?php
-require __DIR__ . '/../../dbcon/dbcon.php';
 session_start();
+require __DIR__ . '/../../dbcon/dbcon.php';
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $email = $_POST['email'] ?? '';
@@ -23,7 +23,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         echo json_encode([
             "success" => true,
             "message" => "Login successful!",
-            "userType" => $user['userType']
+            "userType" => $user['userType'],
+            "session" => $_SESSION
         ]);
         exit();
     } else {

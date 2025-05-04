@@ -153,27 +153,29 @@ $phones = iterator_to_array($db->phones->find([]));
           <div class="flex flex-row gap-4">
             <!-- Filter and Search -->
             <div class="flex laptop:flex-row phone:flex-col gap-2 w-full">
-            <div class="flex justify-start">
-              <form method="" class="flex flex-row items-center">
-                <select name="filter" id="filterSelect"disabled
-                  class="px-4 py-2 h-10 w-48 text-sm border border-gray-700 rounded-l-lg outline-none">
-                  <option value="">Select Filter</option>
-                  <option value="model">Device Model</option>
-                  <option value="serial_number">Serial Number</option>
-                  <option value="status">Status</option>
-                  <option value="team_leader">Team Leader</option>
-                </select>
-                <input type="text" name="" id="searchInput" placeholder="Search"
-                  class="w-full h-10 p-2 border border-gray-700 shadow-sm sm:text-sm outline-none rounded-r-lg" />
-              </form>
-            </div>
+              <div class="flex justify-start">
+                <form method="" class="flex flex-row items-center">
+                  <select name="filter" id="filterSelect" disabled
+                    class="px-4 py-2 h-10 w-48 text-sm border border-gray-700 rounded-l-lg outline-none">
+                    <option value="">Select Filter</option>
+                    <option value="model">Device Model</option>
+                    <option value="serial_number">Serial Number</option>
+                    <option value="status">Status</option>
+                    <option value="team_leader">Team Leader</option>
+                  </select>
+                  <input type="text" name="" id="searchInput" placeholder="Search"
+                    class="w-full h-10 p-2 border border-gray-700 shadow-sm sm:text-sm outline-none rounded-r-lg" />
+                </form>
+              </div>
               <div class="flex flex-row ml-auto gap-2">
-                <a href="">
+
+                <a href="../controls/export_phones.php">
                   <button
-                    class="flex items-center gap-2 border border-white bg-blue-950 hover:bg-blue-950 hover:bg-opacity-95 text-white px-4 py-2 rounded-lg shadow-md">
-                    <i class="fa-solid fa-filter"></i></i><span>Export</span>
+                    class="flex items-center gap-2 border border-white bg-blue-950 hover:bg-opacity-95 text-white px-4 py-2 rounded-lg shadow-md">
+                    <i class="fa-solid fa-file-export"></i><span>Export</span>
                   </button>
                 </a>
+
                 <button id="openModalBtn2"
                   class="flex items-center gap-2 border border-black bg-blue-950 hover:bg-blue-950 hover:bg-opacity-95 text-white px-4 py-2 rounded-lg shadow-md">
                   <i class="fa-solid fa-circle-plus"></i><span>Add New</span>

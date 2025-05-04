@@ -135,10 +135,7 @@ require __DIR__ . '/../../dbcon/session_get.php';
               <!-- Export -->
               <div class="flex ml-auto">
                 <div class="flex justify-end gap-2">
-                  <button id="openModalBtn"
-                    class="flex items-center gap-2 font-semibold border border-black  bg-blue-950 hover:bg-blue-950 hover:bg-opacity-95 text-white px-4 py-2 rounded-lg shadow-md">
-                    <i class="fa-solid fa-filter"></i></i><span>Export</span>
-                  </button>
+                  
                 </div>
               </div>
             </div>

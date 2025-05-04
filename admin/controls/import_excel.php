@@ -27,25 +27,37 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['excel_file'])) {
         }
 
         $inserted = 0;
+        $fileSerials = [];
 
         foreach ($rows as $row) {
             $model = $row[$modelIndex] ?? '';
             $serial = $row[$serialIndex] ?? '';
             $status = $row[$statusIndex] ?? '';
 
+            $serial = trim($serial);
+
             if (empty($serial)) continue;
 
-            $exists = $phonesCollection->findOne(['serial number' => $serial]);
-
-            if (!$exists) {
-                $phonesCollection->insertOne([
-                    'model' => $model,
-                    'serial_number' => $serial,
-                    'status' => $status,
-                    'created_at' => new MongoDB\BSON\UTCDateTime()
-                ]);
-                $inserted++;
+            // Prevent duplicates within the same file
+            if (in_array($serial, $fileSerials)) {
+                continue;
             }
+
+            // Prevent duplicates from existing MongoDB entries
+            $exists = $phonesCollection->findOne(['serial_number' => $serial]);
+            if ($exists) {
+                continue;
+            }
+
+            // Insert into MongoDB
+            $phonesCollection->insertOne([
+                'model' => $model,
+                'serial_number' => $serial,
+                'status' => $status,
+                'created_at' => new MongoDB\BSON\UTCDateTime()
+            ]);
+            $inserted++;
+            $fileSerials[] = $serial; // Track inserted serials from file
         }
 
         if ($inserted > 0) {
@@ -56,7 +68,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['excel_file'])) {
         } else {
             echo json_encode([
                 'status' => 'error',
-                'message' => 'No new phones were imported. All serial numbers may already exist or the file is empty.'
+                'message' => 'No new phones were imported. All serial numbers may already exist or are duplicates.'
             ]);
         }
     } else {
