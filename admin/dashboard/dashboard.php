@@ -151,7 +151,7 @@ $phones = iterator_to_array($db->phones->find([]));
           <div class="flex laptop:flex-row phone:flex-col gap-2 w-full">
             <div class="flex justify-start">
               <form method="" class="flex flex-row items-center">
-                <select name="filter" id="filterSelect"
+                <select name="filter" id="filterSelect" disabled
                   class="px-4 py-2 h-10 w-48 text-sm border border-gray-700 rounded-l-lg outline-none">
                   <option value="">Select Filter</option>
                   <option value="model">Device Model</option>
