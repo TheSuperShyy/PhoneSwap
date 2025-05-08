@@ -13,6 +13,7 @@ require __DIR__ . '/../../dbcon/session_get.php';
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Audit Trail</title>
   <link rel="stylesheet" href="../../src/output.css" />
+  <link rel="icon" href="../../src/assets/images/iconswap.svg" type="image/svg">
   <script src="https://kit.fontawesome.com/10d593c5dc.js" crossorigin="anonymous"></script>
   <script src="../../scripts/script.js"></script>
   <style>
@@ -169,33 +170,24 @@ require __DIR__ . '/../../dbcon/session_get.php';
     const nextBtn = pagination.querySelector(".next-btn");
 
     let currentPage = 1;
-    let paginationButtons = [];
+    let currentLogs = [...logs];
 
     function renderTableRows(filteredLogs) {
-      tableBody.innerHTML = "";
-      filteredLogs.forEach(log => {
-        const row = `
-          <tr class="border-b text-sm user-row">
-            <td class="py-3 px-4 whitespace-nowrap">${log.date}</td>
-            <td class="py-3 px-4 whitespace-nowrap">${log.user}</td>
-            <td class="py-3 px-4 whitespace-nowrap">${log.serial_number}</td>
-            <td class="py-3 px-4 whitespace-nowrap">${log.model}</td>
-            <td class="py-3 px-4 whitespace-nowrap">${log.action}</td>
-          </tr>
-        `;
-        tableBody.innerHTML += row;
-      });
-    }
-
-    function paginateData(data) {
-      const start = (currentPage - 1) * rowsPerPage;
-      const end = start + rowsPerPage;
-      return data.slice(start, end);
+      const paginatedLogs = filteredLogs.slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage);
+      tableBody.innerHTML = paginatedLogs.map(log => `
+        <tr class="border-b text-sm user-row">
+          <td class="py-3 px-4 whitespace-nowrap">${log.date}</td>
+          <td class="py-3 px-4 whitespace-nowrap">${log.user}</td>
+          <td class="py-3 px-4 whitespace-nowrap">${log.serial_number}</td>
+          <td class="py-3 px-4 whitespace-nowrap">${log.model}</td>
+          <td class="py-3 px-4 whitespace-nowrap">${log.action}</td>
+        </tr>
+      `).join("");
     }
 
     function createPaginationButtons(data) {
-      paginationButtons.forEach(btn => btn.remove());
-      paginationButtons = [];
+      // Clear old buttons
+      pagination.querySelectorAll(".page-btn, .dots").forEach(el => el.remove());
 
       const totalPages = Math.ceil(data.length / rowsPerPage);
       if (totalPages === 0) {
@@ -207,32 +199,55 @@ require __DIR__ . '/../../dbcon/session_get.php';
         nextBtn.style.display = "inline-block";
       }
 
-      for (let i = 1; i <= totalPages; i++) {
-        const btn = document.createElement("button");
-        btn.textContent = i;
-        btn.className = "rounded-lg px-4 py-2 hover:bg-yellow-100 hover:border-black hover:font-semibold page-btn";
-        pagination.insertBefore(btn, nextBtn);
-        btn.addEventListener("click", () => {
-          currentPage = i;
-          renderTableRows(paginateData(currentLogs));
-          updatePaginationStyle();
-        });
-        paginationButtons.push(btn);
+      const maxVisibleButtons = 3;
+      let startPage = Math.max(1, currentPage - 2);
+      let endPage = Math.min(totalPages, currentPage + 2);
+
+      if (currentPage <= 3) {
+        startPage = 1;
+        endPage = Math.min(totalPages, maxVisibleButtons);
+      } else if (currentPage >= totalPages - 2) {
+        endPage = totalPages;
+        startPage = Math.max(1, totalPages - maxVisibleButtons + 1);
       }
 
-      updatePaginationStyle();
+      if (startPage > 1) {
+        addPageButton(1);
+        if (startPage > 2) addDots();
+      }
+
+      for (let i = startPage; i <= endPage; i++) {
+        addPageButton(i);
+      }
+
+      if (endPage < totalPages) {
+        if (endPage < totalPages - 1) addDots();
+        addPageButton(totalPages);
+      }
     }
 
-    function updatePaginationStyle() {
-      paginationButtons.forEach((btn, i) => {
-        if ((i + 1) === currentPage) {
-          btn.classList.add("bg-amber-400", "text-white");
-          btn.classList.remove("hover:bg-yellow-100");
-        } else {
-          btn.classList.remove("bg-amber-400", "text-white");
-          btn.classList.add("hover:bg-yellow-100");
-        }
+    function addPageButton(page) {
+      const btn = document.createElement("button");
+      btn.textContent = page;
+      btn.className = "rounded-lg px-4 py-2 mx-1 page-btn";
+      if (page === currentPage) {
+        btn.classList.add("bg-amber-400", "text-white");
+      } else {
+        btn.classList.add("hover:bg-yellow-100", "hover:border-black", "hover:font-semibold");
+      }
+      btn.addEventListener("click", () => {
+        currentPage = page;
+        renderTableRows(currentLogs);
+        createPaginationButtons(currentLogs);
       });
+      pagination.insertBefore(btn, nextBtn);
+    }
+
+    function addDots() {
+      const dots = document.createElement("span");
+      dots.textContent = "...";
+      dots.className = "dots px-2";
+      pagination.insertBefore(dots, nextBtn);
     }
 
     function applySortingAndSearch() {
@@ -241,16 +256,14 @@ require __DIR__ . '/../../dbcon/session_get.php';
 
       let filtered = [...logs];
 
-      // Apply search filter
       if (searchValue) {
         filtered = filtered.filter(log =>
           Object.values(log).some(val =>
-            val.toLowerCase().includes(searchValue)
+            String(val).toLowerCase().includes(searchValue)
           )
         );
       }
 
-      // Apply date sorting
       if (sortValue === "asc") {
         filtered.sort((a, b) => new Date(a.date) - new Date(b.date));
       } else if (sortValue === "desc") {
@@ -259,22 +272,15 @@ require __DIR__ . '/../../dbcon/session_get.php';
 
       currentLogs = filtered;
       currentPage = 1;
-      renderTableRows(paginateData(currentLogs));
+      renderTableRows(currentLogs);
       createPaginationButtons(currentLogs);
     }
 
-    let currentLogs = [...logs]; // To track the filtered and sorted state
-
-    // Set up event listeners
-    document.getElementById("filterSelect").addEventListener("change", applySortingAndSearch);
-    document.getElementById("searchInput").addEventListener("input", applySortingAndSearch);
-
-    // Pagination buttons
     prevBtn.addEventListener("click", () => {
       if (currentPage > 1) {
         currentPage--;
-        renderTableRows(paginateData(currentLogs));
-        updatePaginationStyle();
+        renderTableRows(currentLogs);
+        createPaginationButtons(currentLogs);
       }
     });
 
@@ -282,12 +288,15 @@ require __DIR__ . '/../../dbcon/session_get.php';
       const totalPages = Math.ceil(currentLogs.length / rowsPerPage);
       if (currentPage < totalPages) {
         currentPage++;
-        renderTableRows(paginateData(currentLogs));
-        updatePaginationStyle();
+        renderTableRows(currentLogs);
+        createPaginationButtons(currentLogs);
       }
     });
 
-    // Initial render
+    document.getElementById("filterSelect").addEventListener("change", applySortingAndSearch);
+    document.getElementById("searchInput").addEventListener("input", applySortingAndSearch);
+
+    // Initial
     applySortingAndSearch();
   }
 
@@ -306,7 +315,5 @@ require __DIR__ . '/../../dbcon/session_get.php';
       });
   });
 </script>
-
-
 
 </html>

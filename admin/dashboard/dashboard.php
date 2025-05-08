@@ -12,6 +12,7 @@ $phones = iterator_to_array($db->phones->find([]));
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Dashboard</title>
   <link rel="stylesheet" href="../../src/output.css" />
+  <link rel="icon" href="../../src/assets/images/iconswap.svg" type="image/svg">
   <script src="https://kit.fontawesome.com/10d593c5dc.js" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <style>
@@ -100,7 +101,7 @@ $phones = iterator_to_array($db->phones->find([]));
             <i class="fa-solid fa-angle-down fa-sm pl-3"></i>
           </button>
           <div class="dropdown-menu absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-2 z-20 hidden">
-            <a href="../accountsetting.php" class="block px-4 py-2 text-gray-800 hover:bg-gray-200">Account Settings</a>
+            <a href="../sidebar_pages/accountsetting.php" class="block px-4 py-2 text-gray-800 hover:bg-gray-200">Account Settings</a>
             <a href="../../src/logout.php" id="logoutBtn" class="block px-4 py-2 text-gray-800 hover:bg-gray-200">
               Logout
             </a>
@@ -151,7 +152,7 @@ $phones = iterator_to_array($db->phones->find([]));
           <div class="flex laptop:flex-row phone:flex-col gap-2 w-full">
             <div class="flex justify-start">
               <form method="" class="flex flex-row items-center">
-                <select name="filter" id="filterSelect"
+                <select name="filter" id="filterSelect" disabled  
                   class="px-4 py-2 h-10 w-48 text-sm border border-gray-700 rounded-l-lg outline-none">
                   <option value="">Select Filter</option>
                   <option value="model">Device Model</option>
@@ -167,7 +168,7 @@ $phones = iterator_to_array($db->phones->find([]));
             <div class="flex flex-row ml-auto gap-2">
 
               <button id="returnBtn" onclick="openReturnModal()"
-                class="flex items-center gap-2 border border-white bg-blue-400 hover:bg-blue-600 hover:bg-opacity-95 text-white px-4 py-2 rounded-lg shadow-md"
+                class="flex items-center gap-2 border border-white bg-blue-400 hover:bg-blue-600 hover:bg-opacity-95 text-white px-4 py-1 rounded-lg shadow-md cursor-pointer"
                 disabled>
                 <i class="fa-solid fa-rotate-right"></i>
                 <span>Return</span>
