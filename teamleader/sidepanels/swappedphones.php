@@ -17,6 +17,7 @@ error_reporting(E_ALL);
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Swapped Phones</title>
   <link rel="stylesheet" href="../../src/output.css" />
+  <link rel="icon" href="../../src/assets/images/iconswap.svg" type="image/svg">
   <script src="https://kit.fontawesome.com/10d593c5dc.js" crossorigin="anonymous"></script>
   <style>
     .dropdown-menu {

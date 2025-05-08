@@ -14,7 +14,7 @@ $teamLeaders = $teamLeaders ?? [];
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>User Management</title>
-  <link rel="icon" href="../../src/assets/images/icon1.svg" type="image/svg">
+  <link rel="icon" href="../../src/assets/images/iconswap.svg" type="image/svg">
   <link rel="stylesheet" href="../../src/output.css" />
   <script src="https://kit.fontawesome.com/10d593c5dc.js" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
