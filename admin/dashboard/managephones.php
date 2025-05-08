@@ -13,7 +13,7 @@ $phones = iterator_to_array($db->phones->find([]));
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Manage Phones</title>
-  <link rel="icon" href="../src/assets/images/iconswap.svg" type="image/svg">
+  <link rel="icon" href="../../src/assets/images/iconswap.svg" type="image/svg">
   <link rel="stylesheet" href="../../src/output.css" />
   <script src="https://kit.fontawesome.com/10d593c5dc.js" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -105,7 +105,7 @@ $phones = iterator_to_array($db->phones->find([]));
               <i class="fa-solid fa-angle-down fa-sm pl-3"></i>
             </button>
             <div class="dropdown-menu absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-2 z-20 hidden">
-              <a href="accountsetting.php" class="block px-4 py-2 text-gray-800 hover:bg-gray-200">Account Settings</a>
+              <a href="../sidebar_pages/accountsetting.php" class="block px-4 py-2 text-gray-800 hover:bg-gray-200">Account Settings</a>
               <a href="../../src/logout.php" id="logoutBtn" class="block px-4 py-2 text-gray-800 hover:bg-gray-200">
                 Logout
               </a>
