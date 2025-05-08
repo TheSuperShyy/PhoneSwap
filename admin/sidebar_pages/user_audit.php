@@ -13,6 +13,7 @@ require __DIR__ . '/../../dbcon/session_get.php';
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Audit Trail</title>
   <link rel="stylesheet" href="../../src/output.css" />
+  <link rel="icon" href="../../src/assets/images/iconswap.svg" type="image/svg">
   <script src="https://kit.fontawesome.com/10d593c5dc.js" crossorigin="anonymous"></script>
   <style>
     .dropdown-menu {
