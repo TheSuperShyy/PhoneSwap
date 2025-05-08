@@ -174,9 +174,6 @@ require __DIR__ . '/../../dbcon/session_get.php';
                   </div>
                 </div>
               </form>
-
-
-
             </div>
           </div>
         </div>
