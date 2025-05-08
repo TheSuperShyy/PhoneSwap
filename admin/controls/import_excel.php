@@ -49,21 +49,42 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['excel_file'])) {
                 continue;
             }
 
-            // Insert into MongoDB
-            $phonesCollection->insertOne([
+            // ✅ Insert new phone into MongoDB
+            $insertResult = $phonesCollection->insertOne([
                 'model' => $model,
                 'serial_number' => $serial,
                 'status' => $status,
                 'created_at' => new MongoDB\BSON\UTCDateTime()
             ]);
-            $inserted++;
-            $fileSerials[] = $serial; // Track inserted serials from file
+
+            if ($insertResult->getInsertedCount() > 0) {
+                // ✅ Insert audit log
+                $adminId = $_SESSION['user']['hfId']; // Assuming the admin's hfId is stored in the session
+                $adminName = $_SESSION['user']['first_name'] . ' ' . $_SESSION['user']['last_name'];
+
+                $auditData = [
+                    "timestamp" => date("Y-m-d H:i:s"), // Current timestamp
+                    'user' => [
+                        'hfId' => $adminId,
+                        'name' => $adminName,
+                    ],
+                    'serial_number' => $serial,
+                    'model' => $model,
+                    'action' => 'Added New Phone'
+                ];
+
+                // Insert audit record
+                $db->phone_audit->insertOne($auditData);
+
+                $inserted++;
+                $fileSerials[] = $serial; // Track inserted serials from file
+            }
         }
 
         if ($inserted > 0) {
             echo json_encode([
                 'status' => 'success',
-                'message' => "Successfully imported $inserted phone(s)."
+                'message' => "Successfully imported $inserted phone(s) and logged audit."
             ]);
         } else {
             echo json_encode([
