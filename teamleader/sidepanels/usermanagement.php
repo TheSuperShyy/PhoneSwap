@@ -96,9 +96,11 @@ error_reporting(E_ALL);
               <i class="fa-solid fa-angle-down fa-sm pl-3"></i>
             </button>
             <div class="dropdown-menu absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-2 z-20 hidden">
-              <a href="#" class="block px-4 py-2 text-gray-800 hover:bg-gray-200">Profile</a>
-              <a href="#" class="block px-4 py-2 text-gray-800 hover:bg-gray-200">Settings</a>
-              <a href="#" class="block px-4 py-2 text-gray-800 hover:bg-gray-200">Logout</a>
+              <a href="accountsetting.php" class="block px-4 py-2 text-gray-800 hover:bg-gray-200">Account
+                Settings</a>
+              <a href="../../src/logout.php" id="logoutBtn" class="block px-4 py-2 text-gray-800 hover:bg-gray-200">
+                Logout
+              </a>
             </div>
           </div>
         </div>
